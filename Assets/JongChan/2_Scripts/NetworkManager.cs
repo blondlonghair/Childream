@@ -110,6 +110,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
+        DissconnectPanel.SetActive(false);
         LobbyPanel.SetActive(true);
         RoomPanel.SetActive(false);
         PhotonNetwork.LocalPlayer.NickName = NickNameInput.text;
@@ -124,6 +125,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnDisconnected(DisconnectCause cause)
     {
+        DissconnectPanel.SetActive(true);
         LobbyPanel.SetActive(false);
         RoomPanel.SetActive(false);
     }
