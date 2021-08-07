@@ -1,0 +1,58 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public enum AtkType
+{
+    NONE,
+    ONCE,
+    ALL
+}
+
+public enum MoveType
+{
+    NONE,
+    RIGHT,
+    LEFT,
+    RANDOM
+}
+
+[System.Serializable]
+public class Card
+{
+    [SerializeField] int id { get; set; }
+    [SerializeField] string cardName;
+    [SerializeField] int cost;
+    [SerializeField] AtkType atkType;
+    [SerializeField] MoveType moveType;
+    [SerializeField] int power;
+    [TextArea(5, 10)] public string cardDesc;
+    [SerializeField] Sprite cardImage;
+
+    public Card(int _id, string _cardName, int _cost, AtkType _atkType, MoveType _moveType, int _power, string _cardDesc, Sprite _cardImage)
+    {
+        id = _id;
+        cardName = _cardName;
+        cost = _cost;
+        atkType = _atkType;
+        moveType = _moveType;
+        power = _power;
+        cardDesc = _cardDesc;
+        cardImage = _cardImage;
+    }
+}
+
+public class CardData : MonoBehaviour
+{
+
+    static CardData instance;
+
+    [SerializeField] List<Card> Cards = new List<Card>();
+    public static List<Card> CardList;
+
+    void Awake()
+    {
+        instance = this;
+        CardList = instance.Cards;
+    }
+}

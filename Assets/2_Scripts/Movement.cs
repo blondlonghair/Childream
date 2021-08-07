@@ -21,32 +21,27 @@ public class Movement : MonoBehaviourPunCallbacks
     {
         if (PV.IsMine)
         {
-            PV.RPC(nameof(Move), RpcTarget.All);
+            Move();
         }
     }
 
-    [PunRPC]
     void Move()
     {
         if (Input.GetKey(KeyCode.W))
         {
-            if (PV.IsMine)
-                transform.Translate(0, 1 * Time.deltaTime, 0);
+            transform.Translate(0, 1 * Time.deltaTime, 0);
         }
         if (Input.GetKey(KeyCode.A))
         {
-            if (PV.IsMine)
-                transform.Translate(-1 * Time.deltaTime, 0, 0);
+            transform.Translate(-1 * Time.deltaTime, 0, 0);
         }
         if (Input.GetKey(KeyCode.S))
         {
-            if (PV.IsMine)
-                transform.Translate(0, -1 * Time.deltaTime, 0);
+            transform.Translate(0, -1 * Time.deltaTime, 0);
         }
         if (Input.GetKey(KeyCode.D))
         {
-            if (PV.IsMine)
-                transform.Translate(1 * Time.deltaTime, 0, 0);
+            transform.Translate(1 * Time.deltaTime, 0, 0);
         }
     }
 

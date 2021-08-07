@@ -5,27 +5,22 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class Manager : MonoBehaviourPunCallbacks
+public class ServerManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] Text text;
-    [SerializeField] GameObject gameobject;
+    PhotonView PV;
 
     void Awake()
     {
-        //PhotonNetwork.SendRate = 60;
-        //PhotonNetwork.SerializationRate = 30;
+        PhotonNetwork.SendRate = 60;
+        PhotonNetwork.SerializationRate = 30;
         PhotonNetwork.ConnectUsingSettings();
+        PV = GetComponent<PhotonView>();
     }
-
-    public void Connect() => PhotonNetwork.ConnectUsingSettings();
 
     public override void OnConnectedToMaster()
     {
-        PhotonNetwork.JoinLobby();
-    }
-    public override void OnJoinedLobby()
-    {
-        PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 50 }, null);
+        PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 2 }, null);
     }
 
     public override void OnJoinedRoom()
@@ -35,7 +30,8 @@ public class Manager : MonoBehaviourPunCallbacks
 
     public void Spawn()
     {
-        PhotonNetwork.Instantiate("Player", new Vector3(0, 0, 0), Quaternion.identity);
+        //PhotonNetwork.Instantiate("Player", new Vector3(0, 0, 0), Quaternion.identity);
+        PhotonNetwork.Instantiate("Card", new Vector3(0, 0, 0), Quaternion.identity);
     }
 
     void Update() 
