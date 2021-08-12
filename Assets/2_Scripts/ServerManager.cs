@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.Networking;
+using System;
 
 public class ServerManager : MonoBehaviourPunCallbacks
 {
@@ -15,6 +17,9 @@ public class ServerManager : MonoBehaviourPunCallbacks
         PhotonNetwork.SendRate = 60;
         PhotonNetwork.SerializationRate = 30;
         PhotonNetwork.ConnectUsingSettings();
+
+        StartCoroutine(WebCheck());
+
         PV = GetComponent<PhotonView>();
     }
 
@@ -38,5 +43,36 @@ public class ServerManager : MonoBehaviourPunCallbacks
     {
         text.text = PhotonNetwork.NetworkClientState.ToString();
         if (Input.GetKeyDown(KeyCode.Escape) && PhotonNetwork.IsConnected) PhotonNetwork.Disconnect(); 
+    }
+
+    IEnumerator WebCheck()
+    {
+        while (true)
+        {
+            _ = new UnityWebRequest();
+            UnityWebRequest request;
+            using (request = UnityWebRequest.Get("www.naver.com"))
+            {
+                yield return request.SendWebRequest();
+
+                if (request.isNetworkError)
+                {
+                    print(request.error);
+                }
+                else
+                {
+                    string date = request.GetResponseHeader("date");
+
+                    DateTime dateTime = DateTime.Parse(date).ToUniversalTime();
+                    TimeSpan timestamp = dateTime - new DateTime(2021, 8, 7, 0, 0, 0);
+
+                    int stopwatch = (int)timestamp.TotalSeconds - PlayerPrefs.GetInt("net", (int)timestamp.TotalSeconds);
+                    print(stopwatch + "sec");
+                    PlayerPrefs.SetInt("net", (int)timestamp.TotalSeconds);
+                }
+            }
+
+            yield return new WaitForSeconds(1f);
+        }
     }
 }

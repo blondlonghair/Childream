@@ -15,8 +15,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
     public int id;
     public string cardName;
     public int cost;
-    public AtkType atkType;
-    public MoveType moveType;
+    public CardType cardType;
     public int power;
     [TextArea(5, 10)] public string cardDesc;
     public Sprite cardImage;
@@ -37,8 +36,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
         id = CardData.CardList[cardId].id;
         cardName = CardData.CardList[cardId].cardName;
         cost = CardData.CardList[cardId].cost;
-        atkType = CardData.CardList[cardId].atkType;
-        moveType = CardData.CardList[cardId].moveType;
+        cardType = CardData.CardList[cardId].cardType;
         power = CardData.CardList[cardId].power;
         cardDesc = CardData.CardList[cardId].cardDesc;
         cardImage = CardData.CardList[cardId].cardImage;
@@ -72,10 +70,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
         if (target == gameObject)
         {
-            //if (PV.IsMine)
             target.transform.position = worldMousePos;
-            //if (!PV.IsMine)
-            //    PV.RPC(nameof(nn), RpcTarget.OthersBuffered);
 
             if (Input.GetMouseButtonDown(0))
             {
@@ -92,28 +87,15 @@ public class ThisCard : MonoBehaviourPunCallbacks
                 target = null;
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            if (PV.IsMine)
+            {
+                PhotonNetwork.Destroy(gameObject);
+            }
+        }
     }
-
-    //[PunRPC]
-    //public void nn()
-    //{
-    //    target.transform.position = -worldMousePos;
-    //}
-
-    //[PunRPC]
-    //public void Drag()
-    //{
-    //    if (PV.IsMine)
-    //    {
-    //        transform.position = mousePosition;
-    //    }
-    //}
-
-    //public void OnPhotonInstantiate(PhotonMessageInfo info)
-    //{
-    //    transform.parent = GameObject.Find("MainCanvas").transform;
-    //    GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1);
-    //}
 
     void CastRay()
     {
@@ -125,6 +107,17 @@ public class ThisCard : MonoBehaviourPunCallbacks
         if (hit.collider != null && hit.collider.gameObject.CompareTag("Card"))
         {
             target = hit.collider.gameObject;
+        }
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (collision.CompareTag("IsMasterClient"))
+            {
+                PhotonNetwork.Destroy(gameObject);
+            }
         }
     }
 }

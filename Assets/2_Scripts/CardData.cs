@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public enum AtkType
+public enum CardType
 {
     NONE,
-    ONCE,
-    ALL
+    ATK,
+    DEF,
+    ACT
 }
 
-public enum MoveType
+public enum TargetType
 {
     NONE,
-    RIGHT,
-    LEFT,
-    RANDOM
+    ONE,
+    ALL
 }
 
 #if UNITY_EDITOR
@@ -43,19 +43,17 @@ public class Card
     public int id;
     public string cardName;
     public int cost;
-    public AtkType atkType;
-    public MoveType moveType;
+    public CardType cardType;
     public int power;
     [TextArea(5, 10)] public string cardDesc;
     public Sprite cardImage;
 
-    public Card(int _id, string _cardName, int _cost, AtkType _atkType, MoveType _moveType, int _power, string _cardDesc, Sprite _cardImage)
+    public Card(int _id, string _cardName, int _cost, CardType _cardType, int _power, string _cardDesc, Sprite _cardImage)
     {
         id = _id;
         cardName = _cardName;
         cost = _cost;
-        atkType = _atkType;
-        moveType = _moveType;
+        cardType = _cardType;
         power = _power;
         cardDesc = _cardDesc;
         cardImage = _cardImage;
@@ -74,7 +72,6 @@ public class CardData : MonoBehaviour
         //instance = this;
         //CardList = instance.Cards;
 
-        CardList.Add(new Card(_id : 0,_cardName : "none",_cost : 0,_atkType : AtkType.NONE, 
-            _moveType : MoveType.NONE, _power : 0, _cardDesc : "none", Resources.Load<Sprite>("½£¹è°æ(´«)")));
+        CardList.Add(new Card(_id : 0,_cardName : "none",_cost : 0, _cardType : CardType.NONE, _power : 0, _cardDesc : "none", Resources.Load<Sprite>("½£¹è°æ(´«)")));
     }
 }

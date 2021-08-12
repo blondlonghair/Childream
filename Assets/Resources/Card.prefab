@@ -562,8 +562,7 @@ MonoBehaviour:
   id: 0
   cardName: 
   cost: 0
-  atkType: 0
-  moveType: 0
+  cardType: 0
   power: 0
   cardDesc: 
   cardImage: {fileID: 0}
