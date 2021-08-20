@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 
 public enum CardType
 {
@@ -62,16 +64,10 @@ public class Card
 
 public class CardData : MonoBehaviour
 {
-    //static CardData instance;
-
-    //[SerializeField] List<Card> Cards = new List<Card>();
     public static List<Card> CardList = new List<Card>();
-
+    
     private void Awake()
     {
-        //instance = this;
-        //CardList = instance.Cards;
-
-        CardList.Add(new Card(_id : 0,_cardName : "none",_cost : 0, _cardType : CardType.NONE, _power : 0, _cardDesc : "none", Resources.Load<Sprite>("½£¹è°æ(´«)")));
+        CardList.Add(new Card(_id : 0,_cardName : "none",_cost : 0, _cardType : CardType.NONE, _power : 0, _cardDesc : "none", Resources.Load<Sprite>("Character/None")));
     }
 }

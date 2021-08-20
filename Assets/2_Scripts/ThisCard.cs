@@ -26,6 +26,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
     [SerializeField] Text powerText;
     [SerializeField] Text DescText;
     [SerializeField] Image CardImage;
+    [SerializeField] Image CardBg;
 
     PhotonView PV;
 
@@ -49,9 +50,13 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
         PV = GetComponent<PhotonView>();
 
-        if (PhotonNetwork.IsMasterClient)
+        if (/*PhotonNetwork.IsMasterClient*/PV.IsMine)
         {
             transform.Rotate(0, 0, 180);
+        }
+        else
+        {
+            CardBg.sprite = Resources.Load<Sprite>("CardBack/1");
         }
     }
 
@@ -70,7 +75,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
         if (target == gameObject)
         {
-            target.transform.position = worldMousePos;
+            //target.transform.position = worldMousePos;
 
             if (Input.GetMouseButtonDown(0))
             {

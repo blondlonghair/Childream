@@ -39,17 +39,20 @@ public class ServerManager : MonoBehaviourPunCallbacks
         PhotonNetwork.Instantiate("Card", new Vector3(0, 0, 0), Quaternion.identity);
     }
 
-    void Update() 
+    void Update()
     {
         text.text = PhotonNetwork.NetworkClientState.ToString();
-        if (Input.GetKeyDown(KeyCode.Escape) && PhotonNetwork.IsConnected) PhotonNetwork.Disconnect(); 
+        //if (Input.GetKeyDown(KeyCode.Escape) && PhotonNetwork.IsConnected) PhotonNetwork.Disconnect();
     }
+
+    static float netTime = 0;
 
     IEnumerator WebCheck()
     {
+        DateTime tTime = DateTime.Now.ToUniversalTime();
+
         while (true)
         {
-            _ = new UnityWebRequest();
             UnityWebRequest request;
             using (request = UnityWebRequest.Get("www.naver.com"))
             {
@@ -62,17 +65,23 @@ public class ServerManager : MonoBehaviourPunCallbacks
                 else
                 {
                     string date = request.GetResponseHeader("date");
-
                     DateTime dateTime = DateTime.Parse(date).ToUniversalTime();
-                    TimeSpan timestamp = dateTime - new DateTime(2021, 8, 7, 0, 0, 0);
 
-                    int stopwatch = (int)timestamp.TotalSeconds - PlayerPrefs.GetInt("net", (int)timestamp.TotalSeconds);
-                    print(stopwatch + "sec");
-                    PlayerPrefs.SetInt("net", (int)timestamp.TotalSeconds);
+                    if (tTime != dateTime)
+                    {
+                        netTime++;
+                        tTime = dateTime;
+                    }
+
+                    //print(netTime);
                 }
             }
-
-            yield return new WaitForSeconds(1f);
         }
+    }
+
+    public static float GetTime()
+    {
+        netTime = 0;
+        return netTime;
     }
 }

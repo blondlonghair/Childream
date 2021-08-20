@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 21736348}
   m_Layer: 0
   m_Name: Range_1
-  m_TagString: Untagged
+  m_TagString: Range
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -262,36 +262,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &131977750
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 131977751}
-  m_Layer: 0
-  m_Name: HostObj
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &131977751
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 131977750}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &239488871
 GameObject:
   m_ObjectHideFlags: 0
@@ -304,7 +274,7 @@ GameObject:
   - component: {fileID: 239488873}
   m_Layer: 0
   m_Name: Range_2
-  m_TagString: Untagged
+  m_TagString: Range
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -361,7 +331,7 @@ GameObject:
   - component: {fileID: 257142136}
   m_Layer: 0
   m_Name: Range_3
-  m_TagString: Untagged
+  m_TagString: Range
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -418,7 +388,7 @@ GameObject:
   - component: {fileID: 274140823}
   m_Layer: 0
   m_Name: Range_3
-  m_TagString: Untagged
+  m_TagString: Range
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -474,7 +444,7 @@ GameObject:
   - component: {fileID: 482176667}
   - component: {fileID: 482176666}
   m_Layer: 0
-  m_Name: GuestAtkRange
+  m_Name: HostRange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -492,7 +462,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e607698edb0defb47ba456a3b1bd4383, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  url: www.naver.com
 --- !u!4 &482176667
 Transform:
   m_ObjectHideFlags: 0
@@ -508,7 +477,7 @@ Transform:
   - {fileID: 239488872}
   - {fileID: 257142135}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &671662233
 GameObject:
@@ -520,7 +489,7 @@ GameObject:
   m_Component:
   - component: {fileID: 671662235}
   m_Layer: 0
-  m_Name: HostAtkRange
+  m_Name: GuestRange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -541,7 +510,7 @@ Transform:
   - {fileID: 1084410094}
   - {fileID: 274140822}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &778802898
 GameObject:
@@ -655,7 +624,7 @@ GameObject:
   - component: {fileID: 832705635}
   m_Layer: 0
   m_Name: Range_1
-  m_TagString: Untagged
+  m_TagString: Range
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -876,7 +845,7 @@ GameObject:
   - component: {fileID: 1084410095}
   m_Layer: 0
   m_Name: Range_2
-  m_TagString: Untagged
+  m_TagString: Range
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
