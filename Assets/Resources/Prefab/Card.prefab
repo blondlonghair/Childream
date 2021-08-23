@@ -569,6 +569,7 @@ MonoBehaviour:
   powerText: {fileID: 5259305640081632426}
   DescText: {fileID: 6804714893601007416}
   CardImage: {fileID: 2056631417460249793}
+  PV: {fileID: 0}
 --- !u!61 &7514355708811014575
 BoxCollider2D:
   m_ObjectHideFlags: 0

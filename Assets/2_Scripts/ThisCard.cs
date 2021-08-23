@@ -29,7 +29,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
     [SerializeField] Text DescText;
     [SerializeField] Image CardImage;
 
-    PhotonView PV;
+    public PhotonView PV;
     public PRS originRPS;
 
     GameObject target = null;
@@ -39,14 +39,14 @@ public class ThisCard : MonoBehaviourPunCallbacks
     {
         PV = GetComponent<PhotonView>();
 
-        if (PhotonNetwork.IsMasterClient)
+        if (PV.IsMine)
         {
-            transform.Rotate(0, 0, 180);
+            CardFront(true);
         }
 
-        if (!PV.IsMine)
+        else
         {
-            CardFlip();
+            CardFront(false);
         }
     }
 
@@ -125,21 +125,23 @@ public class ThisCard : MonoBehaviourPunCallbacks
         DescText.text = cardDesc;
         CardImage.sprite = cardImage;
 
-        CardFlip(isFront);
+        CardFront(isFront);
     }
 
-    void CardFlip(bool isFront)
+    void CardFront(bool isFront)
     {
         if (isFront)
         {
             gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
             gameObject.transform.GetChild(0).GetChild(1).gameObject.SetActive(false);
+            isFlip = false;
         }
 
         else
         {
             gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
             gameObject.transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
+            isFlip = true;
         }
     }
 
