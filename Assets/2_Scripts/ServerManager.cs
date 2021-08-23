@@ -35,14 +35,14 @@ public class ServerManager : MonoBehaviourPunCallbacks
 
     public void Spawn()
     {
-        //PhotonNetwork.Instantiate("Player", new Vector3(0, 0, 0), Quaternion.identity);
-        PhotonNetwork.Instantiate("Card", new Vector3(0, 0, 0), Quaternion.identity);
+        //PhotonNetwork.Instantiate("Prefab/Player", new Vector3(0, 0, 0), Quaternion.identity);
+        //PhotonNetwork.Instantiate("Prefab/Card", Vector3.zero, Quaternion.identity);
+        PhotonNetwork.Instantiate("Prefab/Ranges", Vector3.zero, Quaternion.identity);
     }
 
     void Update()
     {
         text.text = PhotonNetwork.NetworkClientState.ToString();
-        //if (Input.GetKeyDown(KeyCode.Escape) && PhotonNetwork.IsConnected) PhotonNetwork.Disconnect();
     }
 
     static float netTime = 0;
@@ -79,9 +79,12 @@ public class ServerManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public static float GetTime()
+    public static float GetTime(out float time)
     {
-        netTime = 0;
-        return netTime;
+        //netTime = 0;
+        float fdsa;
+        fdsa = netTime;
+        time = netTime - fdsa;
+        return time;
     }
 }

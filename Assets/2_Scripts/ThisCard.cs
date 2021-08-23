@@ -5,58 +5,48 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Photon.Pun;
 using Photon.Realtime;
+using Utils;
 
 public class ThisCard : MonoBehaviourPunCallbacks
 {
-    [Header("ƒ´µÂ æ∆¿Ãµ ¿‘∑¬")]
+    [Header("Ïπ¥Îìú ÏïÑÏù¥Îîî ÏûÖÎ†•")]
     [SerializeField] int cardId;
 
-    [Header("ƒ´µÂ ¡§∫∏")]
+    [Header("Ïπ¥Îìú Ï†ïÎ≥¥")]
     public int id;
     public string cardName;
     public int cost;
     public CardType cardType;
+    public TargetType targetType;
     public int power;
     [TextArea(5, 10)] public string cardDesc;
     public Sprite cardImage;
 
-    [Header("ƒ´µÂ ø‰º“")]
+    [Header("Ïπ¥Îìú ÏöîÏÜå")]
     [SerializeField] Text nameText;
     [SerializeField] Text costText;
     [SerializeField] Text powerText;
     [SerializeField] Text DescText;
     [SerializeField] Image CardImage;
-    [SerializeField] Image CardBg;
 
     PhotonView PV;
+    public PRS originRPS;
 
     GameObject target = null;
+    bool isFlip = false;
 
     void Start()
     {
-        id = CardData.CardList[cardId].id;
-        cardName = CardData.CardList[cardId].cardName;
-        cost = CardData.CardList[cardId].cost;
-        cardType = CardData.CardList[cardId].cardType;
-        power = CardData.CardList[cardId].power;
-        cardDesc = CardData.CardList[cardId].cardDesc;
-        cardImage = CardData.CardList[cardId].cardImage;
-
-        nameText.text = cardName;
-        costText.text = cost.ToString();
-        powerText.text = power.ToString();
-        DescText.text = cardDesc;
-        CardImage.sprite = cardImage;
-
         PV = GetComponent<PhotonView>();
 
-        if (/*PhotonNetwork.IsMasterClient*/PV.IsMine)
+        if (PhotonNetwork.IsMasterClient)
         {
             transform.Rotate(0, 0, 180);
         }
-        else
+
+        if (!PV.IsMine)
         {
-            CardBg.sprite = Resources.Load<Sprite>("CardBack/1");
+            CardFlip();
         }
     }
 
@@ -75,7 +65,10 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
         if (target == gameObject)
         {
-            //target.transform.position = worldMousePos;
+            if (targetType == TargetType.ALL)
+            {
+                target.transform.position = worldMousePos;
+            }
 
             if (Input.GetMouseButtonDown(0))
             {
@@ -115,14 +108,55 @@ public class ThisCard : MonoBehaviourPunCallbacks
         }
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    public void Setup(int _id, bool isFront)
     {
-        if (PhotonNetwork.IsMasterClient)
+        id = CardData.CardList[_id].id;
+        cardName = CardData.CardList[_id].cardName;
+        cost = CardData.CardList[_id].cost;
+        cardType = CardData.CardList[_id].cardType;
+        targetType = CardData.CardList[_id].targetType;
+        power = CardData.CardList[_id].power;
+        cardDesc = CardData.CardList[_id].cardDesc;
+        cardImage = CardData.CardList[_id].cardImage;
+
+        nameText.text = cardName;
+        costText.text = cost.ToString();
+        powerText.text = power.ToString();
+        DescText.text = cardDesc;
+        CardImage.sprite = cardImage;
+
+        CardFlip(isFront);
+    }
+
+    void CardFlip(bool isFront)
+    {
+        if (isFront)
         {
-            if (collision.CompareTag("IsMasterClient"))
-            {
-                PhotonNetwork.Destroy(gameObject);
-            }
+            gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+            gameObject.transform.GetChild(0).GetChild(1).gameObject.SetActive(false);
+        }
+
+        else
+        {
+            gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
+            gameObject.transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
+        }
+    }
+
+    void CardFlip()
+    {
+        if (isFlip)
+        {
+            gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+            gameObject.transform.GetChild(0).GetChild(1).gameObject.SetActive(false);
+            isFlip = false;
+        }
+
+        else
+        {
+            gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
+            gameObject.transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
+            isFlip = true;
         }
     }
 }

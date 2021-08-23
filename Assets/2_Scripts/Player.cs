@@ -5,7 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviourPunCallbacks
 {
     GameObject target;
 
@@ -18,23 +18,28 @@ public class Player : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             CastRay("Card");
-            if (!target.GetComponent<PhotonView>().IsMine)
+            
+            if (target == null)
+                return;
+
+            if (target.GetComponent<PhotonView>().IsMine)
             {
                 print("down");
-                return;
             }
         }
 
         if (Input.GetMouseButton(0))
         {
-            print("button");
-            //CastRay("Card");
         }
 
         if (Input.GetMouseButtonUp(0))
         {
             CastRay("Range");
-            if (target.CompareTag("Range"))
+
+            if (target == null)
+                return;
+
+            if (!target.GetComponentInParent<PhotonView>().IsMine)
             {
                 print("up");
             }
