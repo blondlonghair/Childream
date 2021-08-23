@@ -159,4 +159,11 @@ public class ThisCard : MonoBehaviourPunCallbacks
             isFlip = true;
         }
     }
+
+    public void MoveTransform(PRS prs)
+    {
+        transform.position = prs.pos;
+        transform.rotation = prs.rot;
+        transform.localScale = prs.scale;
+    }
 }

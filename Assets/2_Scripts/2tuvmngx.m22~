@@ -38,21 +38,16 @@ public class CardManager : MonoBehaviourPunCallbacks
         CardAlignment(isMine);
     }
 
-    void SetupCard()
-    {
-
-    }
-
     void CardAlignment(bool isMine)
     {
         List<PRS> originCardRPS = new List<PRS>();
         if (isMine)
         {
-            originCardRPS = RondAlignment(myCardLeft, myCardRight, myCards.Count, 0.5f, Vector3.one/* * 1.9f*/);
+            originCardRPS = RondAlignment(myCardLeft, myCardRight, myCards.Count, 0.5f, Vector3.one * 1.9f);
         }
         else
         {
-            originCardRPS = RondAlignment(otherCardLeft, otherCardRight, otherCards.Count, -0.5f, Vector3.one/* * 1.9f*/);
+            originCardRPS = RondAlignment(otherCardLeft, otherCardRight, otherCards.Count, -0.5f, Vector3.one * 1.9f);
         }
         var targetCards = isMine ? myCards : otherCards;
         for (int i = 0; i < targetCards.Count; i++)
