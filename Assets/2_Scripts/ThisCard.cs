@@ -110,14 +110,16 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
     public void Setup(int _id, bool isFront)
     {
-        id = CardData.CardList[_id].id;
-        cardName = CardData.CardList[_id].cardName;
-        cost = CardData.CardList[_id].cost;
-        cardType = CardData.CardList[_id].cardType;
-        targetType = CardData.CardList[_id].targetType;
-        power = CardData.CardList[_id].power;
-        cardDesc = CardData.CardList[_id].cardDesc;
-        cardImage = CardData.CardList[_id].cardImage;
+        cardId = _id;
+
+        id = CardData.CardList[cardId].id;
+        cardName = CardData.CardList[cardId].cardName;
+        cost = CardData.CardList[cardId].cost;
+        cardType = CardData.CardList[cardId].cardType;
+        targetType = CardData.CardList[cardId].targetType;
+        power = CardData.CardList[cardId].power;
+        cardDesc = CardData.CardList[cardId].cardDesc;
+        cardImage = CardData.CardList[cardId].cardImage;
 
         nameText.text = cardName;
         costText.text = cost.ToString();

@@ -18,27 +18,59 @@ public class CardManager : MonoBehaviourPunCallbacks
 
     public static CardManager Instance;
 
+    List<Card> cardBuffer = new List<Card>();
+
     private void Awake() => Instance = this;
+
+    private void Start()
+    {
+        SetupCard();
+    }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
             AddCard(PhotonNetwork.IsMasterClient);
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+            print(PopCard());
     }
 
     public void AddCard(bool isMine)
     {
         var cardObject = PhotonNetwork.Instantiate("Prefab/Card", Vector3.zero, Quaternion.identity);
         var card = cardObject.GetComponent<ThisCard>();
-        card.Setup(1, isMine);
+        card.Setup(PopCard(), isMine);
         (isMine ? hostCards : guestCards).Add(card);
 
         CardAlignment(isMine);
     }
 
+    public int PopCard()
+    {
+        if (cardBuffer.Count == 0)
+        {
+            SetupCard();
+        }
+        int temp = cardBuffer[0].id;
+        cardBuffer.RemoveAt(0);
+        return temp;
+    }
+
     void SetupCard()
     {
+        for (int i = 1; i < CardData.CardList.Count; i++)
+        {
+            Card card = CardData.CardList[i];
+            cardBuffer.Add(card);
+        }
 
+        for (int i = 0; i < cardBuffer.Count; i++)
+        {
+            int rand = Random.Range(i, cardBuffer.Count);
+            Card temp = cardBuffer[i];
+            cardBuffer[i] = cardBuffer[rand];
+            cardBuffer[rand] = temp;
+        }
     }
 
     void CardAlignment(bool isMine)
