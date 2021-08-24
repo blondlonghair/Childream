@@ -31,8 +31,6 @@ public class CardManager : MonoBehaviourPunCallbacks
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
             AddCard(PhotonNetwork.IsMasterClient);
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-            print(PopCard());
     }
 
     public void AddCard(bool isMine)
@@ -117,7 +115,6 @@ public class CardManager : MonoBehaviourPunCallbacks
         {
             var targetPos = Vector3.Lerp(leftTr.position, rightTr.position, objLerps[i]);
             Quaternion targetRot = Quaternion.identity;
-            print("var targetRot = Quaternion.identity;");
 
             if (PhotonNetwork.IsMasterClient && objCount < 4)
             {
@@ -130,7 +127,6 @@ public class CardManager : MonoBehaviourPunCallbacks
                 curve = height >= 0 ? -curve : curve;
                 targetPos.y += curve;
                 targetRot = Quaternion.Slerp(leftTr.rotation, rightTr.rotation, objLerps[i]);
-                print("targetRot = Quaternion.Slerp(leftTr.rotation, rightTr.rotation, objLerps[i]);");
             }
 
             results.Add(new PRS(targetPos, targetRot, scale));

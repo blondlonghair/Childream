@@ -7,10 +7,30 @@ using System;
 
 public class Player : MonoBehaviourPunCallbacks
 {
-    GameObject target;
+    [Header("플레이어 정보")]
+    public float MaxHp;
+    public float CurHp;
+    public float MaxMp;
+    public float CurMp;
+
+    PhotonView PV;
+    GameObject raycastTarget;
 
     void Start()
     {
+        PV = GetComponent<PhotonView>();
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            transform.position = new Vector3(0, 5, 0);
+            transform.Rotate(0, 0, 180);
+            name = "HostPlayer";
+        }
+        else if (!PhotonNetwork.IsMasterClient)
+        {
+            transform.position = new Vector3(0, -5, 0);
+            name = "GuestPlayer";
+        }
     }
 
     void Update()
@@ -19,10 +39,10 @@ public class Player : MonoBehaviourPunCallbacks
         {
             CastRay("Card");
             
-            if (target == null)
+            if (raycastTarget == null)
                 return;
 
-            if (target.GetComponent<PhotonView>().IsMine)
+            if (raycastTarget.GetComponent<PhotonView>().IsMine)
             {
                 print("down");
             }
@@ -36,10 +56,10 @@ public class Player : MonoBehaviourPunCallbacks
         {
             CastRay("Range");
 
-            if (target == null)
+            if (raycastTarget == null)
                 return;
 
-            if (!target.GetComponentInParent<PhotonView>().IsMine)
+            if (!raycastTarget.GetComponentInParent<PhotonView>().IsMine)
             {
                 print("up");
             }
@@ -48,14 +68,14 @@ public class Player : MonoBehaviourPunCallbacks
 
     void CastRay(string _tag)
     {
-        target = null;
+        raycastTarget = null;
 
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 0f);
 
         if (hit.collider != null && hit.collider.gameObject.CompareTag(_tag))
         {
-            target = hit.collider.gameObject;
+            raycastTarget = hit.collider.gameObject;
         }
     }
 }
