@@ -15,12 +15,12 @@ public class Range : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             transform.position = new Vector3(0, 5, 0);
-            name = "MasterRange";
+            gameObject.name = "MasterRange";
         }
         else if (!PhotonNetwork.IsMasterClient)
         {
             transform.position = new Vector3(0, -5, 0);
-            name = "GuestRange";
+            gameObject.name = "GuestRange";
         }
     }
 }

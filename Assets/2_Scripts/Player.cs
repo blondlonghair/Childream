@@ -5,7 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System;
 
-public class Player : MonoBehaviourPunCallbacks
+public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
     [Header("플레이어 정보")]
     public float MaxHp;
@@ -20,17 +20,7 @@ public class Player : MonoBehaviourPunCallbacks
     {
         PV = GetComponent<PhotonView>();
 
-        if (PhotonNetwork.IsMasterClient)
-        {
-            transform.position = new Vector3(0, 5, 0);
-            transform.Rotate(0, 0, 180);
-            name = "HostPlayer";
-        }
-        else if (!PhotonNetwork.IsMasterClient)
-        {
-            transform.position = new Vector3(0, -5, 0);
-            name = "GuestPlayer";
-        }
+        //PV.RPC(nameof(PlayerSetup), RpcTarget.AllBuffered);
     }
 
     void Update()
@@ -38,7 +28,7 @@ public class Player : MonoBehaviourPunCallbacks
         if (Input.GetMouseButtonDown(0))
         {
             CastRay("Card");
-            
+
             if (raycastTarget == null)
                 return;
 
@@ -76,6 +66,44 @@ public class Player : MonoBehaviourPunCallbacks
         if (hit.collider != null && hit.collider.gameObject.CompareTag(_tag))
         {
             raycastTarget = hit.collider.gameObject;
+        }
+    }
+
+    [PunRPC]
+    void PlayerSetup()
+    {
+        if (PV.IsMine)
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                transform.position = new Vector3(0, 5, 0);
+                transform.Rotate(0, 0, 180);
+                gameObject.name = "HostPlayer";
+                print("IsMasterClient");
+            }
+            else
+            {
+                transform.position = new Vector3(0, -5, 0);
+                gameObject.name = "GuestPlayer";
+                print("IsGuestClient");
+            }
+        }
+    }
+
+    public void OnPhotonInstantiate(PhotonMessageInfo info)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            transform.position = new Vector3(0, 5, 0);
+            transform.Rotate(0, 0, 180);
+            gameObject.name = "HostPlayer";
+            print("IsMasterClient");
+        }
+        else
+        {
+            transform.position = new Vector3(0, -5, 0);
+            gameObject.name = "GuestPlayer";
+            print("IsGuestClient");
         }
     }
 }

@@ -258,7 +258,7 @@ GameObject:
   m_Component:
   - component: {fileID: 571512280}
   m_Layer: 0
-  m_Name: GuestPlayer
+  m_Name: GuestCardRange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -420,7 +420,7 @@ GameObject:
   m_Component:
   - component: {fileID: 783276430}
   m_Layer: 0
-  m_Name: HostPlayer
+  m_Name: HostCardRange
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
