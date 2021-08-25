@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         GameSetup,
         GameStart,
         OnTurn,
+        ActCard,
+        PlayerMove,
+        PlayerAtk,
         TurnEnd,
     }
 

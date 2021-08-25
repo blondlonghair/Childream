@@ -5,7 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System;
 
-public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
+public class Player : MonoBehaviourPunCallbacks
 {
     [Header("플레이어 정보")]
     public float MaxHp;
@@ -16,11 +16,13 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
     PhotonView PV;
     GameObject raycastTarget;
 
+    bool isStart = false;
+
     void Start()
     {
         PV = GetComponent<PhotonView>();
 
-        //PV.RPC(nameof(PlayerSetup), RpcTarget.AllBuffered);
+        PlayerSetup();
     }
 
     void Update()
@@ -61,20 +63,22 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
         raycastTarget = null;
 
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 0f);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(pos, Vector2.zero, 0f);
 
-        if (hit.collider != null && hit.collider.gameObject.CompareTag(_tag))
+        for (int i = 0; i < hits.Length; i++)
         {
-            raycastTarget = hit.collider.gameObject;
+            if (hits[i].collider != null && hits[i].collider.gameObject.CompareTag(_tag))
+            {
+                raycastTarget = hits[i].collider.gameObject;
+            }
         }
     }
 
-    [PunRPC]
     void PlayerSetup()
     {
-        if (PV.IsMine)
+        if (PhotonNetwork.IsMasterClient)
         {
-            if (PhotonNetwork.IsMasterClient)
+            if (PV.IsMine)
             {
                 transform.position = new Vector3(0, 5, 0);
                 transform.Rotate(0, 0, 180);
@@ -84,26 +88,45 @@ public class Player : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
             else
             {
                 transform.position = new Vector3(0, -5, 0);
+                transform.Rotate(0, 0, 180);
+                gameObject.name = "GuestPlayer";
+                print("IsGuestClient");
+            }
+        }
+        else
+        {
+            if (PV.IsMine)
+            {
+                transform.position = new Vector3(0, -5, 0);
+                gameObject.name = "HostPlayer";
+                print("IsMasterClient");
+            }
+            else
+            {
+                transform.position = new Vector3(0, 5, 0);
                 gameObject.name = "GuestPlayer";
                 print("IsGuestClient");
             }
         }
     }
 
-    public void OnPhotonInstantiate(PhotonMessageInfo info)
-    {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            transform.position = new Vector3(0, 5, 0);
-            transform.Rotate(0, 0, 180);
-            gameObject.name = "HostPlayer";
-            print("IsMasterClient");
-        }
-        else
-        {
-            transform.position = new Vector3(0, -5, 0);
-            gameObject.name = "GuestPlayer";
-            print("IsGuestClient");
-        }
-    }
+    //public void OnPhotonInstantiate(PhotonMessageInfo info)
+    //{
+    //    if (PhotonNetwork.IsMasterClient)
+    //    {
+    //        if (PV.IsMine)
+    //        {
+    //            transform.position = new Vector3(0, 5, 0);
+    //            transform.Rotate(0, 0, 180);
+    //            gameObject.name = "HostPlayer";
+    //            print("IsMasterClient");
+    //        }
+    //        else
+    //        {
+    //            transform.position = new Vector3(0, -5, 0);
+    //            gameObject.name = "GuestPlayer";
+    //            print("IsGuestClient");
+    //        }
+    //    }
+    //}
 }
