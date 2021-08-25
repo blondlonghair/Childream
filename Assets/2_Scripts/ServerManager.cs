@@ -35,8 +35,7 @@ public class ServerManager : MonoBehaviourPunCallbacks
 
     public void Spawn()
     {
-        PhotonNetwork.Instantiate("Prefab/Player", Vector3.zero, Quaternion.identity);
-        PhotonNetwork.Instantiate("Prefab/Ranges", Vector3.zero, Quaternion.identity);
+        
     }
 
     void Update()
