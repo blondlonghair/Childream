@@ -83,14 +83,12 @@ public class Player : MonoBehaviourPunCallbacks
                 transform.position = new Vector3(0, 5, 0);
                 transform.Rotate(0, 0, 180);
                 gameObject.name = "HostPlayer";
-                //print("IsMasterClient");
             }
             else
             {
                 transform.position = new Vector3(0, -5, 0);
                 transform.Rotate(0, 0, 180);
                 gameObject.name = "GuestPlayer";
-                //print("IsGuestClient");
             }
         }
         else
@@ -99,13 +97,11 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 transform.position = new Vector3(0, -5, 0);
                 gameObject.name = "HostPlayer";
-                //print("IsMasterClient");
             }
             else
             {
                 transform.position = new Vector3(0, 5, 0);
                 gameObject.name = "GuestPlayer";
-                //print("IsGuestClient");
             }
         }
     }

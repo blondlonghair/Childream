@@ -216,7 +216,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
-  m_SortingLayerID: 0
+  m_SortingLayerID: -1844696563
   m_SortingOrder: 0
   m_TargetDisplay: 0
 --- !u!114 &5177780545604171764
@@ -540,8 +540,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SynchronizePosition: 1
-  m_SynchronizeRotation: 0
-  m_SynchronizeScale: 1
+  m_SynchronizeRotation: 1
+  m_SynchronizeScale: 0
   m_UseLocal: 1
 --- !u!114 &7412368418715565448
 MonoBehaviour:

@@ -71,16 +71,16 @@ public class CardManager : MonoBehaviourPunCallbacks
         }
     }
 
-    void CardAlignment(bool isMine)
+    public void CardAlignment(bool isMine)
     {
         List<PRS> originCardRPS = new List<PRS>();
         if (isMine)
         {
-            originCardRPS = RondAlignment(hostCardLeft, hostCardRight, hostCards.Count, 0.5f, Vector3.one/* * 1.9f*/);
+            originCardRPS = RondAlignment(hostCardLeft, hostCardRight, hostCards.Count, 0.5f, Vector3.one, isMine);
         }
         else
         {
-            originCardRPS = RondAlignment(guestCardLeft, guestCardRight, guestCards.Count, -0.5f, Vector3.one/* * 1.9f*/);
+            originCardRPS = RondAlignment(guestCardLeft, guestCardRight, guestCards.Count, -0.5f, Vector3.one, isMine);
         }
         var targetCards = isMine ? hostCards : guestCards;
         for (int i = 0; i < targetCards.Count; i++)
@@ -92,7 +92,7 @@ public class CardManager : MonoBehaviourPunCallbacks
         }
     }
 
-    List<PRS> RondAlignment(Transform leftTr, Transform rightTr, int objCount, float height, Vector3 scale)
+    List<PRS> RondAlignment(Transform leftTr, Transform rightTr, int objCount, float height, Vector3 scale, bool isMine)
     {
         float[] objLerps = new float[objCount];
         List<PRS> results = new List<PRS>(objCount);
@@ -116,7 +116,7 @@ public class CardManager : MonoBehaviourPunCallbacks
             var targetPos = Vector3.Lerp(leftTr.position, rightTr.position, objLerps[i]);
             Quaternion targetRot = Quaternion.identity;
 
-            if (PhotonNetwork.IsMasterClient && objCount < 4)
+            if (isMine  && objCount < 4)
             {
                 targetRot = Quaternion.Euler(0, 0, targetRot.eulerAngles.z + 180);
             }

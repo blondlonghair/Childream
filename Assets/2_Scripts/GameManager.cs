@@ -19,10 +19,17 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     GameState gameState = GameState.None;
+    PhotonView PV;
+    GameObject myPlayer;
 
     public static GameManager Instance;
 
     void Awake() => Instance = this;
+
+    void Start()
+    {
+        PV = GetComponent<PhotonView>();
+    }
 
     public override void OnJoinedRoom()
     {
@@ -45,28 +52,40 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnGameSetup()
     {
-        gameState = GameState.GameStart;
         PhotonNetwork.Instantiate("Prefab/Player", Vector3.zero, Quaternion.identity);
         PhotonNetwork.Instantiate("Prefab/Ranges", Vector3.zero, Quaternion.identity);
+
+        GameObject[] tPlayer;
+        tPlayer = GameObject.FindGameObjectsWithTag("Player");
+
+        foreach (var item in tPlayer)
+        {
+            if (item.GetComponent<PhotonView>().IsMine)
+            {
+                myPlayer = item;
+            }
+        }
+
+        gameState = GameState.GameStart;
     }
 
     void OnGameStart()
     {
-        CardManager.Instance.AddCard(true);
-        CardManager.Instance.AddCard(true);
-        CardManager.Instance.AddCard(true);
+        CardManager.Instance.AddCard(PV.IsMine);
+        CardManager.Instance.AddCard(PV.IsMine);
+        CardManager.Instance.AddCard(PV.IsMine);
 
         gameState = GameState.OnTurn;
     }
 
     void OnTurn()
     {
-
+        gameState = GameState.ActCard;
     }
 
     void OnActCard()
     {
-
+        gameState = GameState.PlayerMove;
     }
 
     void OnPlayerMove()

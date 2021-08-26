@@ -32,6 +32,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
     public PhotonView PV;
     public PRS originRPS;
 
+    public static Vector3 worldMousePos;
     GameObject target = null;
     bool isFlip = false;
 
@@ -49,8 +50,6 @@ public class ThisCard : MonoBehaviourPunCallbacks
             CardFront(false);
         }
     }
-
-    public static Vector3 worldMousePos;
 
     void Update()
     {
@@ -72,16 +71,23 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
             if (Input.GetMouseButtonDown(0))
             {
-                //gameObject.transform.parent = null;
+                if (PhotonNetwork.IsMasterClient)
+                {
+                    transform.rotation = Quaternion.Euler(0, 0, 180);
+                }
+                else
+                {
+                    transform.rotation = Quaternion.Euler(0, 0, 0);
+                }
             }
 
             if (Input.GetMouseButton(0))
             {
-                //transform.position = new Vector3(transform.position.x, transform.position.y, 1);
             }
 
             if (Input.GetMouseButtonUp(0))
             {
+                CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
                 target = null;
             }
         }
