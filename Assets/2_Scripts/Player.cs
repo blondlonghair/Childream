@@ -16,7 +16,7 @@ public class Player : MonoBehaviourPunCallbacks
     PhotonView PV;
     GameObject raycastTarget;
 
-    bool isStart = false;
+    //bool isStart = false;
 
     void Start()
     {
@@ -27,33 +27,36 @@ public class Player : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (PV.IsMine)
         {
-            CastRay("Card");
-
-            if (raycastTarget == null)
-                return;
-
-            if (raycastTarget.GetComponent<PhotonView>().IsMine)
+            if (Input.GetMouseButtonDown(0))
             {
-                print("down");
+                CastRay("Card");
+
+                if (raycastTarget == null)
+                    return;
+
+                if (raycastTarget.GetComponent<PhotonView>().IsMine)
+                {
+                    print("down");
+                }
             }
-        }
 
-        if (Input.GetMouseButton(0))
-        {
-        }
-
-        if (Input.GetMouseButtonUp(0))
-        {
-            CastRay("Range");
-
-            if (raycastTarget == null)
-                return;
-
-            if (!raycastTarget.GetComponentInParent<PhotonView>().IsMine)
+            if (Input.GetMouseButton(0))
             {
-                print("up");
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                CastRay("Range");
+
+                if (raycastTarget == null)
+                    return;
+
+                if (!raycastTarget.GetComponentInParent<PhotonView>().IsMine)
+                {
+                    print("up");
+                }
             }
         }
     }

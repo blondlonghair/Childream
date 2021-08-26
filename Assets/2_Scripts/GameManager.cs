@@ -11,11 +11,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         None,
         GameSetup,
         GameStart,
+        // 게임 루프
         OnTurn,
         ActCard,
         PlayerMove,
         PlayerAtk,
         TurnEnd,
+        // 게임 루프
+        GameEnd
     }
 
     GameState gameState = GameState.None;
@@ -47,6 +50,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             case GameState.PlayerMove: OnPlayerMove(); break;
             case GameState.PlayerAtk: OnPlayerAtk(); break;
             case GameState.TurnEnd: OnTurnEnd(); break;
+            case GameState.GameEnd: OnGameEnd(); break;
         }
     }
 
@@ -90,16 +94,21 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnPlayerMove()
     {
-
+        gameState = GameState.PlayerAtk;
     }
 
     void OnPlayerAtk()
     {
-
+        gameState = GameState.TurnEnd;
     }
 
     void OnTurnEnd()
     {
+        gameState = GameState.OnTurn;
+    }
 
+    void OnGameEnd()
+    {
+        PhotonNetwork.LoadLevel("MainScene");
     }
 }
