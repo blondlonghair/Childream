@@ -27,36 +27,35 @@ public class Player : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        if (PV.IsMine)
+        if (!PV.IsMine) return;
+        
+        if (Input.GetMouseButtonDown(0))
         {
-            if (Input.GetMouseButtonDown(0))
+            CastRay("Card");
+
+            if (raycastTarget == null)
+                return;
+
+            if (raycastTarget.GetComponent<PhotonView>().IsMine)
             {
-                CastRay("Card");
-
-                if (raycastTarget == null)
-                    return;
-
-                if (raycastTarget.GetComponent<PhotonView>().IsMine)
-                {
-                    print("down");
-                }
+                print("down");
             }
+        }
 
-            if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0))
+        {
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            CastRay("Range");
+
+            if (raycastTarget == null)
+                return;
+
+            if (!raycastTarget.GetComponentInParent<PhotonView>().IsMine)
             {
-            }
-
-            if (Input.GetMouseButtonUp(0))
-            {
-                CastRay("Range");
-
-                if (raycastTarget == null)
-                    return;
-
-                if (!raycastTarget.GetComponentInParent<PhotonView>().IsMine)
-                {
-                    print("up");
-                }
+                print("up");
             }
         }
     }

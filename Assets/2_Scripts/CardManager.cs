@@ -49,6 +49,7 @@ public class CardManager : MonoBehaviourPunCallbacks
         {
             SetupCard();
         }
+
         int temp = cardBuffer[0].id;
         cardBuffer.RemoveAt(0);
         return temp;
@@ -65,25 +66,18 @@ public class CardManager : MonoBehaviourPunCallbacks
         for (int i = 0; i < cardBuffer.Count; i++)
         {
             int rand = Random.Range(i, cardBuffer.Count);
-            Card temp = cardBuffer[i];
-            cardBuffer[i] = cardBuffer[rand];
-            cardBuffer[rand] = temp;
+            (cardBuffer[i], cardBuffer[rand]) = (cardBuffer[rand], cardBuffer[i]);
         }
     }
 
     public void CardAlignment(bool isMine)
     {
-        List<PRS> originCardRPS = new List<PRS>();
-        if (isMine)
-        {
-            originCardRPS = RondAlignment(hostCardLeft, hostCardRight, hostCards.Count, 0.5f, Vector3.one, isMine);
-        }
-        else
-        {
-            originCardRPS = RondAlignment(guestCardLeft, guestCardRight, guestCards.Count, -0.5f, Vector3.one, isMine);
-        }
+        var originCardRPS = new List<PRS>();
+        originCardRPS = isMine
+            ? RondAlignment(hostCardLeft, hostCardRight, hostCards.Count, 0.5f, Vector3.one, isMine)
+            : RondAlignment(guestCardLeft, guestCardRight, guestCards.Count, -0.5f, Vector3.one, isMine);
         var targetCards = isMine ? hostCards : guestCards;
-        for (int i = 0; i < targetCards.Count; i++)
+        for (var i = 0; i < targetCards.Count; i++)
         {
             var targetCard = targetCards[i];
 
@@ -99,15 +93,22 @@ public class CardManager : MonoBehaviourPunCallbacks
 
         switch (objCount)
         {
-            case 1: objLerps = new float[] { 0.5f }; break;
-            case 2: objLerps = new float[] { 0.27f, 0.73f }; break;
-            case 3: objLerps = new float[] { 0.1f, 0.5f, 0.9f }; break;
+            case 1:
+                objLerps = new float[] { 0.5f };
+                break;
+            case 2:
+                objLerps = new float[] { 0.27f, 0.73f };
+                break;
+            case 3:
+                objLerps = new float[] { 0.1f, 0.5f, 0.9f };
+                break;
             default:
                 float interval = 1f / (objCount - 1);
                 for (int i = 0; i < objCount; i++)
                 {
                     objLerps[i] = interval * i;
                 }
+
                 break;
         }
 
@@ -116,7 +117,7 @@ public class CardManager : MonoBehaviourPunCallbacks
             var targetPos = Vector3.Lerp(leftTr.position, rightTr.position, objLerps[i]);
             Quaternion targetRot = Quaternion.identity;
 
-            if (isMine  && objCount < 4)
+            if (isMine && objCount < 4)
             {
                 targetRot = Quaternion.Euler(0, 0, targetRot.eulerAngles.z + 180);
             }

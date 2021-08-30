@@ -71,14 +71,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
             if (Input.GetMouseButtonDown(0))
             {
-                if (PhotonNetwork.IsMasterClient)
-                {
-                    transform.rotation = Quaternion.Euler(0, 0, 180);
-                }
-                else
-                {
-                    transform.rotation = Quaternion.Euler(0, 0, 0);
-                }
+                transform.rotation = Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0);
             }
 
             if (Input.GetMouseButton(0))
