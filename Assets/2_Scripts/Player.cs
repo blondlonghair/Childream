@@ -42,43 +42,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (!PV.IsMine) return;
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            CastRay("Card");
-
-            if (raycastTarget == null)
-                return;
-
-            if (raycastTarget.GetComponent<PhotonView>().IsMine)
-            {
-                print("down");
-            }
-        }
-
-        if (Input.GetMouseButton(0))
-        {
-            if (raycastTarget == null)
-                return;
-
-            if (raycastTarget.GetComponent<ThisCard>().targetType == TargetType.ALL)
-            {
-                raycastTarget.transform.position = worldMousePos;
-            }
-        }
-
-        if (Input.GetMouseButtonUp(0))
-        {
-            CastRayRange();
-
-            if (rangeTarget == null)
-                return;
-
-            if (!rangeTarget.GetComponent<PhotonView>().IsMine)
-            {
-                print("up" + rangeTarget.tag);
-                print(SelectRange);
-            }
-        }
+        MouseInput();
     }
 
     void CastRay(string _tag)
@@ -149,6 +113,47 @@ public class Player : MonoBehaviourPunCallbacks
                 gameObject.name = "HostPlayer";
                 print("Host");
 
+            }
+        }
+    }
+
+    void MouseInput()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            CastRay("Card");
+
+            if (raycastTarget == null)
+                return;
+
+            if (raycastTarget.GetComponent<PhotonView>().IsMine)
+            {
+                print("down");
+            }
+        }
+
+        if (Input.GetMouseButton(0))
+        {
+            if (raycastTarget == null)
+                return;
+
+            if (raycastTarget.GetComponent<ThisCard>().targetType == TargetType.ALL)
+            {
+                raycastTarget.transform.position = worldMousePos;
+            }
+        }
+
+        if (Input.GetMouseButtonUp(0))
+        {
+            CastRayRange();
+
+            if (rangeTarget == null)
+                return;
+
+            if (!rangeTarget.GetComponent<PhotonView>().IsMine)
+            {
+                print("up" + rangeTarget.tag);
+                print(SelectRange);
             }
         }
     }
