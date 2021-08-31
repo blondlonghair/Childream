@@ -6,6 +6,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.Networking;
 using System;
+using Utils;
 
 public class ServerManager : MonoBehaviourPunCallbacks
 {
@@ -20,7 +21,7 @@ public class ServerManager : MonoBehaviourPunCallbacks
 
         StartCoroutine(WebCheck());
 
-        PV = GetComponent<PhotonView>();
+        PV = this.PV();
     }
 
     public override void OnConnectedToMaster()

@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Card
+  - Range1
+  - Range2
+  - Range3
   - Range
   layers:
   - Default

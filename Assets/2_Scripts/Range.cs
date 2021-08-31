@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using Utils;
 
 public class Range : MonoBehaviourPunCallbacks
 {
@@ -10,7 +11,7 @@ public class Range : MonoBehaviourPunCallbacks
 
     void Awake()
     {
-        PV = GetComponent<PhotonView>();
+        PV = this.PV();
 
         if (PhotonNetwork.IsMasterClient)
         {
@@ -22,5 +23,10 @@ public class Range : MonoBehaviourPunCallbacks
             transform.position = new Vector3(0, -5, 0);
             gameObject.name = "GuestRange";
         }
+    }
+
+    void OnEnter()
+    {
+        
     }
 }

@@ -7,7 +7,6 @@ using Utils;
 
 public class CardManager : MonoBehaviourPunCallbacks
 {
-    [SerializeField] GameObject cardPrefab;
     [SerializeField] List<ThisCard> hostCards;
     [SerializeField] List<ThisCard> guestCards;
 

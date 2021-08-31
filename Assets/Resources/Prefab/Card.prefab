@@ -560,6 +560,7 @@ MonoBehaviour:
   cardName: 
   cost: 0
   cardType: 0
+  actType: 0
   targetType: 0
   power: 0
   cardDesc: 

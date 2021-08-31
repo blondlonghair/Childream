@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class CameraManager : MonoBehaviourPunCallbacks
+public class PVObject : MonoBehaviourPunCallbacks
 {
     public override void OnJoinedRoom()
     {

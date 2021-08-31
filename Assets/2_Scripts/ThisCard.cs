@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using Photon.Pun;
 using Photon.Realtime;
 using Utils;
+using Enums;
 
 public class ThisCard : MonoBehaviourPunCallbacks
 {
@@ -17,6 +17,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
     public string cardName;
     public int cost;
     public CardType cardType;
+    public ActType actType;
     public TargetType targetType;
     public int power;
     [TextArea(5, 10)] public string cardDesc;
@@ -32,13 +33,11 @@ public class ThisCard : MonoBehaviourPunCallbacks
     public PhotonView PV;
     public PRS originRPS;
 
-    public static Vector3 worldMousePos;
     GameObject target = null;
-    bool isFlip = false;
 
     void Start()
     {
-        PV = GetComponent<PhotonView>();
+        PV = this.PV();
 
         if (PV.IsMine)
         {
@@ -53,9 +52,6 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        Vector3 mousePos = Input.mousePosition;
-        worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
-        worldMousePos.z = 0;
 
         if (Input.GetMouseButtonDown(0) && PV.IsMine)
         {
@@ -64,11 +60,6 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
         if (target == gameObject)
         {
-            if (targetType == TargetType.ALL)
-            {
-                target.transform.position = worldMousePos;
-            }
-
             if (Input.GetMouseButtonDown(0))
             {
                 transform.rotation = Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0);
@@ -115,6 +106,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
         cardName = CardData.CardList[cardId].cardName;
         cost = CardData.CardList[cardId].cost;
         cardType = CardData.CardList[cardId].cardType;
+        actType = CardData.CardList[cardId].actType;
         targetType = CardData.CardList[cardId].targetType;
         power = CardData.CardList[cardId].power;
         cardDesc = CardData.CardList[cardId].cardDesc;
@@ -135,31 +127,12 @@ public class ThisCard : MonoBehaviourPunCallbacks
         {
             gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
             gameObject.transform.GetChild(0).GetChild(1).gameObject.SetActive(false);
-            isFlip = false;
         }
 
         else
         {
             gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
             gameObject.transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
-            isFlip = true;
-        }
-    }
-
-    void CardFlip()
-    {
-        if (isFlip)
-        {
-            gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
-            gameObject.transform.GetChild(0).GetChild(1).gameObject.SetActive(false);
-            isFlip = false;
-        }
-
-        else
-        {
-            gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
-            gameObject.transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
-            isFlip = true;
         }
     }
 

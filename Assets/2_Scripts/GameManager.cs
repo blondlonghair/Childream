@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using Utils;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -11,19 +12,21 @@ public class GameManager : MonoBehaviourPunCallbacks
         None,
         GameSetup,
         GameStart,
+
         // 게임 루프
         OnTurn,
         ActCard,
         PlayerMove,
         PlayerAtk,
         TurnEnd,
+
         // 게임 루프
         GameEnd
     }
 
     GameState gameState = GameState.None;
-    PhotonView PV;
-    GameObject myPlayer;
+    GameObject myPlayer, therePlayer;
+    private PhotonView PV;
 
     public static GameManager Instance;
 
@@ -31,7 +34,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        PV = GetComponent<PhotonView>();
+        PV = this.PV();
     }
 
     public override void OnJoinedRoom()
@@ -39,18 +42,42 @@ public class GameManager : MonoBehaviourPunCallbacks
         gameState = GameState.GameSetup;
     }
 
+    public bool AllPlayerIn()
+    {
+        return PhotonNetwork.PlayerList.Length == 2;
+    }
+
     void Update()
     {
-        switch (gameState)
+        //if (AllPlayerIn())
         {
-            case GameState.GameSetup: OnGameSetup(); break;
-            case GameState.GameStart: OnGameStart(); break;
-            case GameState.OnTurn: OnTurn(); break;
-            case GameState.ActCard: OnActCard(); break;
-            case GameState.PlayerMove: OnPlayerMove(); break;
-            case GameState.PlayerAtk: OnPlayerAtk(); break;
-            case GameState.TurnEnd: OnTurnEnd(); break;
-            case GameState.GameEnd: OnGameEnd(); break;
+            switch (gameState)
+            {
+                case GameState.GameSetup:
+                    OnGameSetup();
+                    break;
+                case GameState.GameStart:
+                    OnGameStart();
+                    break;
+                case GameState.OnTurn:
+                    OnTurn();
+                    break;
+                case GameState.ActCard:
+                    OnActCard();
+                    break;
+                case GameState.PlayerMove:
+                    OnPlayerMove();
+                    break;
+                case GameState.PlayerAtk:
+                    OnPlayerAtk();
+                    break;
+                case GameState.TurnEnd:
+                    OnTurnEnd();
+                    break;
+                case GameState.GameEnd:
+                    OnGameEnd();
+                    break;
+            }
         }
     }
 
@@ -67,6 +94,10 @@ public class GameManager : MonoBehaviourPunCallbacks
             if (item.GetComponent<PhotonView>().IsMine)
             {
                 myPlayer = item;
+            }
+            else
+            {
+                therePlayer = item;
             }
         }
 

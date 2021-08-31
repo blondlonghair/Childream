@@ -4,6 +4,10 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using System;
+using System.Text.RegularExpressions;
+using UnityEngine.UI;
+using Utils;
+using Enums;
 
 public class Player : MonoBehaviourPunCallbacks
 {
@@ -13,22 +17,31 @@ public class Player : MonoBehaviourPunCallbacks
     public float MaxMp;
     public float CurMp;
 
+    public int PlayerCurState;
+    public bool IsPlayerLocked;
+    public int SelectRange;
+
     PhotonView PV;
     GameObject raycastTarget;
+    GameObject rangeTarget;
 
-    //bool isStart = false;
+    public static Vector3 worldMousePos;
 
     void Start()
     {
-        PV = GetComponent<PhotonView>();
+        PV = this.PV();
 
         PlayerSetup();
     }
 
     void Update()
     {
+        Vector3 mousePos = Input.mousePosition;
+        worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
+        worldMousePos.z = 0;
+
         if (!PV.IsMine) return;
-        
+
         if (Input.GetMouseButtonDown(0))
         {
             CastRay("Card");
@@ -44,18 +57,26 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (Input.GetMouseButton(0))
         {
+            if (raycastTarget == null)
+                return;
+
+            if (raycastTarget.GetComponent<ThisCard>().targetType == TargetType.ALL)
+            {
+                raycastTarget.transform.position = worldMousePos;
+            }
         }
 
         if (Input.GetMouseButtonUp(0))
         {
-            CastRay("Range");
+            CastRayRange();
 
-            if (raycastTarget == null)
+            if (rangeTarget == null)
                 return;
 
-            if (!raycastTarget.GetComponentInParent<PhotonView>().IsMine)
+            if (!rangeTarget.GetComponent<PhotonView>().IsMine)
             {
-                print("up");
+                print("up" + rangeTarget.tag);
+                print(SelectRange);
             }
         }
     }
@@ -76,6 +97,23 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
+    void CastRayRange()
+    {
+        rangeTarget = null;
+
+        Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(pos, Vector2.zero, 0f);
+
+        for (int i = 0; i < hits.Length; i++)
+        {
+            if (hits[i].collider != null && hits[i].collider.gameObject.tag.Contains("Range"))
+            {
+                SelectRange = int.Parse(hits[i].collider.gameObject.tag.Replace("Range", ""));
+                rangeTarget = hits[i].collider.gameObject;
+            }
+        }
+    }
+
     void PlayerSetup()
     {
         if (PhotonNetwork.IsMasterClient)
@@ -85,12 +123,15 @@ public class Player : MonoBehaviourPunCallbacks
                 transform.position = new Vector3(0, 5, 0);
                 transform.Rotate(0, 0, 180);
                 gameObject.name = "HostPlayer";
+                print("Host");
             }
             else
             {
                 transform.position = new Vector3(0, -5, 0);
                 transform.Rotate(0, 0, 180);
                 gameObject.name = "GuestPlayer";
+                print("Guest");
+
             }
         }
         else
@@ -98,12 +139,16 @@ public class Player : MonoBehaviourPunCallbacks
             if (PV.IsMine)
             {
                 transform.position = new Vector3(0, -5, 0);
-                gameObject.name = "HostPlayer";
+                gameObject.name = "GuestPlayer";
+                print("Guest");
+
             }
             else
             {
                 transform.position = new Vector3(0, 5, 0);
-                gameObject.name = "GuestPlayer";
+                gameObject.name = "HostPlayer";
+                print("Host");
+
             }
         }
     }

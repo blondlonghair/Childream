@@ -124,6 +124,9 @@ MonoBehaviour:
   CurHp: 30
   MaxMp: 0
   CurMp: 0
+  PlayerCurState: 0
+  IsPlayerLocked: 0
+  SelectRange: 0
 --- !u!114 &131893732960399841
 MonoBehaviour:
   m_ObjectHideFlags: 0
