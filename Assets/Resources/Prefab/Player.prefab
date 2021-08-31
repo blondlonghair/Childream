@@ -127,6 +127,7 @@ MonoBehaviour:
   PlayerCurState: 0
   IsPlayerLocked: 0
   SelectRange: 0
+  fdsa: 0
 --- !u!114 &131893732960399841
 MonoBehaviour:
   m_ObjectHideFlags: 0

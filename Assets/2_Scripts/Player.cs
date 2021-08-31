@@ -25,6 +25,8 @@ public class Player : MonoBehaviourPunCallbacks
     GameObject raycastTarget;
     GameObject rangeTarget;
 
+    [SerializeField] private int fdsa;
+
     public static Vector3 worldMousePos;
 
     void Start()
@@ -43,6 +45,14 @@ public class Player : MonoBehaviourPunCallbacks
         if (!PV.IsMine) return;
 
         MouseInput();
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+            PV.RPC(nameof(Fdsa), RpcTarget.AllBuffered);
+    }
+
+    [PunRPC] void Fdsa()
+    {
+        fdsa++;
     }
 
     void CastRay(string _tag)
