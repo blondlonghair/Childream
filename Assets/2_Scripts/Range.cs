@@ -16,6 +16,7 @@ public class Range : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             transform.position = new Vector3(0, 5, 0);
+            transform.Rotate(0,0,180);
             gameObject.name = "MasterRange";
         }
         else if (!PhotonNetwork.IsMasterClient)

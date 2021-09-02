@@ -47,6 +47,7 @@ MonoBehaviour:
   - Setup
   - PlayerSetup
   - Fdsa
+  - SyncPlayerHp
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

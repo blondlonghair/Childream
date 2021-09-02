@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6467517843919791294}
   - component: {fileID: 6467517843919791295}
-  - component: {fileID: 6467517843919791293}
   - component: {fileID: 3526124671331361918}
+  - component: {fileID: 6467517843919791293}
   - component: {fileID: 131893732960399841}
   m_Layer: 0
   m_Name: Player
@@ -85,6 +85,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &3526124671331361918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6467517843919791266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e607698edb0defb47ba456a3b1bd4383, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxHp: 20
+  CurHp: 20
+  MaxMp: 5
+  CurMp: 5
+  PlayerCurState: 0
+  IsPlayerLocked: 0
+  SelectRange: 0
 --- !u!114 &6467517843919791293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,26 +127,6 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &3526124671331361918
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6467517843919791266}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e607698edb0defb47ba456a3b1bd4383, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MaxHp: 30
-  CurHp: 30
-  MaxMp: 0
-  CurMp: 0
-  PlayerCurState: 0
-  IsPlayerLocked: 0
-  SelectRange: 0
-  fdsa: 0
 --- !u!114 &131893732960399841
 MonoBehaviour:
   m_ObjectHideFlags: 0

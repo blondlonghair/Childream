@@ -5,7 +5,6 @@ using Photon.Pun;
 using Photon.Realtime;
 using System;
 using System.Text.RegularExpressions;
-using UnityEngine.UI;
 using Utils;
 using Enums;
 
@@ -17,15 +16,13 @@ public class Player : MonoBehaviourPunCallbacks
     public float MaxMp;
     public float CurMp;
 
-    public int PlayerCurState;
-    public bool IsPlayerLocked;
-    public int SelectRange;
+    [HideInInspector] public int PlayerCurState;
+    [HideInInspector] public bool IsPlayerLocked;
+    [HideInInspector] public int SelectRange;
 
     PhotonView PV;
     GameObject raycastTarget;
     GameObject rangeTarget;
-
-    [SerializeField] private int fdsa;
 
     public static Vector3 worldMousePos;
 
@@ -45,16 +42,8 @@ public class Player : MonoBehaviourPunCallbacks
         if (!PV.IsMine) return;
 
         MouseInput();
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            PV.RPC(nameof(Fdsa), RpcTarget.AllBuffered);
     }
-
-    [PunRPC] void Fdsa()
-    {
-        fdsa++;
-    }
-
+    
     void CastRay(string _tag)
     {
         raycastTarget = null;
