@@ -22,8 +22,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     public GameState gameState = GameState.None;
-    public Player myPlayer, therePlayer;
     public PhotonView PV;
+    public Player myPlayer, therePlayer;
+    public bool isHostReady, isGuestReady;
 
     public List<Tuple<int, int>> HostBattleList = new List<Tuple<int, int>>();
     public List<Tuple<int, int>> GuestBattleList = new List<Tuple<int, int>>();
@@ -111,15 +112,15 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnGameStart()
     {
-        CardManager.Instance.AddCard(PV.IsMine);
-        CardManager.Instance.AddCard(PV.IsMine);
-        CardManager.Instance.AddCard(PV.IsMine);
-
         gameState = GameState.StartTurn;
     }
 
     void OnStartTurn()
     {
+        CardManager.Instance.AddCard(PV.IsMine);
+        CardManager.Instance.AddCard(PV.IsMine);
+        CardManager.Instance.AddCard(PV.IsMine);
+
         gameState = GameState.LastTurn;
     }
 
@@ -130,7 +131,12 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnPlayerTurn()
     {
-        gameState = GameState.PlayerTurn;
+        if (isHostReady && isGuestReady)
+        {
+            gameState = GameState.TurnEnd;
+            isHostReady = false;
+            isGuestReady = false;
+        }
     }
 
     void OnTurnEnd()
@@ -145,7 +151,27 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void TurnEndButton()
     {
-        
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PV.RPC(nameof(HostReady), RpcTarget.AllBuffered);
+        }
+
+        else
+        {
+            PV.RPC(nameof(GuestReady), RpcTarget.AllBuffered);
+        }
+    }
+
+    [PunRPC]
+    void HostReady()
+    {
+        isHostReady = true;
+    }
+
+    [PunRPC]
+    void GuestReady()
+    {
+        isGuestReady = true;
     }
 
     public void AddBattleList(int SelectRange, int id, bool isHost)
