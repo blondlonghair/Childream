@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,8 +23,11 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public GameState gameState = GameState.None;
     public Player myPlayer, therePlayer;
-    private PhotonView PV;
+    public PhotonView PV;
 
+    public List<Tuple<int, int>> HostBattleList = new List<Tuple<int, int>>();
+    public List<Tuple<int, int>> GuestBattleList = new List<Tuple<int, int>>();
+    
     public static GameManager Instance;
     
     void Awake() => Instance = this;
@@ -45,6 +49,14 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void Update()
     {
+        if (HostBattleList.Count != 0)
+        {
+            Debug.Log(HostBattleList[0]);
+        }
+
+        if (GuestBattleList.Count != 0)
+            print(GuestBattleList[0]);
+        
         //if (AllPlayerIn())
         {
             switch (gameState)
@@ -134,5 +146,29 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void TurnEndButton()
     {
         
+    }
+
+    public void AddBattleList(int SelectRange, int id, bool isHost)
+    {
+        if (isHost)
+        {
+            PV.RPC(nameof(AddHostBattleList), RpcTarget.AllBuffered, SelectRange, id);
+        }
+        else
+        {
+            PV.RPC(nameof(AddGuestBattleList), RpcTarget.AllBuffered, SelectRange, id);
+        }
+    }
+    
+    [PunRPC]
+    private void AddHostBattleList(int SelectRange, int cardId)
+    {
+            HostBattleList.Add(new Tuple<int, int>(SelectRange, cardId));
+    }
+    
+    [PunRPC]
+    private void AddGuestBattleList(int SelectRange, int cardId)
+    {
+        GuestBattleList.Add(new Tuple<int, int>(SelectRange, cardId));
     }
 }

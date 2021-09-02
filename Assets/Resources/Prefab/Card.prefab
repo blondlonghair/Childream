@@ -427,9 +427,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5791461945556063910}
   - component: {fileID: 2858787853400216184}
+  - component: {fileID: 7412368418715565448}
   - component: {fileID: 5860495970024549474}
   - component: {fileID: 4467828720838701395}
-  - component: {fileID: 7412368418715565448}
   - component: {fileID: 7514355708811014575}
   m_Layer: 0
   m_Name: Card
@@ -504,6 +504,34 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &7412368418715565448
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4498043186111655030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0732b3a96039f0b468656363aa36908c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cardId: 1
+  id: 0
+  cardName: 
+  cost: 0
+  cardType: 0
+  actType: 0
+  targetType: 0
+  power: 0
+  cardDesc: 
+  cardImage: {fileID: 0}
+  nameText: {fileID: 5246438152893667890}
+  costText: {fileID: 4606866584187314402}
+  powerText: {fileID: 5259305640081632426}
+  DescText: {fileID: 6804714893601007416}
+  CardImage: {fileID: 2056631417460249793}
+  PV: {fileID: 0}
 --- !u!114 &5860495970024549474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -543,34 +571,6 @@ MonoBehaviour:
   m_SynchronizeRotation: 1
   m_SynchronizeScale: 0
   m_UseLocal: 1
---- !u!114 &7412368418715565448
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4498043186111655030}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0732b3a96039f0b468656363aa36908c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cardId: 1
-  id: 0
-  cardName: 
-  cost: 0
-  cardType: 0
-  actType: 0
-  targetType: 0
-  power: 0
-  cardDesc: 
-  cardImage: {fileID: 0}
-  nameText: {fileID: 5246438152893667890}
-  costText: {fileID: 4606866584187314402}
-  powerText: {fileID: 5259305640081632426}
-  DescText: {fileID: 6804714893601007416}
-  CardImage: {fileID: 2056631417460249793}
-  PV: {fileID: 0}
 --- !u!61 &7514355708811014575
 BoxCollider2D:
   m_ObjectHideFlags: 0

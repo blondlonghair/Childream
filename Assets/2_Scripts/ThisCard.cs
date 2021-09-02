@@ -92,7 +92,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 0f);
 
-        if (hit.collider != null && hit.collider.gameObject.tag.Contains("Range"))
+        if (hit.collider != null && hit.collider.gameObject.CompareTag("Card"))
         {
             target = hit.collider.gameObject;
         }

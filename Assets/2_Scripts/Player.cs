@@ -94,7 +94,6 @@ public class Player : MonoBehaviourPunCallbacks
                 transform.Rotate(0, 0, 180);
                 gameObject.name = "GuestPlayer";
                 print("Guest");
-
             }
         }
         else
@@ -111,7 +110,6 @@ public class Player : MonoBehaviourPunCallbacks
                 transform.position = new Vector3(0, 5, 0);
                 gameObject.name = "HostPlayer";
                 print("Host");
-
             }
         }
     }
@@ -127,7 +125,7 @@ public class Player : MonoBehaviourPunCallbacks
 
             if (raycastTarget.GetComponent<PhotonView>().IsMine)
             {
-                print("down");
+                // print("down");
             }
         }
 
@@ -151,8 +149,12 @@ public class Player : MonoBehaviourPunCallbacks
 
             if (!rangeTarget.GetComponent<PhotonView>().IsMine)
             {
-                print("up" + rangeTarget.tag);
-                print(SelectRange);
+                // print("up" + rangeTarget.tag);
+                // print(SelectRange);
+                // print(raycastTarget.GetComponent<ThisCard>().id);
+                // print(PhotonNetwork.IsMasterClient);
+                
+                GameManager.Instance.AddBattleList(SelectRange, raycastTarget.GetComponent<ThisCard>().id, PhotonNetwork.IsMasterClient);
             }
         }
     }
