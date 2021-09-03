@@ -101,6 +101,8 @@ MonoBehaviour:
   CurHp: 20
   MaxMp: 5
   CurMp: 5
+  MaxMoveCount: 0
+  CurMoveCount: 0
   PlayerCurState: 0
   IsPlayerLocked: 0
   SelectRange: 0

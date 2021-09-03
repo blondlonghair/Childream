@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public GameState gameState = GameState.None;
     public PhotonView PV;
-    public Player myPlayer, therePlayer;
+    public Player myPlayer, opponentPlayer;
     public bool isHostReady, isGuestReady;
 
     public List<Tuple<int, int>> HostBattleList = new List<Tuple<int, int>>();
@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (GuestBattleList.Count != 0)
             print(GuestBattleList[0]);
         
-        //if (AllPlayerIn())
+        if (AllPlayerIn())
         {
             switch (gameState)
             {
@@ -103,7 +103,8 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
             else
             {
-                therePlayer = item.GetComponent<Player>();
+                opponentPlayer = item.GetComponent<Player>();
+                print(opponentPlayer);
             }
         }
 
@@ -121,6 +122,13 @@ public class GameManager : MonoBehaviourPunCallbacks
         CardManager.Instance.AddCard(PV.IsMine);
         CardManager.Instance.AddCard(PV.IsMine);
 
+        // myPlayer.CurMp = myPlayer.MaxMp;
+        // opponentPlayer.CurMp = opponentPlayer.MaxMp;
+        //
+        // myPlayer.CurMoveCount = myPlayer.MaxMoveCount;
+        // opponentPlayer.CurMoveCount = opponentPlayer.MaxMoveCount;
+        
+        
         gameState = GameState.LastTurn;
     }
 

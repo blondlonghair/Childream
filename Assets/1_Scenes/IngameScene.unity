@@ -1070,7 +1070,7 @@ MonoBehaviour:
   gameState: 0
   PV: {fileID: 0}
   myPlayer: {fileID: 0}
-  therePlayer: {fileID: 0}
+  opponentPlayer: {fileID: 0}
   isHostReady: 0
   isGuestReady: 0
 --- !u!114 &1911228710
