@@ -78,14 +78,7 @@ public class CardManager : MonoBehaviourPunCallbacks
         }
     }
 
-    [PunRPC]
     public void CardAlignment(bool isMine)
-    {
-        PV.RPC(nameof(_CardAlignment), RpcTarget.AllBuffered, isMine);
-    }
-    
-    [PunRPC]
-    public void _CardAlignment(bool isMine)
     {
         var originCardRPS = new List<PRS>();
         originCardRPS = isMine
