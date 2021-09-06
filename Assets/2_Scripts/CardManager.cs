@@ -16,6 +16,7 @@ public class CardManager : MonoBehaviourPunCallbacks
     [SerializeField] Transform guestCardRight;
 
     public static CardManager Instance;
+    private PhotonView PV;
 
     List<Card> cardBuffer = new List<Card>();
 
@@ -34,6 +35,12 @@ public class CardManager : MonoBehaviourPunCallbacks
 
     public void AddCard(bool isMine)
     {
+        PV.RPC(nameof(_AddCard), RpcTarget.AllBuffered, isMine);
+    }
+    
+    [PunRPC]
+    public void _AddCard(bool isMine)
+    {
         var cardObject = PhotonNetwork.Instantiate("Prefab/Card", Vector3.zero, Quaternion.identity);
         var card = cardObject.GetComponent<ThisCard>();
         card.Setup(PopCard(), isMine);
@@ -42,6 +49,7 @@ public class CardManager : MonoBehaviourPunCallbacks
         CardAlignment(isMine);
     }
 
+    [PunRPC]
     public int PopCard()
     {
         if (cardBuffer.Count == 0)
@@ -54,6 +62,7 @@ public class CardManager : MonoBehaviourPunCallbacks
         return temp;
     }
 
+    [PunRPC]
     void SetupCard()
     {
         for (int i = 1; i < CardData.CardList.Count; i++)
@@ -69,7 +78,14 @@ public class CardManager : MonoBehaviourPunCallbacks
         }
     }
 
+    [PunRPC]
     public void CardAlignment(bool isMine)
+    {
+        PV.RPC(nameof(_CardAlignment), RpcTarget.AllBuffered, isMine);
+    }
+    
+    [PunRPC]
+    public void _CardAlignment(bool isMine)
     {
         var originCardRPS = new List<PRS>();
         originCardRPS = isMine

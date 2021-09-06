@@ -16,9 +16,9 @@ public class ThisCard : MonoBehaviourPunCallbacks
     public int id;
     public string cardName;
     public int cost;
-    public CardType cardType;
-    public ActType actType;
-    public TargetType targetType;
+    // public CardType cardType;
+    // public ActType actType;
+    // public TargetType targetType;
     public int power;
     [TextArea(5, 10)] public string cardDesc;
     public Sprite cardImage;
@@ -105,10 +105,10 @@ public class ThisCard : MonoBehaviourPunCallbacks
         id = CardData.CardList[cardId].id;
         cardName = CardData.CardList[cardId].cardName;
         cost = CardData.CardList[cardId].cost;
-        cardType = CardData.CardList[cardId].cardType;
-        actType = CardData.CardList[cardId].actType;
-        targetType = CardData.CardList[cardId].targetType;
-        power = CardData.CardList[cardId].power;
+        // cardType = CardData.CardList[cardId].cardType;
+        // actType = CardData.CardList[cardId].actType;
+        // targetType = CardData.CardList[cardId].targetType;
+        // power = CardData.CardList[cardId].power;
         cardDesc = CardData.CardList[cardId].cardDesc;
         cardImage = CardData.CardList[cardId].cardImage;
 

@@ -6,6 +6,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.Networking;
 using System;
+using ExitGames.Client.Photon;
 using Utils;
 
 public class ServerManager : MonoBehaviourPunCallbacks
@@ -22,6 +23,8 @@ public class ServerManager : MonoBehaviourPunCallbacks
         StartCoroutine(WebCheck());
 
         PV = this.PV();
+        
+        // PhotonPeer.RegisterType(Player, )
     }
 
     public override void OnConnectedToMaster()

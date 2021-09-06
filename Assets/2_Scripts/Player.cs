@@ -32,6 +32,7 @@ public class Player : MonoBehaviourPunCallbacks
     {
         PV = this.PV();
 
+        // GameManager.Instance.AddPlayer(this, PhotonNetwork.IsMasterClient);
         PlayerSetup();
     }
 
@@ -89,14 +90,14 @@ public class Player : MonoBehaviourPunCallbacks
                 transform.position = new Vector3(0, 5, 0);
                 transform.Rotate(0, 0, 180);
                 gameObject.name = "HostPlayer";
-                print("Host");
+                // print("Host");
             }
             else
             {
                 transform.position = new Vector3(0, -5, 0);
                 transform.Rotate(0, 0, 180);
                 gameObject.name = "GuestPlayer";
-                print("Guest");
+                // print("Guest");
             }
         }
         else
@@ -105,13 +106,13 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 transform.position = new Vector3(0, -5, 0);
                 gameObject.name = "GuestPlayer";
-                print("Guest");
+                // print("Guest");
             }
             else
             {
                 transform.position = new Vector3(0, 5, 0);
                 gameObject.name = "HostPlayer";
-                print("Host");
+                // print("Host");
             }
         }
     }
@@ -192,10 +193,12 @@ public class Player : MonoBehaviourPunCallbacks
             if (raycastTarget == null)
                 return;
 
-            if (raycastTarget.GetComponent<ThisCard>().targetType == TargetType.ALL)
-            {
-                raycastTarget.transform.position = worldMousePos;
-            }
+            raycastTarget.transform.position = worldMousePos;
+
+            // if (raycastTarget.GetComponent<ThisCard>().targetType == TargetType.ALL)
+            // {
+            //     raycastTarget.transform.position = worldMousePos;
+            // }
         }
 
         if (Input.GetMouseButtonUp(0))

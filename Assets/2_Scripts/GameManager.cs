@@ -23,14 +23,16 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public GameState gameState = GameState.None;
     public PhotonView PV;
-    public Player myPlayer, opponentPlayer;
+    public Player HostPlayer, GuestPlayer;
     public bool isHostReady, isGuestReady;
+
+    private float CardInvokeTimer;
 
     public List<Tuple<int, int>> HostBattleList = new List<Tuple<int, int>>();
     public List<Tuple<int, int>> GuestBattleList = new List<Tuple<int, int>>();
-    
+
     public static GameManager Instance;
-    
+
     void Awake() => Instance = this;
 
     void Start()
@@ -42,6 +44,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         gameState = GameState.GameSetup;
     }
+
 
     public bool AllPlayerIn()
     {
@@ -57,7 +60,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (GuestBattleList.Count != 0)
             print(GuestBattleList[0]);
-        
+
         if (AllPlayerIn())
         {
             switch (gameState)
@@ -72,7 +75,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                     OnStartTurn();
                     break;
                 case GameState.LastTurn:
-                    OnActCard();
+                    OnLastTurn();
                     break;
                 case GameState.PlayerTurn:
                     OnPlayerTurn();
@@ -92,27 +95,17 @@ public class GameManager : MonoBehaviourPunCallbacks
         PhotonNetwork.Instantiate("Prefab/Player", Vector3.zero, Quaternion.identity);
         PhotonNetwork.Instantiate("Prefab/Ranges", Vector3.zero, Quaternion.identity);
 
-        GameObject[] tPlayer;
-        tPlayer = GameObject.FindGameObjectsWithTag("Player");
-
-        foreach (var item in tPlayer)
-        {
-            if (item.GetComponent<PhotonView>().IsMine)
-            {
-                myPlayer = item.GetComponent<Player>();
-            }
-            else
-            {
-                opponentPlayer = item.GetComponent<Player>();
-                print(opponentPlayer);
-            }
-        }
-
         gameState = GameState.GameStart;
     }
 
     void OnGameStart()
     {
+        if (!Checkplayers())
+            return;
+
+        PV.RPC(nameof(InitPlayers), RpcTarget.AllBuffered);
+        print(HostPlayer);
+        print(GuestPlayer);
         gameState = GameState.StartTurn;
     }
 
@@ -122,18 +115,28 @@ public class GameManager : MonoBehaviourPunCallbacks
         CardManager.Instance.AddCard(PV.IsMine);
         CardManager.Instance.AddCard(PV.IsMine);
 
-        // myPlayer.CurMp = myPlayer.MaxMp;
-        // opponentPlayer.CurMp = opponentPlayer.MaxMp;
-        //
-        // myPlayer.CurMoveCount = myPlayer.MaxMoveCount;
-        // opponentPlayer.CurMoveCount = opponentPlayer.MaxMoveCount;
+        HostPlayer.CurMp = HostPlayer.MaxMp;
+        GuestPlayer.CurMp = GuestPlayer.MaxMp;
         
-        
+        HostPlayer.CurMoveCount = HostPlayer.MaxMoveCount;
+        GuestPlayer.CurMoveCount = GuestPlayer.MaxMoveCount;
+
         gameState = GameState.LastTurn;
     }
 
-    void OnActCard()
+    void OnLastTurn()
     {
+        CardInvokeTimer += Time.deltaTime;
+
+        if (CardInvokeTimer >= 0.5)
+        {
+            // HostBattleList[0];
+            // GuestBattleList[0]; //여기서 배틀리스트들 인보크
+
+            HostBattleList.RemoveAt(0);
+            GuestBattleList.RemoveAt(0);
+        }
+
         gameState = GameState.PlayerTurn;
     }
 
@@ -193,16 +196,39 @@ public class GameManager : MonoBehaviourPunCallbacks
             PV.RPC(nameof(AddGuestBattleList), RpcTarget.AllBuffered, SelectRange, id);
         }
     }
-    
+
     [PunRPC]
     private void AddHostBattleList(int SelectRange, int cardId)
     {
-            HostBattleList.Add(new Tuple<int, int>(SelectRange, cardId));
+        HostBattleList.Add(new Tuple<int, int>(SelectRange, cardId));
     }
-    
+
     [PunRPC]
     private void AddGuestBattleList(int SelectRange, int cardId)
     {
         GuestBattleList.Add(new Tuple<int, int>(SelectRange, cardId));
+    }
+
+    [PunRPC]
+    void InitPlayers()
+    {
+        HostPlayer = GameObject.Find("HostPlayer").GetComponent<Player>();
+        GuestPlayer = GameObject.Find("GuestPlayer").GetComponent<Player>();
+    }
+
+    bool Checkplayers() => GameObject.FindGameObjectsWithTag("Player").Length == 2;
+
+    public void AddPlayer(Player player, bool isMaster)
+    {
+        PV.RPC(nameof(_AddPlayer), RpcTarget.AllBuffered, player, isMaster);
+    }
+
+    [PunRPC]
+    void _AddPlayer(Player player, bool isMaster)
+    {
+        if (isMaster)
+            HostPlayer = player;
+        else
+            GuestPlayer = player;
     }
 }

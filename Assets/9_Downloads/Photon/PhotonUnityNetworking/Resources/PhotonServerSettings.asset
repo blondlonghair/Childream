@@ -54,6 +54,13 @@ MonoBehaviour:
   - GuestReady
   - HostReady
   - MovePlayerIndex
+  - InitPlayers
+  - _AddPlayer
+  - _AddCard
+  - _CardAlignment
+  - CardAlignment
+  - PopCard
+  - SetupCard
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
