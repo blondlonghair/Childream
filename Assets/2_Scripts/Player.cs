@@ -10,8 +10,7 @@ using Enums;
 
 public class Player : MonoBehaviourPunCallbacks
 {
-    [Header("플레이어 정보")] 
-    public float MaxHp;
+    [Header("플레이어 정보")] public float MaxHp;
     public float CurHp;
     public float MaxMp;
     public float CurMp;
@@ -121,7 +120,7 @@ public class Player : MonoBehaviourPunCallbacks
     {
         if (CurMoveCount <= MaxMoveCount)
             return;
-        
+
         if (Input.GetKeyDown(KeyCode.Q))
         {
             PV.RPC(nameof(MovePlayerIndex), RpcTarget.AllBuffered, 1);
@@ -193,7 +192,8 @@ public class Player : MonoBehaviourPunCallbacks
             if (raycastTarget == null)
                 return;
 
-            raycastTarget.transform.position = worldMousePos;
+            if (raycastTarget.GetComponent<PhotonView>().IsMine)
+                raycastTarget.transform.position = worldMousePos;
 
             // if (raycastTarget.GetComponent<ThisCard>().targetType == TargetType.ALL)
             // {

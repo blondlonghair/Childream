@@ -46,9 +46,4 @@ public class Range : MonoBehaviourPunCallbacks
             }
         }
     }
-
-    void OnEnter()
-    {
-        
-    }
 }

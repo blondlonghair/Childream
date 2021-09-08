@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,13 +10,13 @@ using Enums;
 
 public class ThisCard : MonoBehaviourPunCallbacks
 {
-    [Header("카드 아이디 입력")]
-    [SerializeField] int cardId;
+    [Header("카드 아이디 입력")] [SerializeField] int cardId;
 
-    [Header("카드 정보")]
-    public int id;
+    [Header("카드 정보")] public int id;
     public string cardName;
+
     public int cost;
+
     // public CardType cardType;
     // public ActType actType;
     // public TargetType targetType;
@@ -23,8 +24,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
     [TextArea(5, 10)] public string cardDesc;
     public Sprite cardImage;
 
-    [Header("카드 요소")]
-    [SerializeField] Text nameText;
+    [Header("카드 요소")] [SerializeField] Text nameText;
     [SerializeField] Text costText;
     [SerializeField] Text powerText;
     [SerializeField] Text DescText;
@@ -35,24 +35,41 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
     GameObject target = null;
 
-    void Start()
+    private void Awake()
     {
         PV = this.PV();
-
+        
         if (PV.IsMine)
         {
-            CardFront(true);
+            if (PhotonNetwork.IsMasterClient)
+                CardManager.Instance.hostCards.Add(this);
+            else
+                CardManager.Instance.guestCards.Add(this);
         }
 
         else
         {
-            CardFront(false);
+            if (PhotonNetwork.IsMasterClient)
+                CardManager.Instance.guestCards.Add(this);
+            else
+                CardManager.Instance.hostCards.Add(this);
         }
+        
+        CardManager.Instance.CardAlignment(PV.IsMine);
+        CardManager.Instance.CardAlignment(!PV.IsMine);
+    }
+
+    void Start()
+    {
+        if (PV.IsMine)
+            CardFront(true);
+        
+        else
+            CardFront(false);
     }
 
     void Update()
     {
-
         if (Input.GetMouseButtonDown(0) && PV.IsMine)
         {
             CastRay();
@@ -80,6 +97,11 @@ public class ThisCard : MonoBehaviourPunCallbacks
         {
             if (PV.IsMine)
             {
+                if (PhotonNetwork.IsMasterClient)
+                    CardManager.Instance.hostCards.Remove(this);
+                else
+                    CardManager.Instance.guestCards.Remove(this);
+
                 PhotonNetwork.Destroy(gameObject);
             }
         }
@@ -142,4 +164,20 @@ public class ThisCard : MonoBehaviourPunCallbacks
         transform.rotation = prs.rot;
         transform.localScale = prs.scale;
     }
+
+    // public void OnPhotonInstantiate(PhotonMessageInfo info)
+    // {
+    //     PV = this.PV();
+    //     if (PV.IsMine)
+    //     {
+    //         CardFront(true);
+    //         CardManager.Instance.CardAlignment(PV.IsMine);
+    //     }
+    //
+    //     else
+    //     {
+    //         CardFront(false);
+    //         CardManager.Instance.CardAlignment(PV.IsMine);
+    //     }
+    // }
 }

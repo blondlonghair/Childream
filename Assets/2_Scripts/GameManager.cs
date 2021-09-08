@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public bool isHostReady, isGuestReady;
 
     private float CardInvokeTimer;
+    [SerializeField] private float CardInovkeInvaldTime;
 
     public List<Tuple<int, int>> HostBattleList = new List<Tuple<int, int>>();
     public List<Tuple<int, int>> GuestBattleList = new List<Tuple<int, int>>();
@@ -111,13 +112,15 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnStartTurn()
     {
+        print("AddCard" + (PhotonNetwork.IsMasterClient ? " Host" : " Guest"));
+
         CardManager.Instance.AddCard(PV.IsMine);
         CardManager.Instance.AddCard(PV.IsMine);
         CardManager.Instance.AddCard(PV.IsMine);
 
         HostPlayer.CurMp = HostPlayer.MaxMp;
         GuestPlayer.CurMp = GuestPlayer.MaxMp;
-        
+
         HostPlayer.CurMoveCount = HostPlayer.MaxMoveCount;
         GuestPlayer.CurMoveCount = GuestPlayer.MaxMoveCount;
 
@@ -157,7 +160,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnGameEnd()
     {
-        PhotonNetwork.LoadLevel("MainScene");
+        // PhotonNetwork.LoadLevel("MainScene");
     }
 
     public void TurnEndButton()

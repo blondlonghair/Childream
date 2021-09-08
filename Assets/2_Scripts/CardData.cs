@@ -78,8 +78,8 @@ public class AtkCard2 : AtkCard
 {
     public AtkCard2()
     {
-        id = 1;
-        cardName = "Atk1";
+        id = 2;
+        cardName = "Atk2";
     }
     public override void CardEffective()
     {
@@ -90,8 +90,8 @@ public class AtkCard3 : AtkCard
 {
     public AtkCard3()
     {
-        id = 1;
-        cardName = "Atk1";
+        id = 3;
+        cardName = "Atk3";
     }
     public override void CardEffective()
     {
@@ -102,8 +102,8 @@ public class DefCard1 : DefCard
 {
     public DefCard1()
     {
-        id = 1;
-        cardName = "Atk1";
+        id = 4;
+        cardName = "Def1";
     }
     public override void CardEffective()
     {
@@ -114,8 +114,8 @@ public class DefCard2 : DefCard
 {
     public DefCard2()
     {
-        id = 1;
-        cardName = "Atk1";
+        id = 5;
+        cardName = "Def2";
     }
     public override void CardEffective()
     {
@@ -126,8 +126,8 @@ public class DefCard3 : DefCard
 {
     public DefCard3()
     {
-        id = 1;
-        cardName = "Atk1";
+        id = 6;
+        cardName = "Def3";
     }
     public override void CardEffective()
     {
@@ -138,8 +138,8 @@ public class ActCard1 : ActCard
 {
     public ActCard1()
     {
-        id = 1;
-        cardName = "Atk1";
+        id = 7;
+        cardName = "Act1";
     }
     public override void CardEffective()
     {
@@ -150,8 +150,8 @@ public class ActCard2 : ActCard
 {
     public ActCard2()
     {
-        id = 1;
-        cardName = "Atk1";
+        id = 8;
+        cardName = "Act2";
     }
     public override void CardEffective()
     {
@@ -162,8 +162,8 @@ public class ActCard3 : ActCard
 {
     public ActCard3()
     {
-        id = 1;
-        cardName = "Atk1";
+        id = 9;
+        cardName = "Act3";
     }
     public override void CardEffective()
     {

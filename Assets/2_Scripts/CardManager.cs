@@ -7,8 +7,8 @@ using Utils;
 
 public class CardManager : MonoBehaviourPunCallbacks
 {
-    [SerializeField] List<ThisCard> hostCards;
-    [SerializeField] List<ThisCard> guestCards;
+    public List<ThisCard> hostCards;
+    public List<ThisCard> guestCards;
 
     [SerializeField] Transform hostCardLeft;
     [SerializeField] Transform hostCardRight;
@@ -24,6 +24,7 @@ public class CardManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        PV = this.PV();
         SetupCard();
     }
 
@@ -35,21 +36,30 @@ public class CardManager : MonoBehaviourPunCallbacks
 
     public void AddCard(bool isMine)
     {
-        PV.RPC(nameof(_AddCard), RpcTarget.AllBuffered, isMine);
+        _AddCard(isMine);
+        // PV.RPC(nameof(_AddCard), RpcTarget.AllBuffered, isMine);
     }
-    
-    [PunRPC]
+
+    // [PunRPC]
     public void _AddCard(bool isMine)
     {
         var cardObject = PhotonNetwork.Instantiate("Prefab/Card", Vector3.zero, Quaternion.identity);
         var card = cardObject.GetComponent<ThisCard>();
         card.Setup(PopCard(), isMine);
-        (isMine ? hostCards : guestCards).Add(card);
+        // (isMine ? hostCards : guestCards).Add(card);
 
         CardAlignment(isMine);
     }
 
-    [PunRPC]
+    // [PunRPC]
+    // public void AddList(bool isMine, ThisCard card)
+    // {
+    //     if (isMine)
+    //         hostCards.Add(card);
+    //     else
+    //         guestCards.Add(card);
+    // }
+
     public int PopCard()
     {
         if (cardBuffer.Count == 0)
@@ -62,7 +72,6 @@ public class CardManager : MonoBehaviourPunCallbacks
         return temp;
     }
 
-    [PunRPC]
     void SetupCard()
     {
         for (int i = 1; i < CardData.CardList.Count; i++)
@@ -80,10 +89,18 @@ public class CardManager : MonoBehaviourPunCallbacks
 
     public void CardAlignment(bool isMine)
     {
+        _CardAlignment(isMine);
+        // PV.RPC(nameof(_CardAlignment), RpcTarget.AllBuffered, isMine);
+    }
+
+    // [PunRPC]
+    public void _CardAlignment(bool isMine)
+    {
         var originCardRPS = new List<PRS>();
         originCardRPS = isMine
             ? RondAlignment(hostCardLeft, hostCardRight, hostCards.Count, 0.5f, Vector3.one, isMine)
             : RondAlignment(guestCardLeft, guestCardRight, guestCards.Count, -0.5f, Vector3.one, isMine);
+
         var targetCards = isMine ? hostCards : guestCards;
         for (var i = 0; i < targetCards.Count; i++)
         {
@@ -102,13 +119,13 @@ public class CardManager : MonoBehaviourPunCallbacks
         switch (objCount)
         {
             case 1:
-                objLerps = new float[] { 0.5f };
+                objLerps = new float[] {0.5f};
                 break;
             case 2:
-                objLerps = new float[] { 0.27f, 0.73f };
+                objLerps = new float[] {0.27f, 0.73f};
                 break;
             case 3:
-                objLerps = new float[] { 0.1f, 0.5f, 0.9f };
+                objLerps = new float[] {0.1f, 0.5f, 0.9f};
                 break;
             default:
                 float interval = 1f / (objCount - 1);
