@@ -61,6 +61,10 @@ MonoBehaviour:
   - CardAlignment
   - PopCard
   - SetupCard
+  - _AddGuestBattleList
+  - _AddHostBattleList
+  - _GuestReady
+  - _HostReady
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

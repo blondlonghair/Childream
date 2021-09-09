@@ -1068,11 +1068,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameState: 0
-  PV: {fileID: 0}
   HostPlayer: {fileID: 0}
   GuestPlayer: {fileID: 0}
   isHostReady: 0
   isGuestReady: 0
+  CardInovkeInvaldTime: 0
 --- !u!114 &1911228710
 MonoBehaviour:
   m_ObjectHideFlags: 0

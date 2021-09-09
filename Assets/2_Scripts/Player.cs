@@ -169,6 +169,7 @@ public class Player : MonoBehaviourPunCallbacks
             }
         }
 
+        PlayerCurState = index;
         CurMoveCount--;
     }
 

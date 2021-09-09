@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
@@ -11,10 +12,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 {
     public enum GameState
     {
-        None,
-        GameSetup,
-        GameStart,
-        StartTurn, //턴이 시작될때
+        None = 1,
+        GameSetup = 2,
+        GameStart = 4,
+        StartTurn = 8, //턴이 시작될때
         LastTurn, //마지막 턴의 카드들의 효과 발동
         PlayerTurn, //플레이어 행동 (이동, 카드 사용)
         TurnEnd, //턴이 끝날때
@@ -22,12 +23,15 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     public GameState gameState = GameState.None;
-    public PhotonView PV;
     public Player HostPlayer, GuestPlayer;
     public bool isHostReady, isGuestReady;
+    private PhotonView PV;
 
     private float CardInvokeTimer;
     [SerializeField] private float CardInovkeInvaldTime;
+
+    // public delegate void HostInvoker(int i, int j);
+    // public event HostInvoker hostInvoker;
 
     public List<Tuple<int, int>> HostBattleList = new List<Tuple<int, int>>();
     public List<Tuple<int, int>> GuestBattleList = new List<Tuple<int, int>>();
@@ -39,6 +43,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     void Start()
     {
         PV = this.PV();
+        AddBattleList(1, 0, PhotonNetwork.IsMasterClient);
+        AddBattleList(1, 0, !PhotonNetwork.IsMasterClient);
     }
 
     public override void OnJoinedRoom()
@@ -54,13 +60,11 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        if (HostBattleList.Count != 0)
-        {
-            Debug.Log(HostBattleList[0]);
-        }
-
-        if (GuestBattleList.Count != 0)
-            print(GuestBattleList[0]);
+        // if (HostBattleList.Count != 0)
+        //     Debug.Log(HostBattleList[0]);
+        //
+        // if (GuestBattleList.Count != 0)
+        //     print(GuestBattleList[0]);
 
         if (AllPlayerIn())
         {
@@ -131,30 +135,53 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         CardInvokeTimer += Time.deltaTime;
 
-        if (CardInvokeTimer >= 0.5)
+        //3초마다 리스트 인보크
+        if (CardInvokeTimer >= 3)
         {
-            // HostBattleList[0];
-            // GuestBattleList[0]; //여기서 배틀리스트들 인보크
+            try
+            {
+                if (HostBattleList.Count <= 0 && GuestBattleList.Count <= 0)
+                {
+                    gameState = GameState.PlayerTurn;
+                }
 
-            HostBattleList.RemoveAt(0);
-            GuestBattleList.RemoveAt(0);
+                CardData.CardList[HostBattleList[0].Item2].CardEffective(HostPlayer);
+                CardData.CardList[GuestBattleList[0].Item2].CardEffective(GuestPlayer);
+                print("리스트 Effective");
+
+                HostBattleList.RemoveAt(0);
+                GuestBattleList.RemoveAt(0);
+                print("리스트 Remove");
+            }
+            catch (Exception e)
+            {
+                print(e);
+            }
+            finally
+            {
+                CardInvokeTimer = 0;
+            }
+            
         }
-
-        gameState = GameState.PlayerTurn;
     }
 
     void OnPlayerTurn()
     {
+        //플레이어 모두 버튼 누르면 다음 턴으로
         if (isHostReady && isGuestReady)
         {
-            gameState = GameState.TurnEnd;
             isHostReady = false;
             isGuestReady = false;
+
+            gameState = GameState.TurnEnd;
         }
     }
 
     void OnTurnEnd()
     {
+        HostPlayer.IsPlayerLocked = false;
+        GuestPlayer.IsPlayerLocked = false;
+
         gameState = GameState.StartTurn;
     }
 
@@ -167,23 +194,23 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            PV.RPC(nameof(HostReady), RpcTarget.AllBuffered);
+            PV.RPC(nameof(_HostReady), RpcTarget.AllBuffered);
         }
 
         else
         {
-            PV.RPC(nameof(GuestReady), RpcTarget.AllBuffered);
+            PV.RPC(nameof(_GuestReady), RpcTarget.AllBuffered);
         }
     }
 
     [PunRPC]
-    void HostReady()
+    void _HostReady()
     {
         isHostReady = true;
     }
 
     [PunRPC]
-    void GuestReady()
+    void _GuestReady()
     {
         isGuestReady = true;
     }
@@ -192,22 +219,22 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (isHost)
         {
-            PV.RPC(nameof(AddHostBattleList), RpcTarget.AllBuffered, SelectRange, id);
+            PV.RPC(nameof(_AddHostBattleList), RpcTarget.AllBuffered, SelectRange, id);
         }
         else
         {
-            PV.RPC(nameof(AddGuestBattleList), RpcTarget.AllBuffered, SelectRange, id);
+            PV.RPC(nameof(_AddGuestBattleList), RpcTarget.AllBuffered, SelectRange, id);
         }
     }
 
     [PunRPC]
-    private void AddHostBattleList(int SelectRange, int cardId)
+    private void _AddHostBattleList(int SelectRange, int cardId)
     {
         HostBattleList.Add(new Tuple<int, int>(SelectRange, cardId));
     }
 
     [PunRPC]
-    private void AddGuestBattleList(int SelectRange, int cardId)
+    private void _AddGuestBattleList(int SelectRange, int cardId)
     {
         GuestBattleList.Add(new Tuple<int, int>(SelectRange, cardId));
     }

@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using Enums;
+using Photon.Pun.Demo.PunBasics;
 
 public class Card
 {
@@ -14,25 +14,31 @@ public class Card
     public string cardDesc;
     public Sprite cardImage;
     public CardType cardType;
-    public virtual void CardEffective() { }
+    
+    public virtual void CardEffective(Player _target) { }
 }
 
 public abstract class AtkCard : Card
 {
+    public int damage;
+    
     public AtkCard()
     {
-        cardType = CardType.ACT;
+        cardType = CardType.ATK;
     }
-    public abstract override void CardEffective();
+    public abstract override void CardEffective(Player _target);
 }
 
 public abstract class DefCard : Card
 {
+    public int counter;
+    public int defence;
+    
     public DefCard()
     {
         cardType = CardType.DEF;
     }
-    public abstract override void CardEffective();
+    public abstract override void CardEffective(Player _target);
 }
 
 public abstract class ActCard : Card
@@ -41,36 +47,42 @@ public abstract class ActCard : Card
     {
         cardType = CardType.ACT;
     }
-    public abstract override void CardEffective();
+    public abstract override void CardEffective(Player _target);
 }
 
-public class EmptyCard : ActCard
+public class EmptyCard : Card
 {
     public EmptyCard()
     {
+        cardType = CardType.NONE;
         id = 0;
         cardName = "None";
         cost = 0;
         cardDesc = "NoneNoneNoneNoneNoneNoneNoneNoneNoneNoneNoneNoneNone";
+        cardImage = Resources.Load<Sprite>("Character/None");
     }
-    public override void CardEffective()
+
+    public override void CardEffective(Player _target)
     {
     }
 }
 
 public class AtkCard1 : AtkCard
 {
+    private float damage = 1;
+    
     public AtkCard1()
     {
         id = 1;
         cardName = "Atk1";
         cost = 1;
         cardDesc = "지정한 장소를 공격합니다. 만약 해당 장소에 상대방이 있다면 피해를 5 줍니다.";
-        
+        cardImage = Resources.Load<Sprite>("Character/Atk1");
+        damage = 5;
     }
-    public override void CardEffective()
+    public override void CardEffective(Player _target)
     {
-        
+        _target.CurHp -= damage;
     }
 }
 
@@ -80,9 +92,14 @@ public class AtkCard2 : AtkCard
     {
         id = 2;
         cardName = "Atk2";
+        cost = 1;
+        cardDesc = "지정한 장소를 공격합니다. 만약 해당 장소에 상대방이 있다면 피해를 5 줍니다.";
+        cardImage = Resources.Load<Sprite>("Character/Atk2");
+        damage = 2;
     }
-    public override void CardEffective()
+    public override void CardEffective(Player _target)
     {
+        _target.CurHp -= damage;
     }
 }
 
@@ -92,9 +109,12 @@ public class AtkCard3 : AtkCard
     {
         id = 3;
         cardName = "Atk3";
+        cardImage = Resources.Load<Sprite>("Character/Atk3");
+        damage = 10;
     }
-    public override void CardEffective()
+    public override void CardEffective(Player _target)
     {
+        _target.CurHp -= damage;
     }
 }
 
@@ -104,8 +124,10 @@ public class DefCard1 : DefCard
     {
         id = 4;
         cardName = "Def1";
+        cardImage = Resources.Load<Sprite>("Character/Def1");
+
     }
-    public override void CardEffective()
+    public override void CardEffective(Player _target)
     {
     }
 }
@@ -116,8 +138,10 @@ public class DefCard2 : DefCard
     {
         id = 5;
         cardName = "Def2";
+        cardImage = Resources.Load<Sprite>("Character/Def2");
+
     }
-    public override void CardEffective()
+    public override void CardEffective(Player _target)
     {
     }
 }
@@ -128,8 +152,10 @@ public class DefCard3 : DefCard
     {
         id = 6;
         cardName = "Def3";
+        cardImage = Resources.Load<Sprite>("Character/Def3");
+
     }
-    public override void CardEffective()
+    public override void CardEffective(Player _target)
     {
     }
 }
@@ -140,8 +166,10 @@ public class ActCard1 : ActCard
     {
         id = 7;
         cardName = "Act1";
+        cardImage = Resources.Load<Sprite>("Character/Act1");
+
     }
-    public override void CardEffective()
+    public override void CardEffective(Player _target)
     {
     }
 }
@@ -152,8 +180,10 @@ public class ActCard2 : ActCard
     {
         id = 8;
         cardName = "Act2";
+        cardImage = Resources.Load<Sprite>("Character/Act2");
+
     }
-    public override void CardEffective()
+    public override void CardEffective(Player _target)
     {
     }
 }
@@ -164,9 +194,12 @@ public class ActCard3 : ActCard
     {
         id = 9;
         cardName = "Act3";
+        cardImage = Resources.Load<Sprite>("Character/Act3");
+
     }
-    public override void CardEffective()
+    public override void CardEffective(Player _target)
     {
+        _target.IsPlayerLocked = true;
     }
 }
 
