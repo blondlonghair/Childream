@@ -5,7 +5,7 @@ namespace Enums
         NONE,
         ATK,
         DEF,
-        ACT
+        SUP
     }
 
     public enum TargetType

@@ -52,46 +52,34 @@ public class GameManager : MonoBehaviourPunCallbacks
         gameState = GameState.GameSetup;
     }
 
-
-    public bool AllPlayerIn()
-    {
-        return PhotonNetwork.PlayerList.Length == 2;
-    }
-
     void Update()
     {
-        // if (HostBattleList.Count != 0)
-        //     Debug.Log(HostBattleList[0]);
-        //
-        // if (GuestBattleList.Count != 0)
-        //     print(GuestBattleList[0]);
-
-        if (AllPlayerIn())
+        if (!AllPlayerIn())
+            return;
+        
+        switch (gameState)
         {
-            switch (gameState)
-            {
-                case GameState.GameSetup:
-                    OnGameSetup();
-                    break;
-                case GameState.GameStart:
-                    OnGameStart();
-                    break;
-                case GameState.StartTurn:
-                    OnStartTurn();
-                    break;
-                case GameState.LastTurn:
-                    OnLastTurn();
-                    break;
-                case GameState.PlayerTurn:
-                    OnPlayerTurn();
-                    break;
-                case GameState.TurnEnd:
-                    OnTurnEnd();
-                    break;
-                case GameState.GameEnd:
-                    OnGameEnd();
-                    break;
-            }
+            case GameState.GameSetup:
+                OnGameSetup();
+                break;
+            case GameState.GameStart:
+                OnGameStart();
+                break;
+            case GameState.StartTurn:
+                OnStartTurn();
+                break;
+            case GameState.LastTurn:
+                OnLastTurn();
+                break;
+            case GameState.PlayerTurn:
+                OnPlayerTurn();
+                break;
+            case GameState.TurnEnd:
+                OnTurnEnd();
+                break;
+            case GameState.GameEnd:
+                OnGameEnd();
+                break;
         }
     }
 
@@ -109,8 +97,8 @@ public class GameManager : MonoBehaviourPunCallbacks
             return;
 
         PV.RPC(nameof(InitPlayers), RpcTarget.AllBuffered);
-        print(HostPlayer);
-        print(GuestPlayer);
+        // print(HostPlayer);
+        // print(GuestPlayer);
         gameState = GameState.StartTurn;
     }
 
@@ -138,30 +126,25 @@ public class GameManager : MonoBehaviourPunCallbacks
         //3초마다 리스트 인보크
         if (CardInvokeTimer >= 3)
         {
-            try
+            if (HostBattleList.Count > 0)
             {
-                if (HostBattleList.Count <= 0 && GuestBattleList.Count <= 0)
-                {
-                    gameState = GameState.PlayerTurn;
-                }
-
                 CardData.CardList[HostBattleList[0].Item2].CardEffective(HostPlayer);
-                CardData.CardList[GuestBattleList[0].Item2].CardEffective(GuestPlayer);
-                print("리스트 Effective");
-
                 HostBattleList.RemoveAt(0);
+            }
+
+            if (GuestBattleList.Count > 0)
+            {
+                CardData.CardList[GuestBattleList[0].Item2].CardEffective(GuestPlayer);
                 GuestBattleList.RemoveAt(0);
-                print("리스트 Remove");
             }
-            catch (Exception e)
+
+
+            if (HostBattleList.Count <= 0 && GuestBattleList.Count <= 0)
             {
-                print(e);
+                gameState = GameState.PlayerTurn;
             }
-            finally
-            {
-                CardInvokeTimer = 0;
-            }
-            
+
+            CardInvokeTimer = 0;
         }
     }
 
@@ -247,6 +230,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     }
 
     bool Checkplayers() => GameObject.FindGameObjectsWithTag("Player").Length == 2;
+    
+    public bool AllPlayerIn()
+    {
+        return PhotonNetwork.PlayerList.Length == 2;
+    }
 
     public void AddPlayer(Player player, bool isMaster)
     {

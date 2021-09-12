@@ -219,6 +219,8 @@ public class Player : MonoBehaviourPunCallbacks
                 GameManager.Instance.AddBattleList(SelectRange, raycastTarget.GetComponent<ThisCard>().id,
                     PhotonNetwork.IsMasterClient);
             }
+
+            raycastTarget = null;
         }
     }
 }

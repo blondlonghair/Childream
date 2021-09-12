@@ -5,6 +5,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using Enums;
 using Photon.Pun.Demo.PunBasics;
+using UnityEngine.UIElements;
 
 public class Card
 {
@@ -14,18 +15,21 @@ public class Card
     public string cardDesc;
     public Sprite cardImage;
     public CardType cardType;
-    
-    public virtual void CardEffective(Player _target) { }
+
+    public virtual void CardEffective(Player _target)
+    {
+    }
 }
 
 public abstract class AtkCard : Card
 {
     public int damage;
-    
+
     public AtkCard()
     {
         cardType = CardType.ATK;
     }
+
     public abstract override void CardEffective(Player _target);
 }
 
@@ -33,11 +37,12 @@ public abstract class DefCard : Card
 {
     public int counter;
     public int defence;
-    
+
     public DefCard()
     {
         cardType = CardType.DEF;
     }
+
     public abstract override void CardEffective(Player _target);
 }
 
@@ -45,8 +50,9 @@ public abstract class ActCard : Card
 {
     public ActCard()
     {
-        cardType = CardType.ACT;
+        cardType = CardType.SUP;
     }
+
     public abstract override void CardEffective(Player _target);
 }
 
@@ -55,11 +61,11 @@ public class EmptyCard : Card
     public EmptyCard()
     {
         cardType = CardType.NONE;
-        id = 0;
-        cardName = "None";
-        cost = 0;
-        cardDesc = "NoneNoneNoneNoneNoneNoneNoneNoneNoneNoneNoneNoneNone";
-        cardImage = Resources.Load<Sprite>("Character/None");
+        id = CardData.CardTable[0].id;
+        cardName = CardData.CardTable[0].name;
+        cost = CardData.CardTable[0].cost;
+        cardDesc = CardData.CardTable[0].desc;
+        cardImage = Resources.Load<Sprite>("Card/Cards/None");
     }
 
     public override void CardEffective(Player _target)
@@ -69,17 +75,16 @@ public class EmptyCard : Card
 
 public class AtkCard1 : AtkCard
 {
-    private float damage = 1;
-    
     public AtkCard1()
     {
-        id = 1;
-        cardName = "Atk1";
-        cost = 1;
-        cardDesc = "지정한 장소를 공격합니다. 만약 해당 장소에 상대방이 있다면 피해를 5 줍니다.";
-        cardImage = Resources.Load<Sprite>("Character/Atk1");
+        id = CardData.CardTable[1].id;
+        cardName = CardData.CardTable[1].name;
+        cost = CardData.CardTable[1].cost;
+        cardDesc = CardData.CardTable[1].desc;
+        cardImage = Resources.Load<Sprite>("Card/Cards/Atk_1");
         damage = 5;
     }
+
     public override void CardEffective(Player _target)
     {
         _target.CurHp -= damage;
@@ -90,13 +95,14 @@ public class AtkCard2 : AtkCard
 {
     public AtkCard2()
     {
-        id = 2;
-        cardName = "Atk2";
-        cost = 1;
-        cardDesc = "지정한 장소를 공격합니다. 만약 해당 장소에 상대방이 있다면 피해를 5 줍니다.";
-        cardImage = Resources.Load<Sprite>("Character/Atk2");
+        id = CardData.CardTable[2].id;
+        cardName = CardData.CardTable[2].name;
+        cost = CardData.CardTable[2].cost;
+        cardDesc = CardData.CardTable[2].desc;
+        cardImage = Resources.Load<Sprite>("Card/Cards/Atk_2");
         damage = 2;
     }
+
     public override void CardEffective(Player _target)
     {
         _target.CurHp -= damage;
@@ -107,11 +113,14 @@ public class AtkCard3 : AtkCard
 {
     public AtkCard3()
     {
-        id = 3;
-        cardName = "Atk3";
-        cardImage = Resources.Load<Sprite>("Character/Atk3");
+        id = CardData.CardTable[3].id;
+        cardName = CardData.CardTable[3].name;
+        cost = CardData.CardTable[3].cost;
+        cardDesc = CardData.CardTable[3].desc;
+        cardImage = Resources.Load<Sprite>("Card/Cards/Atk_3");
         damage = 10;
     }
+
     public override void CardEffective(Player _target)
     {
         _target.CurHp -= damage;
@@ -122,11 +131,13 @@ public class DefCard1 : DefCard
 {
     public DefCard1()
     {
-        id = 4;
-        cardName = "Def1";
-        cardImage = Resources.Load<Sprite>("Character/Def1");
-
+        id = CardData.CardTable[4].id;
+        cardName = CardData.CardTable[4].name;
+        cost = CardData.CardTable[4].cost;
+        cardDesc = CardData.CardTable[4].desc;
+        cardImage = Resources.Load<Sprite>("Card/Cards/Def_1");
     }
+
     public override void CardEffective(Player _target)
     {
     }
@@ -136,11 +147,13 @@ public class DefCard2 : DefCard
 {
     public DefCard2()
     {
-        id = 5;
-        cardName = "Def2";
-        cardImage = Resources.Load<Sprite>("Character/Def2");
-
+        id = CardData.CardTable[5].id;
+        cardName = CardData.CardTable[5].name;
+        cost = CardData.CardTable[5].cost;
+        cardDesc = CardData.CardTable[5].desc;
+        cardImage = Resources.Load<Sprite>("Card/Cards/Def_2");
     }
+
     public override void CardEffective(Player _target)
     {
     }
@@ -150,124 +163,94 @@ public class DefCard3 : DefCard
 {
     public DefCard3()
     {
-        id = 6;
-        cardName = "Def3";
-        cardImage = Resources.Load<Sprite>("Character/Def3");
-
+        id = CardData.CardTable[6].id;
+        cardName = CardData.CardTable[6].name;
+        cost = CardData.CardTable[6].cost;
+        cardDesc = CardData.CardTable[6].desc;
+        cardImage = Resources.Load<Sprite>("Card/Cards/Def_3");
     }
+
     public override void CardEffective(Player _target)
     {
     }
 }
 
-public class ActCard1 : ActCard
+public class SupCard1 : ActCard
 {
-    public ActCard1()
+    public SupCard1()
     {
-        id = 7;
-        cardName = "Act1";
-        cardImage = Resources.Load<Sprite>("Character/Act1");
-
+        id = CardData.CardTable[7].id;
+        cardName = CardData.CardTable[7].name;
+        cost = CardData.CardTable[7].cost;
+        cardDesc = CardData.CardTable[7].desc;
+        cardImage = Resources.Load<Sprite>("Card/Cards/Sup_1");
     }
+
     public override void CardEffective(Player _target)
     {
     }
 }
 
-public class ActCard2 : ActCard
+public class SupCard2 : ActCard
 {
-    public ActCard2()
+    public SupCard2()
     {
-        id = 8;
-        cardName = "Act2";
-        cardImage = Resources.Load<Sprite>("Character/Act2");
-
+        id = CardData.CardTable[8].id;
+        cardName = CardData.CardTable[8].name;
+        cost = CardData.CardTable[8].cost;
+        cardDesc = CardData.CardTable[8].desc;
+        cardImage = Resources.Load<Sprite>("Card/Cards/Sup_2");
     }
+
     public override void CardEffective(Player _target)
     {
     }
 }
 
-public class ActCard3 : ActCard
+public class SupCard3 : ActCard
 {
-    public ActCard3()
+    public SupCard3()
     {
-        id = 9;
-        cardName = "Act3";
-        cardImage = Resources.Load<Sprite>("Character/Act3");
-
+        id = CardData.CardTable[9].id;
+        cardName = CardData.CardTable[9].name;
+        cost = CardData.CardTable[9].cost;
+        cardDesc = CardData.CardTable[9].desc;
+        cardImage = Resources.Load<Sprite>("Card/Cards/Sup_3");
     }
+
     public override void CardEffective(Player _target)
     {
         _target.IsPlayerLocked = true;
     }
 }
 
-// [System.Serializable]
-// public class Card
-// {
-//     public int id;
-//     public string cardName;
-//     public int cost;
-//     public CardType cardType;
-//     public ActType actType;
-//     public TargetType targetType;
-//     public int power;
-//     [TextArea(5, 10)] public string cardDesc;
-//     public Sprite cardImage;
-//
-//     public Card(int _id, string _cardName, int _cost, CardType _cardType, TargetType _targetType, int _power, string _cardDesc, Sprite _cardImage)
-//     {
-//         id = _id;
-//         cardName = _cardName;
-//         cost = _cost;
-//         cardType = _cardType;
-//         targetType = _targetType;
-//         power = _power;
-//         cardDesc = _cardDesc;
-//         cardImage = _cardImage;
-//     }
-//
-//     public Card(int _id, string _cardName, int _cost, CardType _cardType, ActType _actType, TargetType _targetType, int _power, string _cardDesc, Sprite _cardImage)
-//     {
-//         id = _id;
-//         cardName = _cardName;
-//         cost = _cost;
-//         cardType = _cardType;
-//         actType = _actType;
-//         targetType = _targetType;
-//         power = _power;
-//         cardDesc = _cardDesc;
-//         cardImage = _cardImage;
-//     }
-// }
+//아이디	이름	마나	설명	종류
+public class CardTable
+{
+    public int id;
+    public string name;
+    public int cost;
+    public string desc;
+
+    public CardTable(int id, string name, int cost, string desc)
+    {
+        this.id = id;
+        this.name = name;
+        this.cost = cost;
+        this.desc = desc;
+    }
+}
 
 public class CardData : MonoBehaviour
 {
     public static readonly List<Card> CardList = new List<Card>();
 
+    [SerializeField] private TextAsset cardTable;
+    public static readonly List<CardTable> CardTable = new List<CardTable>();
+
     private void Awake()
     {
-        // CardList.Add(new Card(_id: 0, _cardName: "none", _cost: 0, _cardType: CardType.NONE,
-        //     _targetType: TargetType.NONE, _power: 0, _cardDesc: "none", Resources.Load<Sprite>("Character/None")));
-        // CardList.Add(new Card(_id: 1, _cardName: "Atk1", _cost: 1, _cardType: CardType.ATK, _targetType: TargetType.ONE,
-        //     _power: 5, _cardDesc: "적을 한번 공격할 수 있습니다.", Resources.Load<Sprite>("Character/Atk1")));
-        // CardList.Add(new Card(_id: 2, _cardName: "Atk2", _cost: 2, _cardType: CardType.ATK, _targetType: TargetType.ALL,
-        //     _power: 2, _cardDesc: "none", Resources.Load<Sprite>("Character/Atk2")));
-        // CardList.Add(new Card(_id: 3, _cardName: "Atk3", _cost: 3, _cardType: CardType.ATK, _targetType: TargetType.ONE,
-        //     _power: 10, _cardDesc: "none", Resources.Load<Sprite>("Character/Atk3")));
-        // CardList.Add(new Card(_id: 4, _cardName: "Def1", _cost: 3, _cardType: CardType.DEF, _targetType: TargetType.ONE,
-        //     _power: 3, _cardDesc: "none", Resources.Load<Sprite>("Character/Def1")));
-        // CardList.Add(new Card(_id: 5, _cardName: "Def2", _cost: 2, _cardType: CardType.DEF, _targetType: TargetType.ONE,
-        //     _power: 1, _cardDesc: "none", Resources.Load<Sprite>("Character/Def2")));
-        // CardList.Add(new Card(_id: 6, _cardName: "Def3", _cost: 2, _cardType: CardType.DEF, _targetType: TargetType.ONE,
-        //     _power: 1, _cardDesc: "none", Resources.Load<Sprite>("Character/Def3")));
-        // CardList.Add(new Card(_id: 7, _cardName: "Act1", _cost: 1, _cardType: CardType.ACT, _actType: ActType.CHANGECARD, _targetType: TargetType.ONE,
-        //     _power: 1, _cardDesc: "none", Resources.Load<Sprite>("Character/Act1")));
-        // CardList.Add(new Card(_id: 8, _cardName: "Act2", _cost: 2, _cardType: CardType.ACT, _actType: ActType.HEAL, _targetType: TargetType.ONE,
-        //     _power: 2, _cardDesc: "none", Resources.Load<Sprite>("Character/Act2")));
-        // CardList.Add(new Card(_id: 9, _cardName: "Act3", _cost: 3, _cardType: CardType.ACT, _actType: ActType.LOCKGRID, _targetType: TargetType.ALL,
-        //     _power: 1, _cardDesc: "none", Resources.Load<Sprite>("Character/Act3")));
+        ExcelParsing();
 
         CardList.Add(new EmptyCard());
         CardList.Add(new AtkCard1());
@@ -276,8 +259,23 @@ public class CardData : MonoBehaviour
         CardList.Add(new DefCard1());
         CardList.Add(new DefCard2());
         CardList.Add(new DefCard3());
-        CardList.Add(new ActCard1());
-        CardList.Add(new ActCard2());
-        CardList.Add(new ActCard3());
+        CardList.Add(new SupCard1());
+        CardList.Add(new SupCard2());
+        CardList.Add(new SupCard3());
+
+        print($"{CardList[0].id}{CardList[1].id}{CardList[2].id}{CardList[3].id}{CardList[4].id}{CardList[5].id}{CardList[6].id}{CardList[7].id}{CardList[8].id}");
+    }
+
+    private void ExcelParsing()
+    {
+        string currentText = cardTable.text.Substring(0, cardTable.text.Length - 1);
+        string[] lines = currentText.Split('\n');
+
+        for (int i = 0; i < lines.Length; i++)
+        {
+            string[] words = lines[i].Split('\t');
+            CardTable.Add(new CardTable(int.Parse(words[0]), words[1], int.Parse(words[2]), words[3]));
+            print($"{words[0]}");
+        }
     }
 }
