@@ -33,7 +33,6 @@ public class CardManager : MonoBehaviourPunCallbacks
         if (Input.GetKeyDown(KeyCode.Alpha1))
             AddCard(PhotonNetwork.IsMasterClient);
         
-        // print($"{cardBuffer[0].id}{cardBuffer[1].id}{cardBuffer[2].id}{cardBuffer[3].id}{cardBuffer[4].id}{cardBuffer[5].id}{cardBuffer[6].id}{cardBuffer[7].id}{cardBuffer[8].id}");
     }
 
     public void AddCard(bool isMine)
@@ -71,17 +70,13 @@ public class CardManager : MonoBehaviourPunCallbacks
 
         int temp = cardBuffer[0].id;
         cardBuffer.RemoveAt(0);
-        print("PopIndex" + temp);
         return temp;
     }
 
     void SetupCard()
     {
-        // print(CardData.CardList.Count + "CardListCount");
-        // print($"CardDataList Id {CardData.CardList[0].id}{CardData.CardList[1].id}{CardData.CardList[2].id}{CardData.CardList[3].id}{CardData.CardList[4].id}{CardData.CardList[5].id}{CardData.CardList[6].id}{CardData.CardList[7].id}{CardData.CardList[8].id}");
         for (int i = 1; i < CardData.CardList.Count; i++)
         {
-            // print(i);
             Card card = CardData.CardList[i];
             cardBuffer.Add(card);
         }
@@ -89,7 +84,6 @@ public class CardManager : MonoBehaviourPunCallbacks
         for (int i = 0; i < cardBuffer.Count; i++)
         {
             int rand = Random.Range(i, cardBuffer.Count);
-            // print($"RandomAddCard {rand}");
             (cardBuffer[i], cardBuffer[rand]) = (cardBuffer[rand], cardBuffer[i]);
         }
     }

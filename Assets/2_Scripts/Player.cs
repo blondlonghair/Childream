@@ -17,8 +17,8 @@ public class Player : MonoBehaviourPunCallbacks
     public int MaxMoveCount;
     public int CurMoveCount;
 
-    [HideInInspector] public int PlayerCurState;
-    [HideInInspector] public bool IsPlayerLocked;
+    [HideInInspector] public int CurState;
+    [HideInInspector] public bool IsLocked = false;
     [HideInInspector] public int SelectRange;
 
     PhotonView PV;
@@ -82,6 +82,8 @@ public class Player : MonoBehaviourPunCallbacks
 
     void PlayerSetup()
     {
+        CurState = 2;
+        
         if (PhotonNetwork.IsMasterClient)
         {
             if (PV.IsMine)
@@ -169,7 +171,7 @@ public class Player : MonoBehaviourPunCallbacks
             }
         }
 
-        PlayerCurState = index;
+        CurState = index;
         CurMoveCount--;
     }
 
@@ -211,13 +213,15 @@ public class Player : MonoBehaviourPunCallbacks
 
             if (!rangeTarget.GetComponent<PhotonView>().IsMine)
             {
-                // print("up" + rangeTarget.tag);
-                // print(SelectRange);
-                // print(raycastTarget.GetComponent<ThisCard>().id);
-                // print(PhotonNetwork.IsMasterClient);
-
                 GameManager.Instance.AddBattleList(SelectRange, raycastTarget.GetComponent<ThisCard>().id,
                     PhotonNetwork.IsMasterClient);
+                // var card = (PhotonNetwork.IsMasterClient
+                //     ? CardManager.Instance.hostCards
+                //     : CardManager.Instance.guestCards).Remove((PhotonNetwork.IsMasterClient
+                //     ? CardManager.Instance.hostCards
+                //     : CardManager.Instance.guestCards).Find(x => x.id == rangeTarget.GetComponent<ThisCard>().id));
+
+                // Destroy(raycastTarget.gameObject);
             }
 
             raycastTarget = null;

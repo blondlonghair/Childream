@@ -104,8 +104,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnStartTurn()
     {
-        print("AddCard" + (PhotonNetwork.IsMasterClient ? " Host" : " Guest"));
-
         CardManager.Instance.AddCard(PV.IsMine);
         CardManager.Instance.AddCard(PV.IsMine);
         CardManager.Instance.AddCard(PV.IsMine);
@@ -128,16 +126,19 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             if (HostBattleList.Count > 0)
             {
-                CardData.CardList[HostBattleList[0].Item2].CardEffective(HostPlayer);
+                print($"카드 효과 실행");
+                CardData.CardList[HostBattleList[0].Item2].CardEffective(GuestPlayer, HostBattleList[0].Item1);
+                // Destroy(CardManager.Instance.hostCards[HostBattleList[0].Item1]);
                 HostBattleList.RemoveAt(0);
             }
 
             if (GuestBattleList.Count > 0)
             {
-                CardData.CardList[GuestBattleList[0].Item2].CardEffective(GuestPlayer);
+                print($"카드 효과 실행");
+                CardData.CardList[GuestBattleList[0].Item2].CardEffective(HostPlayer, GuestBattleList[0].Item1);
+                // Destroy(CardManager.Instance.guestCards[GuestBattleList[0].Item1]);
                 GuestBattleList.RemoveAt(0);
             }
-
 
             if (HostBattleList.Count <= 0 && GuestBattleList.Count <= 0)
             {
@@ -162,8 +163,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnTurnEnd()
     {
-        HostPlayer.IsPlayerLocked = false;
-        GuestPlayer.IsPlayerLocked = false;
+        HostPlayer.IsLocked = false;
+        GuestPlayer.IsLocked = false;
 
         gameState = GameState.StartTurn;
     }
@@ -236,17 +237,17 @@ public class GameManager : MonoBehaviourPunCallbacks
         return PhotonNetwork.PlayerList.Length == 2;
     }
 
-    public void AddPlayer(Player player, bool isMaster)
-    {
-        PV.RPC(nameof(_AddPlayer), RpcTarget.AllBuffered, player, isMaster);
-    }
-
-    [PunRPC]
-    void _AddPlayer(Player player, bool isMaster)
-    {
-        if (isMaster)
-            HostPlayer = player;
-        else
-            GuestPlayer = player;
-    }
+    // public void AddPlayer(Player player, bool isMaster)
+    // {
+    //     PV.RPC(nameof(_AddPlayer), RpcTarget.AllBuffered, player, isMaster);
+    // }
+    //
+    // [PunRPC]
+    // void _AddPlayer(Player player, bool isMaster)
+    // {
+    //     if (isMaster)
+    //         HostPlayer = player;
+    //     else
+    //         GuestPlayer = player;
+    // }
 }

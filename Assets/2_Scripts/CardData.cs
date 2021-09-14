@@ -6,8 +6,9 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using Enums;
 using Photon.Pun.Demo.PunBasics;
 using UnityEngine.UIElements;
+using Utils;
 
-public class Card
+public class Card : MonoBehaviour
 {
     public int id;
     public string cardName;
@@ -16,7 +17,7 @@ public class Card
     public Sprite cardImage;
     public CardType cardType;
 
-    public virtual void CardEffective(Player _target)
+    public virtual void CardEffective(Player _target, int _index)
     {
     }
 }
@@ -30,7 +31,7 @@ public abstract class AtkCard : Card
         cardType = CardType.ATK;
     }
 
-    public abstract override void CardEffective(Player _target);
+    public abstract override void CardEffective(Player _target, int _index);
 }
 
 public abstract class DefCard : Card
@@ -43,7 +44,7 @@ public abstract class DefCard : Card
         cardType = CardType.DEF;
     }
 
-    public abstract override void CardEffective(Player _target);
+    public abstract override void CardEffective(Player _target, int _index);
 }
 
 public abstract class ActCard : Card
@@ -53,7 +54,7 @@ public abstract class ActCard : Card
         cardType = CardType.SUP;
     }
 
-    public abstract override void CardEffective(Player _target);
+    public abstract override void CardEffective(Player _target, int _index);
 }
 
 public class EmptyCard : Card
@@ -68,7 +69,7 @@ public class EmptyCard : Card
         cardImage = Resources.Load<Sprite>("Card/Cards/None");
     }
 
-    public override void CardEffective(Player _target)
+    public override void CardEffective(Player _target, int _index)
     {
     }
 }
@@ -85,9 +86,13 @@ public class AtkCard1 : AtkCard
         damage = 5;
     }
 
-    public override void CardEffective(Player _target)
+    public override void CardEffective(Player _target, int _index)
     {
-        _target.CurHp -= damage;
+        if (_target.CurState == _index)
+        {
+            print($"카드 효과 발동");
+            _target.CurHp -= damage;
+        }
     }
 }
 
@@ -103,8 +108,9 @@ public class AtkCard2 : AtkCard
         damage = 2;
     }
 
-    public override void CardEffective(Player _target)
+    public override void CardEffective(Player _target, int _index)
     {
+        print($"카드 효과 발동");
         _target.CurHp -= damage;
     }
 }
@@ -121,9 +127,13 @@ public class AtkCard3 : AtkCard
         damage = 10;
     }
 
-    public override void CardEffective(Player _target)
+    public override void CardEffective(Player _target, int _index)
     {
-        _target.CurHp -= damage;
+        if (_target.CurState == _index)
+        {
+            print($"카드 효과 발동");
+            _target.CurHp -= damage;
+        }
     }
 }
 
@@ -138,7 +148,7 @@ public class DefCard1 : DefCard
         cardImage = Resources.Load<Sprite>("Card/Cards/Def_1");
     }
 
-    public override void CardEffective(Player _target)
+    public override void CardEffective(Player _target, int _index)
     {
     }
 }
@@ -154,7 +164,7 @@ public class DefCard2 : DefCard
         cardImage = Resources.Load<Sprite>("Card/Cards/Def_2");
     }
 
-    public override void CardEffective(Player _target)
+    public override void CardEffective(Player _target, int _index)
     {
     }
 }
@@ -170,7 +180,7 @@ public class DefCard3 : DefCard
         cardImage = Resources.Load<Sprite>("Card/Cards/Def_3");
     }
 
-    public override void CardEffective(Player _target)
+    public override void CardEffective(Player _target, int _index)
     {
     }
 }
@@ -186,8 +196,9 @@ public class SupCard1 : ActCard
         cardImage = Resources.Load<Sprite>("Card/Cards/Sup_1");
     }
 
-    public override void CardEffective(Player _target)
+    public override void CardEffective(Player _target, int _index)
     {
+        _target.IsLocked = true;
     }
 }
 
@@ -202,8 +213,17 @@ public class SupCard2 : ActCard
         cardImage = Resources.Load<Sprite>("Card/Cards/Sup_2");
     }
 
-    public override void CardEffective(Player _target)
+    public override void CardEffective(Player _target, int _index)
     {
+        for (int i = 0; i < 3; i++)
+        {
+            if (_target.CurHp == _target.MaxHp)
+            {
+                break;
+            }
+
+            _target.CurHp++;
+        }
     }
 }
 
@@ -218,9 +238,9 @@ public class SupCard3 : ActCard
         cardImage = Resources.Load<Sprite>("Card/Cards/Sup_3");
     }
 
-    public override void CardEffective(Player _target)
+    public override void CardEffective(Player _target, int _index)
     {
-        _target.IsPlayerLocked = true;
+        CardManager.Instance.AddCard(!_target.PV().IsMine);
     }
 }
 
@@ -244,9 +264,9 @@ public class CardTable
 public class CardData : MonoBehaviour
 {
     public static readonly List<Card> CardList = new List<Card>();
+    public static readonly List<CardTable> CardTable = new List<CardTable>();
 
     [SerializeField] private TextAsset cardTable;
-    public static readonly List<CardTable> CardTable = new List<CardTable>();
 
     private void Awake()
     {
@@ -262,8 +282,6 @@ public class CardData : MonoBehaviour
         CardList.Add(new SupCard1());
         CardList.Add(new SupCard2());
         CardList.Add(new SupCard3());
-
-        print($"{CardList[0].id}{CardList[1].id}{CardList[2].id}{CardList[3].id}{CardList[4].id}{CardList[5].id}{CardList[6].id}{CardList[7].id}{CardList[8].id}");
     }
 
     private void ExcelParsing()
@@ -275,7 +293,6 @@ public class CardData : MonoBehaviour
         {
             string[] words = lines[i].Split('\t');
             CardTable.Add(new CardTable(int.Parse(words[0]), words[1], int.Parse(words[2]), words[3]));
-            print($"{words[0]}");
         }
     }
 }
