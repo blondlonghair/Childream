@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Enums;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
@@ -124,6 +125,10 @@ public class GameManager : MonoBehaviourPunCallbacks
         //3초마다 리스트 인보크
         if (CardInvokeTimer >= 3)
         {
+            var hostSupCard = HostBattleList.FindAll(x => CardData.CardList[x.Item2].cardType == CardType.SUP);
+            var guestSupCard = GuestBattleList.FindAll(x => CardData.CardList[x.Item2].cardType == CardType.SUP);
+            HostBattleList.FindIndex(x => CardData.CardList[x.Item2].cardType == CardType.SUP);
+            
             if (HostBattleList.Count > 0)
             {
                 print($"카드 효과 실행");
@@ -163,6 +168,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnTurnEnd()
     {
+        //플레이어 잠금효과 헤제
         HostPlayer.IsLocked = false;
         GuestPlayer.IsLocked = false;
 

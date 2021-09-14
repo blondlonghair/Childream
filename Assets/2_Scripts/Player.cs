@@ -17,9 +17,9 @@ public class Player : MonoBehaviourPunCallbacks
     public int MaxMoveCount;
     public int CurMoveCount;
 
-    [HideInInspector] public int CurState;
-    [HideInInspector] public bool IsLocked = false;
-    [HideInInspector] public int SelectRange;
+    public int CurState;
+    public bool IsLocked = false;
+    public int SelectRange;
 
     PhotonView PV;
     GameObject raycastTarget;
@@ -213,6 +213,9 @@ public class Player : MonoBehaviourPunCallbacks
 
             if (!rangeTarget.GetComponent<PhotonView>().IsMine)
             {
+                if (CurMp < raycastTarget.GetComponent<ThisCard>().cost)
+                    return;
+                
                 GameManager.Instance.AddBattleList(SelectRange, raycastTarget.GetComponent<ThisCard>().id,
                     PhotonNetwork.IsMasterClient);
                 // var card = (PhotonNetwork.IsMasterClient

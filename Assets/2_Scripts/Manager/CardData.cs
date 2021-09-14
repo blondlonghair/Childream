@@ -8,7 +8,7 @@ using Photon.Pun.Demo.PunBasics;
 using UnityEngine.UIElements;
 using Utils;
 
-public class Card : MonoBehaviour
+public class Card
 {
     public int id;
     public string cardName;
@@ -90,7 +90,6 @@ public class AtkCard1 : AtkCard
     {
         if (_target.CurState == _index)
         {
-            print($"카드 효과 발동");
             _target.CurHp -= damage;
         }
     }
@@ -110,7 +109,6 @@ public class AtkCard2 : AtkCard
 
     public override void CardEffective(Player _target, int _index)
     {
-        print($"카드 효과 발동");
         _target.CurHp -= damage;
     }
 }
@@ -131,7 +129,6 @@ public class AtkCard3 : AtkCard
     {
         if (_target.CurState == _index)
         {
-            print($"카드 효과 발동");
             _target.CurHp -= damage;
         }
     }
@@ -240,6 +237,7 @@ public class SupCard3 : ActCard
 
     public override void CardEffective(Player _target, int _index)
     {
+        CardManager.Instance.AddCard(!_target.PV().IsMine);
         CardManager.Instance.AddCard(!_target.PV().IsMine);
     }
 }
