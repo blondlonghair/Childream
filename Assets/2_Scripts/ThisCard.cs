@@ -65,29 +65,6 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && PV.IsMine)
-        {
-            CastRay();
-        }
-
-        if (target == gameObject)
-        {
-            // if (Input.GetMouseButtonDown(0))
-            // {
-            //     transform.rotation = Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0);
-            // }
-            //
-            // if (Input.GetMouseButton(0))
-            // {
-            // }
-            //
-            // if (Input.GetMouseButtonUp(0))
-            // {
-            //     CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
-            //     target = null;
-            // }
-        }
-
         if (Input.GetKeyDown(KeyCode.D))
         {
             if (PV.IsMine)
@@ -121,7 +98,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
         if (CardData.CardList[cardId] is Card)
         {
-            id = ((Card) CardData.CardList[cardId]).id;
+            id = ((Card)CardData.CardList[cardId]).id;
             cardName = ((Card)CardData.CardList[cardId]).cardName;
             cost = ((Card)CardData.CardList[cardId]).cost;
             cardType = ((Card)CardData.CardList[cardId]).cardType;

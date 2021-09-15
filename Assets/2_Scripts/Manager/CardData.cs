@@ -270,11 +270,15 @@ public class Move : Action
             {
                 _target.transform.position = new Vector3(-3.5f, _target.transform.position.y, 0);
             }
+
+            _target.CurState = _index;
         }
 
         else if (_index == 2)
         {
             _target.transform.position = new Vector3(0, _target.transform.position.y, 0);
+
+            _target.CurState = _index;
         }
 
         else if (_index == 3)
@@ -287,6 +291,8 @@ public class Move : Action
             {
                 _target.transform.position = new Vector3(3.5f, _target.transform.position.y, 0);
             }
+
+            _target.CurState = _index;
         }
 
         _target.CurState = _index;
@@ -332,6 +338,7 @@ public class CardData : MonoBehaviour
         CardList.Add(new SupCard1());
         CardList.Add(new SupCard2());
         CardList.Add(new SupCard3());
+        CardList.Add(new Move());
     }
 
     private void ExcelParsing()

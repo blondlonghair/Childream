@@ -47,7 +47,7 @@ public class Player : MonoBehaviourPunCallbacks
         MouseInput();
     }
 
-    void CastRay(string _tag)
+    void CastRay(params string[] _tag)
     {
         raycastTarget = null;
 
@@ -56,9 +56,12 @@ public class Player : MonoBehaviourPunCallbacks
         
         for (int i = 0; i < hits.Length; i++)
         {
-            if (hits[i].collider != null && hits[i].collider.gameObject.CompareTag(_tag))
+            foreach (var tag in _tag)
             {
-                raycastTarget = hits[i].collider.gameObject;
+                if (hits[i].collider != null && hits[i].collider.gameObject.CompareTag(tag))
+                {
+                    raycastTarget = hits[i].collider.gameObject;
+                }
             }
         }
     }
@@ -122,45 +125,31 @@ public class Player : MonoBehaviourPunCallbacks
     {
         if (CurMoveCount <= 0)
             return;
-
+    
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            PV.RPC(nameof(MovePlayerIndex), RpcTarget.AllBuffered, 1);
+            if (PhotonNetwork.IsMasterClient)
+            {
+                transform.position = new Vector3(3.5f, transform.position.y, 0);
+            }
+            else
+            {
+                transform.position = new Vector3(-3.5f, transform.position.y, 0);
+            }
+            
+            GameManager.Instance.AddBattleList(1, 10, PhotonNetwork.IsMasterClient);
         }
-
+    
         if (Input.GetKeyDown(KeyCode.W))
         {
-            PV.RPC(nameof(MovePlayerIndex), RpcTarget.AllBuffered, 2);
-        }
+            transform.position = new Vector3(0, transform.position.y, 0);
+            
+            GameManager.Instance.AddBattleList(2, 10, PhotonNetwork.IsMasterClient);
 
+        }
+    
         if (Input.GetKeyDown(KeyCode.E))
         {
-            PV.RPC(nameof(MovePlayerIndex), RpcTarget.AllBuffered, 3);
-        }
-    }
-
-    [PunRPC]
-    void MovePlayerIndex(int index)
-    {
-        if (index == 1)
-        {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                transform.position = new Vector3(3.5f, transform.position.y, 0);
-            }
-            else
-            {
-                transform.position = new Vector3(-3.5f, transform.position.y, 0);
-            }
-        }
-
-        else if (index == 2)
-        {
-            transform.position = new Vector3(0, transform.position.y, 0);
-        }
-
-        else if (index == 3)
-        {
             if (PhotonNetwork.IsMasterClient)
             {
                 transform.position = new Vector3(-3.5f, transform.position.y, 0);
@@ -169,17 +158,55 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 transform.position = new Vector3(3.5f, transform.position.y, 0);
             }
-        }
+            
+            GameManager.Instance.AddBattleList(3, 10, PhotonNetwork.IsMasterClient);
 
-        CurState = index;
+        }
+        
         CurMoveCount--;
     }
+    //
+    // [PunRPC]
+    // void MovePlayerIndex(int index)
+    // {
+    //     if (index == 1)
+    //     {
+    //         if (PhotonNetwork.IsMasterClient)
+    //         {
+    //             transform.position = new Vector3(3.5f, transform.position.y, 0);
+    //         }
+    //         else
+    //         {
+    //             transform.position = new Vector3(-3.5f, transform.position.y, 0);
+    //         }
+    //     }
+    //
+    //     else if (index == 2)
+    //     {
+    //         transform.position = new Vector3(0, transform.position.y, 0);
+    //     }
+    //
+    //     else if (index == 3)
+    //     {
+    //         if (PhotonNetwork.IsMasterClient)
+    //         {
+    //             transform.position = new Vector3(-3.5f, transform.position.y, 0);
+    //         }
+    //         else
+    //         {
+    //             transform.position = new Vector3(3.5f, transform.position.y, 0);
+    //         }
+    //     }
+    //
+    //     CurState = index;
+    //     CurMoveCount--;
+    // }
 
     void MouseInput()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            CastRay("Card");
+            CastRay("Card", "Player");
 
             if (raycastTarget == null)
                 return;
@@ -219,7 +246,7 @@ public class Player : MonoBehaviourPunCallbacks
                 if (CurMp < raycastTarget.GetComponent<ThisCard>().cost)
                     return;
 
-                GameManager.Instance.AddBattleList(SelectRange, raycastTarget.GetComponent<ThisCard>().id,
+                GameManager.Instance.AddBattleList(SelectRange, raycastTarget is Card ? raycastTarget.GetComponent<ThisCard>().id : 10,
                     PhotonNetwork.IsMasterClient);
                 // var card = (PhotonNetwork.IsMasterClient
                 //     ? CardManager.Instance.hostCards
