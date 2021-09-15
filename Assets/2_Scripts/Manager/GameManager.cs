@@ -13,10 +13,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 {
     public enum GameState
     {
-        None = 1,
-        GameSetup = 2,
-        GameStart = 4,
-        StartTurn = 8, //턴이 시작될때
+        None,
+        GameSetup,
+        GameStart,
+        StartTurn, //턴이 시작될때
         LastTurn, //마지막 턴의 카드들의 효과 발동
         PlayerTurn, //플레이어 행동 (이동, 카드 사용)
         TurnEnd, //턴이 끝날때
@@ -36,7 +36,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public List<Tuple<int, int>> HostBattleList = new List<Tuple<int, int>>();
     public List<Tuple<int, int>> GuestBattleList = new List<Tuple<int, int>>();
-
+    
     public static GameManager Instance;
 
     void Awake() => Instance = this;

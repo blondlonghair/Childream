@@ -4,11 +4,17 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using Enums;
-using Photon.Pun.Demo.PunBasics;
+using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine.UIElements;
 using Utils;
 
-public class Card
+public class Action
+{
+    public virtual void CardEffective(Player _target, int _index) {}
+}
+
+public abstract class Card : Action
 {
     public int id;
     public string cardName;
@@ -16,10 +22,7 @@ public class Card
     public string cardDesc;
     public Sprite cardImage;
     public CardType cardType;
-
-    public virtual void CardEffective(Player _target, int _index)
-    {
-    }
+    public abstract override void CardEffective(Player _target, int _index);
 }
 
 public abstract class AtkCard : Card
@@ -57,11 +60,22 @@ public abstract class ActCard : Card
     public abstract override void CardEffective(Player _target, int _index);
 }
 
+public abstract class Actions : Card
+{
+    public Actions()
+    {
+        cardType = CardType.NONE;
+    }
+
+    public abstract override void CardEffective(Player _target, int _index);
+}
+
 public class EmptyCard : Card
 {
     public EmptyCard()
     {
         cardType = CardType.NONE;
+        
         id = CardData.CardTable[0].id;
         cardName = CardData.CardTable[0].name;
         cost = CardData.CardTable[0].cost;
@@ -239,6 +253,44 @@ public class SupCard3 : ActCard
     {
         CardManager.Instance.AddCard(!_target.PV().IsMine);
         CardManager.Instance.AddCard(!_target.PV().IsMine);
+    }
+}
+
+public class Move : Action
+{
+    public override void CardEffective(Player _target, int _index)
+    {
+        if (_index == 1)
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                _target.transform.position = new Vector3(3.5f, _target.transform.position.y, 0);
+            }
+            else
+            {
+                _target.transform.position = new Vector3(-3.5f, _target.transform.position.y, 0);
+            }
+        }
+
+        else if (_index == 2)
+        {
+            _target.transform.position = new Vector3(0, _target.transform.position.y, 0);
+        }
+
+        else if (_index == 3)
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                _target.transform.position = new Vector3(-3.5f, _target.transform.position.y, 0);
+            }
+            else
+            {
+                _target.transform.position = new Vector3(3.5f, _target.transform.position.y, 0);
+            }
+        }
+
+        _target.CurState = _index;
+        _target.CurMoveCount--;
     }
 }
 

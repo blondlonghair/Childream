@@ -77,20 +77,20 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
         if (target == gameObject)
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                transform.rotation = Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0);
-            }
-
-            if (Input.GetMouseButton(0))
-            {
-            }
-
-            if (Input.GetMouseButtonUp(0))
-            {
-                CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
-                target = null;
-            }
+            // if (Input.GetMouseButtonDown(0))
+            // {
+            //     transform.rotation = Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0);
+            // }
+            //
+            // if (Input.GetMouseButton(0))
+            // {
+            // }
+            //
+            // if (Input.GetMouseButtonUp(0))
+            // {
+            //     CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
+            //     target = null;
+            // }
         }
 
         if (Input.GetKeyDown(KeyCode.D))

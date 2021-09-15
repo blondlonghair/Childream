@@ -53,7 +53,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D[] hits = Physics2D.RaycastAll(pos, Vector2.zero, 0f);
-
+        
         for (int i = 0; i < hits.Length; i++)
         {
             if (hits[i].collider != null && hits[i].collider.gameObject.CompareTag(_tag))
@@ -83,7 +83,7 @@ public class Player : MonoBehaviourPunCallbacks
     void PlayerSetup()
     {
         CurState = 2;
-        
+
         if (PhotonNetwork.IsMasterClient)
         {
             if (PV.IsMine)
@@ -120,7 +120,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     void PlayerMove()
     {
-        if (CurMoveCount <= MaxMoveCount)
+        if (CurMoveCount <= 0)
             return;
 
         if (Input.GetKeyDown(KeyCode.Q))
@@ -186,6 +186,7 @@ public class Player : MonoBehaviourPunCallbacks
 
             if (raycastTarget.GetComponent<PhotonView>().IsMine)
             {
+                raycastTarget.transform.rotation = Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0);
                 // print("down");
             }
         }
@@ -208,6 +209,8 @@ public class Player : MonoBehaviourPunCallbacks
         {
             CastRayRange();
 
+            CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
+
             if (rangeTarget == null)
                 return;
 
@@ -215,7 +218,7 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 if (CurMp < raycastTarget.GetComponent<ThisCard>().cost)
                     return;
-                
+
                 GameManager.Instance.AddBattleList(SelectRange, raycastTarget.GetComponent<ThisCard>().id,
                     PhotonNetwork.IsMasterClient);
                 // var card = (PhotonNetwork.IsMasterClient
