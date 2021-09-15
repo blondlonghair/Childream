@@ -313,7 +313,7 @@ public class CardTable
 
 public class CardData : MonoBehaviour
 {
-    public static readonly List<Card> CardList = new List<Card>();
+    public static readonly List<Action> CardList = new List<Action>();
     public static readonly List<CardTable> CardTable = new List<CardTable>();
 
     [SerializeField] private TextAsset cardTable;

@@ -125,9 +125,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         //3초마다 리스트 인보크
         if (CardInvokeTimer >= 3)
         {
-            var hostSupCard = HostBattleList.FindAll(x => CardData.CardList[x.Item2].cardType == CardType.SUP);
-            var guestSupCard = GuestBattleList.FindAll(x => CardData.CardList[x.Item2].cardType == CardType.SUP);
-            HostBattleList.FindIndex(x => CardData.CardList[x.Item2].cardType == CardType.SUP);
+            var hostSupCard = HostBattleList.FindAll(x => ((Card)CardData.CardList[x.Item2]).cardType == CardType.SUP);
+            var guestSupCard = GuestBattleList.FindAll(x => ((Card)CardData.CardList[x.Item2]).cardType == CardType.SUP);
+            HostBattleList.FindIndex(x => ((Card)CardData.CardList[x.Item2]).cardType == CardType.SUP);
             
             if (HostBattleList.Count > 0)
             {

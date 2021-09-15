@@ -77,7 +77,7 @@ public class CardManager : MonoBehaviourPunCallbacks
     {
         for (int i = 1; i < CardData.CardList.Count; i++)
         {
-            Card card = CardData.CardList[i];
+            Card card = CardData.CardList[i] as Card;
             cardBuffer.Add(card);
         }
 
