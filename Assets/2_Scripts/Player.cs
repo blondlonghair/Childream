@@ -31,7 +31,6 @@ public class Player : MonoBehaviourPunCallbacks
     {
         PV = this.PV();
 
-        // GameManager.Instance.AddPlayer(this, PhotonNetwork.IsMasterClient);
         PlayerSetup();
     }
 
@@ -86,6 +85,9 @@ public class Player : MonoBehaviourPunCallbacks
     void PlayerSetup()
     {
         CurState = 2;
+        CurMoveCount = MaxMoveCount;
+        CurHp = MaxHp;
+        CurMp = MaxMp;
 
         if (PhotonNetwork.IsMasterClient)
         {
@@ -121,50 +123,30 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
-    void PlayerMove()
+    void PlayerMove() //키보드 이동
     {
         if (CurMoveCount <= 0)
             return;
     
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                transform.position = new Vector3(3.5f, transform.position.y, 0);
-            }
-            else
-            {
-                transform.position = new Vector3(-3.5f, transform.position.y, 0);
-            }
-            
             GameManager.Instance.AddBattleList(1, 10, PhotonNetwork.IsMasterClient);
+            CurMoveCount--;
         }
     
         if (Input.GetKeyDown(KeyCode.W))
         {
-            transform.position = new Vector3(0, transform.position.y, 0);
-            
             GameManager.Instance.AddBattleList(2, 10, PhotonNetwork.IsMasterClient); 
+            CurMoveCount--;
         }
     
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                transform.position = new Vector3(-3.5f, transform.position.y, 0);
-            }
-            else
-            {
-                transform.position = new Vector3(3.5f, transform.position.y, 0);
-            }
-            
             GameManager.Instance.AddBattleList(3, 10, PhotonNetwork.IsMasterClient);
-
+            CurMoveCount--;
         }
-        
-        CurMoveCount--;
     }
-    //
+
     // [PunRPC]
     // void MovePlayerIndex(int index)
     // {
@@ -205,7 +187,7 @@ public class Player : MonoBehaviourPunCallbacks
     {
         if (Input.GetMouseButtonDown(0))
         {
-            CastRay("Card", "Player");
+            CastRay("Card");
 
             if (raycastTarget == null)
                 return;

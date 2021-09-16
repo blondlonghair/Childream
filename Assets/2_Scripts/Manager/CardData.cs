@@ -9,14 +9,9 @@ using Photon.Realtime;
 using UnityEngine.UIElements;
 using Utils;
 
-public class Action
+public class Card
 {
     public int id;
-    public virtual void CardEffective(Player _target, int _index) {}
-}
-
-public abstract class Card : Action
-{
     public string cardName;
     public int cost;
     public string cardDesc;
@@ -24,7 +19,7 @@ public abstract class Card : Action
     public Sprite cardImageBG;
     public CardType cardType;
     public TargetType targetType;
-    public abstract override void CardEffective(Player _target, int _index);
+    public virtual void CardEffective(Player _target, int _index) {}
 }
 
 public abstract class AtkCard : Card
@@ -267,15 +262,21 @@ public class SupCard3 : ActCard
     }
 }
 
-public class Move : Action
+public class Move : Card
 {
     public Move()
     {
         id = 10;
+        targetType = TargetType.ME;
     }
     
     public override void CardEffective(Player _target, int _index)
     {
+        if (_target.IsLocked)
+        {
+            return;
+        }
+        
         if (_index == 1)
         {
             if (PhotonNetwork.IsMasterClient)
@@ -335,7 +336,7 @@ public class CardTable
 
 public class CardData : MonoBehaviour
 {
-    public static readonly List<Action> CardList = new List<Action>();
+    public static readonly List<Card> CardList = new List<Card>();
     public static readonly List<CardTable> CardTable = new List<CardTable>();
 
     [SerializeField] private TextAsset cardTable;

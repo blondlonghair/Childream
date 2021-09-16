@@ -32,17 +32,9 @@ public class CardManager : MonoBehaviourPunCallbacks
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
             AddCard(PhotonNetwork.IsMasterClient);
-        
     }
 
     public void AddCard(bool isMine)
-    {
-        _AddCard(isMine);
-        // PV.RPC(nameof(_AddCard), RpcTarget.AllBuffered, isMine);
-    }
-
-    // [PunRPC]
-    public void _AddCard(bool isMine)
     {
         var cardObject = PhotonNetwork.Instantiate("Prefab/Card", Vector3.zero, Quaternion.identity);
         var card = cardObject.GetComponent<ThisCard>();
@@ -51,6 +43,22 @@ public class CardManager : MonoBehaviourPunCallbacks
 
         CardAlignment(isMine);
     }
+
+    // public void RemoveCard(bool isMine)
+    // {
+    //     var 
+    // }
+    
+    // [PunRPC]
+    // public void _AddCard(bool isMine)
+    // {
+    //     var cardObject = PhotonNetwork.Instantiate("Prefab/Card", Vector3.zero, Quaternion.identity);
+    //     var card = cardObject.GetComponent<ThisCard>();
+    //     card.Setup(PopCard(), isMine);
+    //     (isMine ? hostCards : guestCards).Add(card);
+    //
+    //     CardAlignment(isMine);
+    // }
 
     // [PunRPC]
     // public void AddList(bool isMine, ThisCard card)

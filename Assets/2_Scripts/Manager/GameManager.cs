@@ -123,31 +123,29 @@ public class GameManager : MonoBehaviourPunCallbacks
         //3초마다 리스트 인보크
         if (CardInvokeTimer >= 3)
         {
-            if (HostBattleList.Any(x => (CardData.CardList[x.Item2] as Card)?.id == 7))
+            if (HostBattleList.Any(x => CardData.CardList[x.Item2]?.id == 7))
             {
-                var hostSupCard = HostBattleList.Find(x => (CardData.CardList[x.Item2] as Card)?.id == 7);
+                var hostSupCard = HostBattleList.Find(x => CardData.CardList[x.Item2]?.id == 7);
                 HostBattleList.Remove(hostSupCard);
                 HostBattleList.Insert(0, hostSupCard);
             }
             
-            if (GuestBattleList.Any(x => (CardData.CardList[x.Item2] as Card)?.id == 7))
+            if (GuestBattleList.Any(x => CardData.CardList[x.Item2]?.id == 7))
             {
-                var guestSupCard = GuestBattleList.Find(x => (CardData.CardList[x.Item2] as Card)?.id == 7);
+                var guestSupCard = GuestBattleList.Find(x => CardData.CardList[x.Item2]?.id == 7);
                 GuestBattleList.Remove(guestSupCard);
                 GuestBattleList.Insert(0, guestSupCard);
             }
 
             if (HostBattleList.Count > 0)
             {
-                    print($"카드 효과 실행");
                     print(CardData.CardList[HostBattleList[0].Item2]);
-                    print(HostBattleList.Count);
-                    if (((Card) CardData.CardList[HostBattleList[0].Item2]).targetType == TargetType.ME)
+                    if (CardData.CardList[HostBattleList[0].Item2].targetType == TargetType.ME)
                     {
                         CardData.CardList[HostBattleList[0].Item2]?.CardEffective(HostPlayer, HostBattleList[0].Item1);
                     }
 
-                    else if (((Card) CardData.CardList[HostBattleList[0].Item2]).targetType == TargetType.ENEMY)
+                    else if (CardData.CardList[HostBattleList[0].Item2].targetType == TargetType.ENEMY)
                     {
                         CardData.CardList[HostBattleList[0].Item2]?.CardEffective(GuestPlayer, HostBattleList[0].Item1);
                     }
@@ -158,16 +156,14 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             if (GuestBattleList.Count > 0)
             {
-                    print($"카드 효과 실행");
                     print(CardData.CardList[GuestBattleList[0].Item2]);
-                    print(GuestBattleList.Count);
-                    if (((Card) CardData.CardList[GuestBattleList[0].Item2]).targetType == TargetType.ME)
+                    if (CardData.CardList[GuestBattleList[0].Item2].targetType == TargetType.ME)
                     {
                         CardData.CardList[GuestBattleList[0].Item2]
                             ?.CardEffective(GuestPlayer, GuestBattleList[0].Item1);
                     }
 
-                    else if (((Card) CardData.CardList[GuestBattleList[0].Item2]).targetType == TargetType.ENEMY)
+                    else if (CardData.CardList[GuestBattleList[0].Item2].targetType == TargetType.ENEMY)
                     {
                         CardData.CardList[GuestBattleList[0].Item2]
                             ?.CardEffective(HostPlayer, GuestBattleList[0].Item1);
@@ -203,6 +199,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         //플레이어 잠금효과 헤제
         HostPlayer.IsLocked = false;
         GuestPlayer.IsLocked = false;
+
+        HostPlayer.CurMoveCount = HostPlayer.MaxMoveCount;
+        GuestPlayer.CurMoveCount = GuestPlayer.MaxMoveCount;
 
         gameState = GameState.StartTurn;
     }
