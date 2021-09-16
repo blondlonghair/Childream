@@ -103,9 +103,12 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnStartTurn()
     {
-        CardManager.Instance.AddCard(PV.IsMine);
-        CardManager.Instance.AddCard(PV.IsMine);
-        CardManager.Instance.AddCard(PV.IsMine);
+        CardManager.Instance.AddCard(HostPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(HostPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(HostPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(GuestPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(GuestPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(GuestPlayer.PV().IsMine);
 
         HostPlayer.CurMp = HostPlayer.MaxMp;
         GuestPlayer.CurMp = GuestPlayer.MaxMp;

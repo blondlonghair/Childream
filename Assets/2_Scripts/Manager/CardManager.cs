@@ -36,18 +36,24 @@ public class CardManager : MonoBehaviourPunCallbacks
 
     public void AddCard(bool isMine)
     {
-        var cardObject = PhotonNetwork.Instantiate("Prefab/Card", Vector3.zero, Quaternion.identity);
-        var card = cardObject.GetComponent<ThisCard>();
-        card.Setup(PopCard(), isMine);
+        if (isMine)
+        {
+            print("카드 생성");
+            var cardObject = PhotonNetwork.Instantiate("Prefab/Card", Vector3.zero, Quaternion.identity);
+            var card = cardObject.GetComponent<ThisCard>();
+            card.Setup(PopCard(), isMine);
+        }
         // (isMine ? hostCards : guestCards).Add(card);
 
         CardAlignment(isMine);
     }
 
-    // public void RemoveCard(bool isMine)
-    // {
-    //     var 
-    // }
+    public void RemoveCard(bool isMine, GameObject card)
+    {
+        PhotonNetwork.Destroy(card);
+        
+        CardAlignment(isMine);
+    }
     
     // [PunRPC]
     // public void _AddCard(bool isMine)
@@ -85,7 +91,7 @@ public class CardManager : MonoBehaviourPunCallbacks
     {
         for (int i = 1; i < CardData.CardList.Count - 1; i++)
         {
-            Card card = CardData.CardList[i] as Card;
+            Card card = CardData.CardList[i];
             cardBuffer.Add(card);
         }
 
