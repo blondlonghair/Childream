@@ -559,11 +559,13 @@ MonoBehaviour:
   power: 0
   cardDesc: 
   cardImage: {fileID: 0}
+  cardImageBG: {fileID: 0}
   nameText: {fileID: 5246438152893667890}
   costText: {fileID: 4606866584187314402}
   powerText: {fileID: 5259305640081632426}
   DescText: {fileID: 6804714893601007416}
   CardImage: {fileID: 2056631417460249793}
+  CardImageBG: {fileID: 4208667778330270614}
   PV: {fileID: 0}
 --- !u!114 &5860495970024549474
 MonoBehaviour:

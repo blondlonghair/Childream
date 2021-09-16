@@ -11,16 +11,17 @@ using Utils;
 
 public class Action
 {
+    public int id;
     public virtual void CardEffective(Player _target, int _index) {}
 }
 
 public abstract class Card : Action
 {
-    public int id;
     public string cardName;
     public int cost;
     public string cardDesc;
     public Sprite cardImage;
+    public Sprite cardImageBG;
     public CardType cardType;
     public abstract override void CardEffective(Player _target, int _index);
 }
@@ -31,6 +32,7 @@ public abstract class AtkCard : Card
 
     public AtkCard()
     {
+        cardImageBG = Resources.Load<Sprite>("Card/카드-공격");
         cardType = CardType.ATK;
     }
 
@@ -44,6 +46,7 @@ public abstract class DefCard : Card
 
     public DefCard()
     {
+        cardImageBG = Resources.Load<Sprite>("Card/카드-수비");
         cardType = CardType.DEF;
     }
 
@@ -54,6 +57,7 @@ public abstract class ActCard : Card
 {
     public ActCard()
     {
+        cardImageBG = Resources.Load<Sprite>("Card/카드-지원");
         cardType = CardType.SUP;
     }
 
@@ -258,6 +262,11 @@ public class SupCard3 : ActCard
 
 public class Move : Action
 {
+    public Move()
+    {
+        id = 10;
+    }
+    
     public override void CardEffective(Player _target, int _index)
     {
         if (_index == 1)

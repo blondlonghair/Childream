@@ -69,19 +69,21 @@ public class CardManager : MonoBehaviourPunCallbacks
         }
 
         int temp = cardBuffer[0].id;
+        print(temp);
+        print(cardBuffer[0].id);
         cardBuffer.RemoveAt(0);
         return temp;
     }
 
     void SetupCard()
     {
-        for (int i = 1; i < CardData.CardList.Count; i++)
+        for (int i = 1; i < CardData.CardList.Count - 1; i++)
         {
             Card card = CardData.CardList[i] as Card;
             cardBuffer.Add(card);
         }
 
-        for (int i = 0; i < cardBuffer.Count; i++)
+        for (int i = 0; i < cardBuffer.Count - 1; i++)
         {
             int rand = Random.Range(i, cardBuffer.Count);
             (cardBuffer[i], cardBuffer[rand]) = (cardBuffer[rand], cardBuffer[i]);

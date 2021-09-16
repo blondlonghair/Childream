@@ -18,12 +18,14 @@ public class ThisCard : MonoBehaviourPunCallbacks
     public int power;
     [TextArea(5, 10)] public string cardDesc;
     public Sprite cardImage;
+    public Sprite cardImageBG;
 
     [Header("카드 요소")] [SerializeField] Text nameText;
     [SerializeField] Text costText;
     [SerializeField] Text powerText;
     [SerializeField] Text DescText;
     [SerializeField] Image CardImage;
+    [SerializeField] Image CardImageBG;
 
     public PhotonView PV;
     public PRS originRPS;
@@ -104,6 +106,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
             cardType = ((Card)CardData.CardList[cardId]).cardType;
             cardDesc = ((Card)CardData.CardList[cardId]).cardDesc;
             cardImage = ((Card)CardData.CardList[cardId]).cardImage;
+            cardImageBG = ((Card) CardData.CardList[cardId]).cardImageBG;
         }
 
         nameText.text = cardName;
@@ -111,6 +114,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
         powerText.text = power.ToString();
         DescText.text = cardDesc;
         CardImage.sprite = cardImage;
+        CardImageBG.sprite = cardImageBG;
 
         CardFront(isFront);
     }
