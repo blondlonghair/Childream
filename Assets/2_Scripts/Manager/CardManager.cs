@@ -69,8 +69,6 @@ public class CardManager : MonoBehaviourPunCallbacks
         }
 
         int temp = cardBuffer[0].id;
-        print(temp);
-        print(cardBuffer[0].id);
         cardBuffer.RemoveAt(0);
         return temp;
     }

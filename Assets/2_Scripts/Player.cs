@@ -144,8 +144,7 @@ public class Player : MonoBehaviourPunCallbacks
         {
             transform.position = new Vector3(0, transform.position.y, 0);
             
-            GameManager.Instance.AddBattleList(2, 10, PhotonNetwork.IsMasterClient);
-
+            GameManager.Instance.AddBattleList(2, 10, PhotonNetwork.IsMasterClient); 
         }
     
         if (Input.GetKeyDown(KeyCode.E))
@@ -246,7 +245,7 @@ public class Player : MonoBehaviourPunCallbacks
                 if (CurMp < raycastTarget.GetComponent<ThisCard>().cost)
                     return;
 
-                GameManager.Instance.AddBattleList(SelectRange, raycastTarget is Card ? raycastTarget.GetComponent<ThisCard>().id : 10,
+                GameManager.Instance.AddBattleList(SelectRange, raycastTarget is Move ? 10 : raycastTarget.GetComponent<ThisCard>().id,
                     PhotonNetwork.IsMasterClient);
                 // var card = (PhotonNetwork.IsMasterClient
                 //     ? CardManager.Instance.hostCards

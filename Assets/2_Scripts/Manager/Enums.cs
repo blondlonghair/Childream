@@ -11,8 +11,8 @@ namespace Enums
     public enum TargetType
     {
         NONE,
-        ONE,
-        ALL
+        ME,
+        ENEMY
     }
 
     public enum ActType

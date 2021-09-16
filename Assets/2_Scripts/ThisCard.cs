@@ -15,6 +15,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
     public string cardName;
     public int cost;
     public CardType cardType;
+    public TargetType targetType;
     public int power;
     [TextArea(5, 10)] public string cardDesc;
     public Sprite cardImage;
@@ -35,7 +36,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
     private void Awake()
     {
         PV = this.PV();
-        
+
         if (PV.IsMine)
         {
             if (PhotonNetwork.IsMasterClient)
@@ -51,7 +52,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
             else
                 CardManager.Instance.hostCards.Add(this);
         }
-        
+
         CardManager.Instance.CardAlignment(PV.IsMine);
         CardManager.Instance.CardAlignment(!PV.IsMine);
     }
@@ -60,7 +61,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
     {
         if (PV.IsMine)
             CardFront(true);
-        
+
         else
             CardFront(false);
     }
@@ -98,16 +99,14 @@ public class ThisCard : MonoBehaviourPunCallbacks
     {
         cardId = _id;
 
-        if (CardData.CardList[cardId] is Card)
-        {
-            id = ((Card)CardData.CardList[cardId]).id;
-            cardName = ((Card)CardData.CardList[cardId]).cardName;
-            cost = ((Card)CardData.CardList[cardId]).cost;
-            cardType = ((Card)CardData.CardList[cardId]).cardType;
-            cardDesc = ((Card)CardData.CardList[cardId]).cardDesc;
-            cardImage = ((Card)CardData.CardList[cardId]).cardImage;
-            cardImageBG = ((Card) CardData.CardList[cardId]).cardImageBG;
-        }
+        id = (CardData.CardList[cardId] as Card).id;
+        cardName = (CardData.CardList[cardId] as Card).cardName;
+        cost = (CardData.CardList[cardId] as Card).cost;
+        cardType = (CardData.CardList[cardId] as Card).cardType;
+        targetType = (CardData.CardList[cardId] as Card).targetType;
+        cardDesc = (CardData.CardList[cardId] as Card).cardDesc;
+        cardImage = (CardData.CardList[cardId] as Card).cardImage;
+        cardImageBG = (CardData.CardList[cardId] as Card).cardImageBG;
 
         nameText.text = cardName;
         costText.text = cost.ToString();

@@ -23,6 +23,7 @@ public abstract class Card : Action
     public Sprite cardImage;
     public Sprite cardImageBG;
     public CardType cardType;
+    public TargetType targetType;
     public abstract override void CardEffective(Player _target, int _index);
 }
 
@@ -34,6 +35,7 @@ public abstract class AtkCard : Card
     {
         cardImageBG = Resources.Load<Sprite>("Card/카드-공격");
         cardType = CardType.ATK;
+        targetType = TargetType.ENEMY;
     }
 
     public abstract override void CardEffective(Player _target, int _index);
@@ -48,6 +50,7 @@ public abstract class DefCard : Card
     {
         cardImageBG = Resources.Load<Sprite>("Card/카드-수비");
         cardType = CardType.DEF;
+        targetType = TargetType.ME;
     }
 
     public abstract override void CardEffective(Player _target, int _index);
@@ -79,6 +82,7 @@ public class EmptyCard : Card
     public EmptyCard()
     {
         cardType = CardType.NONE;
+        targetType = TargetType.NONE;
         
         id = CardData.CardTable[0].id;
         cardName = CardData.CardTable[0].name;
@@ -209,6 +213,7 @@ public class SupCard1 : ActCard
         cost = CardData.CardTable[7].cost;
         cardDesc = CardData.CardTable[7].desc;
         cardImage = Resources.Load<Sprite>("Card/Cards/Sup_1");
+        targetType = TargetType.ENEMY;
     }
 
     public override void CardEffective(Player _target, int _index)
@@ -226,6 +231,7 @@ public class SupCard2 : ActCard
         cost = CardData.CardTable[8].cost;
         cardDesc = CardData.CardTable[8].desc;
         cardImage = Resources.Load<Sprite>("Card/Cards/Sup_2");
+        targetType = TargetType.ME;
     }
 
     public override void CardEffective(Player _target, int _index)
@@ -251,12 +257,13 @@ public class SupCard3 : ActCard
         cost = CardData.CardTable[9].cost;
         cardDesc = CardData.CardTable[9].desc;
         cardImage = Resources.Load<Sprite>("Card/Cards/Sup_3");
+        targetType = TargetType.ME;
     }
 
     public override void CardEffective(Player _target, int _index)
     {
-        CardManager.Instance.AddCard(!_target.PV().IsMine);
-        CardManager.Instance.AddCard(!_target.PV().IsMine);
+        CardManager.Instance.AddCard(_target.PV().IsMine);
+        CardManager.Instance.AddCard(_target.PV().IsMine);
     }
 }
 
