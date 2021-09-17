@@ -155,6 +155,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                     CardData.CardList[HostBattleList[0].Item2]?.CardEffective(GuestPlayer, HostBattleList[0].Item1);
                 }
 
+                HostPlayer.CurMp -= CardData.CardList[HostBattleList[0].Item2].cost;
                 HostBattleList.RemoveAt(0);
             }
 
@@ -171,7 +172,6 @@ public class GameManager : MonoBehaviourPunCallbacks
                 {
                     CardData.CardList[GuestBattleList[0].Item2]?.CardEffective(HostPlayer, GuestBattleList[0].Item1);
                 }
-
 
                 GuestBattleList.RemoveAt(0);
             }

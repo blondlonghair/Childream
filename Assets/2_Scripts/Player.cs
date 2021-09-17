@@ -226,6 +226,8 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 if (CurMp < raycastTarget.GetComponent<ThisCard>().cost)
                     return;
+                
+                CurMp -= raycastTarget.GetComponent<ThisCard>().cost;
 
                 GameManager.Instance.AddBattleList(SelectRange, raycastTarget is Move ? 10 : raycastTarget.GetComponent<ThisCard>().id,
                     PhotonNetwork.IsMasterClient);
