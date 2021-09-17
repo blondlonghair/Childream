@@ -140,6 +140,28 @@ public class ThisCard : MonoBehaviourPunCallbacks
         transform.localScale = prs.scale;
     }
 
+    private void OnDestroy()
+    {
+        if (PV.IsMine)
+        {
+            if (PhotonNetwork.IsMasterClient)
+                CardManager.Instance.hostCards.Remove(this);
+            else
+                CardManager.Instance.guestCards.Remove(this);
+        }
+
+        else
+        {
+            if (PhotonNetwork.IsMasterClient)
+                CardManager.Instance.guestCards.Remove(this);
+            else
+                CardManager.Instance.hostCards.Remove(this);
+        }
+
+        CardManager.Instance.CardAlignment(PV.IsMine);
+        CardManager.Instance.CardAlignment(!PV.IsMine);
+    }
+
     // public void OnPhotonInstantiate(PhotonMessageInfo info)
     // {
     //     PV = this.PV();

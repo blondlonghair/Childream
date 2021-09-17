@@ -229,6 +229,10 @@ public class Player : MonoBehaviourPunCallbacks
 
                 GameManager.Instance.AddBattleList(SelectRange, raycastTarget is Move ? 10 : raycastTarget.GetComponent<ThisCard>().id,
                     PhotonNetwork.IsMasterClient);
+
+                var targetPV = raycastTarget.GetComponent<PhotonView>().ViewID;
+                PhotonNetwork.Destroy(PhotonView.Find(targetPV));
+
                 // var card = (PhotonNetwork.IsMasterClient
                 //     ? CardManager.Instance.hostCards
                 //     : CardManager.Instance.guestCards).Remove((PhotonNetwork.IsMasterClient

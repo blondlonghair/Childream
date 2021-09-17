@@ -58,6 +58,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (!AllPlayerIn())
             return;
 
+        print(HostBattleList.Count);
+        print(GuestBattleList.Count);
         switch (gameState)
         {
             case GameState.GameSetup:
@@ -153,7 +155,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                     CardData.CardList[HostBattleList[0].Item2]?.CardEffective(GuestPlayer, HostBattleList[0].Item1);
                 }
 
-                PV.RPC(nameof(DestoryCard), RpcTarget.OthersBuffered, PhotonNetwork.IsMasterClient);
+                HostBattleList.RemoveAt(0);
             }
 
             if (GuestBattleList.Count > 0)
@@ -170,7 +172,8 @@ public class GameManager : MonoBehaviourPunCallbacks
                     CardData.CardList[GuestBattleList[0].Item2]?.CardEffective(HostPlayer, GuestBattleList[0].Item1);
                 }
 
-                PV.RPC(nameof(DestoryCard), RpcTarget.OthersBuffered, PhotonNetwork.IsMasterClient);
+
+                GuestBattleList.RemoveAt(0);
             }
 
             if (HostBattleList.Count <= 0 && GuestBattleList.Count <= 0)
