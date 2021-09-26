@@ -147,42 +147,6 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
-    // [PunRPC]
-    // void MovePlayerIndex(int index)
-    // {
-    //     if (index == 1)
-    //     {
-    //         if (PhotonNetwork.IsMasterClient)
-    //         {
-    //             transform.position = new Vector3(3.5f, transform.position.y, 0);
-    //         }
-    //         else
-    //         {
-    //             transform.position = new Vector3(-3.5f, transform.position.y, 0);
-    //         }
-    //     }
-    //
-    //     else if (index == 2)
-    //     {
-    //         transform.position = new Vector3(0, transform.position.y, 0);
-    //     }
-    //
-    //     else if (index == 3)
-    //     {
-    //         if (PhotonNetwork.IsMasterClient)
-    //         {
-    //             transform.position = new Vector3(-3.5f, transform.position.y, 0);
-    //         }
-    //         else
-    //         {
-    //             transform.position = new Vector3(3.5f, transform.position.y, 0);
-    //         }
-    //     }
-    //
-    //     CurState = index;
-    //     CurMoveCount--;
-    // }
-
     void MouseInput()
     {
         if (Input.GetMouseButtonDown(0))
@@ -206,11 +170,6 @@ public class Player : MonoBehaviourPunCallbacks
 
             if (raycastTarget.GetComponent<PhotonView>().IsMine)
                 raycastTarget.transform.position = worldMousePos;
-
-            // if (raycastTarget.GetComponent<ThisCard>().targetType == TargetType.ALL)
-            // {
-            //     raycastTarget.transform.position = worldMousePos;
-            // }
         }
 
         if (Input.GetMouseButtonUp(0))
@@ -234,14 +193,6 @@ public class Player : MonoBehaviourPunCallbacks
 
                 var targetPV = raycastTarget.GetComponent<PhotonView>().ViewID;
                 PhotonNetwork.Destroy(PhotonView.Find(targetPV));
-
-                // var card = (PhotonNetwork.IsMasterClient
-                //     ? CardManager.Instance.hostCards
-                //     : CardManager.Instance.guestCards).Remove((PhotonNetwork.IsMasterClient
-                //     ? CardManager.Instance.hostCards
-                //     : CardManager.Instance.guestCards).Find(x => x.id == rangeTarget.GetComponent<ThisCard>().id));
-
-                // Destroy(raycastTarget.gameObject);
             }
 
             raycastTarget = null;

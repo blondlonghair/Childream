@@ -104,6 +104,8 @@ MonoBehaviour:
   - {fileID: 7866420281330190276}
   - {fileID: 7866420281345615317}
   - {fileID: 7866420281227952424}
+  frontRange: {fileID: 21300000, guid: f55d0381312691f40bcda70922e8d555, type: 3}
+  backRange: {fileID: 21300000, guid: ec1ac87c7c41b9c4ca2bbf3b78c32894, type: 3}
 --- !u!114 &2360527305438888832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,7 +141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 627855c7f81362d41938ffe0b1475957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_SynchronizePosition: 1
+  m_SynchronizePosition: 0
   m_SynchronizeRotation: 0
   m_SynchronizeScale: 0
   m_UseLocal: 1

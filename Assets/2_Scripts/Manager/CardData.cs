@@ -19,7 +19,10 @@ public class Card
     public Sprite cardImageBG;
     public CardType cardType;
     public TargetType targetType;
-    public virtual void CardEffective(Player _target, int _index) {}
+
+    public virtual void CardEffective(Player _target, int _index)
+    {
+    }
 }
 
 public abstract class AtkCard : Card
@@ -78,7 +81,7 @@ public class EmptyCard : Card
     {
         cardType = CardType.NONE;
         targetType = TargetType.NONE;
-        
+
         id = CardData.CardTable[0].id;
         cardName = CardData.CardTable[0].name;
         cost = CardData.CardTable[0].cost;
@@ -269,14 +272,14 @@ public class Move : Card
         id = 10;
         targetType = TargetType.ME;
     }
-    
+
     public override void CardEffective(Player _target, int _index)
     {
         if (_target.IsLocked)
         {
             return;
         }
-        
+
         if (_index == 1)
         {
             if (PhotonNetwork.IsMasterClient)
@@ -336,8 +339,9 @@ public class CardTable
 
 public class CardData : MonoBehaviour
 {
-    public static readonly List<Card> CardList = new List<Card>();
-    public static readonly List<CardTable> CardTable = new List<CardTable>();
+    public static List<Card> CardList = new List<Card>();
+
+    public static List<CardTable> CardTable = new List<CardTable>();
 
     [SerializeField] private TextAsset cardTable;
 

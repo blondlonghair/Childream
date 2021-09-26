@@ -99,14 +99,14 @@ public class ThisCard : MonoBehaviourPunCallbacks
     {
         cardId = _id;
 
-        id = (CardData.CardList[cardId] as Card).id;
-        cardName = (CardData.CardList[cardId] as Card).cardName;
-        cost = (CardData.CardList[cardId] as Card).cost;
-        cardType = (CardData.CardList[cardId] as Card).cardType;
-        targetType = (CardData.CardList[cardId] as Card).targetType;
-        cardDesc = (CardData.CardList[cardId] as Card).cardDesc;
-        cardImage = (CardData.CardList[cardId] as Card).cardImage;
-        cardImageBG = (CardData.CardList[cardId] as Card).cardImageBG;
+        id = CardData.CardList[cardId].id;
+        cardName = CardData.CardList[cardId].cardName;
+        cost = CardData.CardList[cardId].cost;
+        cardType = CardData.CardList[cardId].cardType;
+        targetType = CardData.CardList[cardId].targetType;
+        cardDesc = CardData.CardList[cardId].cardDesc;
+        cardImage = CardData.CardList[cardId].cardImage;
+        cardImageBG = CardData.CardList[cardId].cardImageBG;
 
         nameText.text = cardName;
         costText.text = cost.ToString();

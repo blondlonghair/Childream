@@ -16,7 +16,7 @@ public class ServerManager : MonoBehaviourPunCallbacks
 
     void Awake()
     {
-        PhotonPeer.RegisterType(typeof(ThisCard), (byte)'W', SerializeCard, DeserializeCard);
+        // PhotonPeer.RegisterType(typeof(ThisCard), (byte)'W', SerializeCard, DeserializeCard);
         
         PhotonNetwork.SendRate = 60;
         PhotonNetwork.SerializationRate = 30;
@@ -25,11 +25,14 @@ public class ServerManager : MonoBehaviourPunCallbacks
         StartCoroutine(WebCheck());
 
         PV = this.PV();
-        
-        // PhotonPeer.RegisterType(Player, )
     }
 
     public override void OnConnectedToMaster()
+    {
+        PhotonNetwork.JoinLobby();
+    }
+
+    public override void OnJoinedLobby()
     {
         PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 2 }, null);
     }
@@ -91,37 +94,37 @@ public class ServerManager : MonoBehaviourPunCallbacks
         return time;
     }
     
-    public static readonly byte[] memCard = new byte[3 * 4];
-    private static short SerializeCard(StreamBuffer outStream, object customobject)
-    {
-        ThisCard thisCard = (ThisCard) customobject;
-        lock (memCard)
-        {
-            byte[] bytes = memCard;
-            int index = 0;
-            Protocol.Serialize(thisCard.cost, bytes, ref index);
-            Protocol.Serialize(thisCard.id, bytes, ref index);
-            Protocol.Serialize(thisCard.power, bytes, ref index);
-            outStream.Write(bytes, 0, 2 * 4);
-        }
-
-        return 2 * 4;
-    }
-    
-    private static object DeserializeCard(StreamBuffer inStream, short length)
-    {
-        ThisCard thisCard = new ThisCard();
-
-        lock (memCard)
-        {
-            inStream.Read(memCard, 0, 2 * 4);
-            int index = 0;
-            Protocol.Serialize(thisCard.cost, memCard, ref index);
-            Protocol.Serialize(thisCard.id, memCard, ref index);
-            Protocol.Serialize(thisCard.power, memCard, ref index);
-        }
-
-        return memCard;
-    }
+    // public static readonly byte[] memCard = new byte[3 * 4];
+    // private static short SerializeCard(StreamBuffer outStream, object customobject)
+    // {
+    //     ThisCard thisCard = (ThisCard) customobject;
+    //     lock (memCard)
+    //     {
+    //         byte[] bytes = memCard;
+    //         int index = 0;
+    //         Protocol.Serialize(thisCard.cost, bytes, ref index);
+    //         Protocol.Serialize(thisCard.id, bytes, ref index);
+    //         Protocol.Serialize(thisCard.power, bytes, ref index);
+    //         outStream.Write(bytes, 0, 2 * 4);
+    //     }
+    //
+    //     return 2 * 4;
+    // }
+    //
+    // private static object DeserializeCard(StreamBuffer inStream, short length)
+    // {
+    //     ThisCard thisCard = new ThisCard();
+    //
+    //     lock (memCard)
+    //     {
+    //         inStream.Read(memCard, 0, 2 * 4);
+    //         int index = 0;
+    //         Protocol.Serialize(thisCard.cost, memCard, ref index);
+    //         Protocol.Serialize(thisCard.id, memCard, ref index);
+    //         Protocol.Serialize(thisCard.power, memCard, ref index);
+    //     }
+    //
+    //     return memCard;
+    // }
     
 }

@@ -12,5 +12,7 @@ public class PVObject : MonoBehaviourPunCallbacks
         {
             transform.Rotate(0, 0, 180);
         }
+        
+        transform.Translate(0, -1, 0);
     }
 }

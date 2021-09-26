@@ -26,18 +26,22 @@ public class GameManager : MonoBehaviourPunCallbacks
     public GameState gameState = GameState.None;
     public Player HostPlayer, GuestPlayer;
     public bool isHostReady, isGuestReady;
-    private PhotonView PV;
-
-    private float CardInvokeTimer;
-    [SerializeField] private float CardInovkeInvaldTime;
-
-    // public delegate void HostInvoker(int i, int j);
-    // public event HostInvoker hostInvoker;
-
     public List<Tuple<int, int>> HostBattleList = new List<Tuple<int, int>>();
     public List<Tuple<int, int>> GuestBattleList = new List<Tuple<int, int>>();
+  
+    [Header("Timer")]
+    [SerializeField] private float CardInvokeTimer;
+    [SerializeField] private float CardInovkeInvaldTime;
+
+    [Header("UI")]
+    [SerializeField] private GameObject matchingPanel;
+    [SerializeField] private Slider myHpBar;
+    [SerializeField] private Slider myMpBar;
+    [SerializeField] private Slider EnemyHpBar;
+    [SerializeField] private Slider EnemyMpBar;
 
     public static GameManager Instance;
+    private PhotonView PV;
 
     void Awake() => Instance = this;
 
@@ -100,6 +104,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             return;
 
         PV.RPC(nameof(InitPlayers), RpcTarget.AllBuffered);
+        matchingPanel.SetActive(false);
         gameState = GameState.StartTurn;
     }
 
@@ -119,6 +124,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         GuestPlayer.CurMoveCount = GuestPlayer.MaxMoveCount;
 
         gameState = GameState.LastTurn;
+        PV.RPC(nameof(DestoryCard), RpcTarget.AllViaServer);
     }
 
     void OnLastTurn()
@@ -144,33 +150,36 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             if (HostBattleList.Count > 0)
             {
-                print(CardData.CardList[HostBattleList[0].Item2]);
-                if (CardData.CardList[HostBattleList[0].Item2].targetType == TargetType.ME)
+                var firstHostCard = CardData.CardList[HostBattleList[0].Item2];
+                
+                print(firstHostCard);
+                if (firstHostCard.targetType == TargetType.ME)
                 {
-                    CardData.CardList[HostBattleList[0].Item2]?.CardEffective(HostPlayer, HostBattleList[0].Item1);
+                    firstHostCard?.CardEffective(HostPlayer, HostBattleList[0].Item1);
                 }
 
-                else if (CardData.CardList[HostBattleList[0].Item2].targetType == TargetType.ENEMY)
+                else if (firstHostCard.targetType == TargetType.ENEMY)
                 {
-                    CardData.CardList[HostBattleList[0].Item2]?.CardEffective(GuestPlayer, HostBattleList[0].Item1);
+                    firstHostCard?.CardEffective(GuestPlayer, HostBattleList[0].Item1);
                 }
 
-                HostPlayer.CurMp -= CardData.CardList[HostBattleList[0].Item2].cost;
+                HostPlayer.CurMp -= firstHostCard.cost;
                 HostBattleList.RemoveAt(0);
             }
 
             if (GuestBattleList.Count > 0)
             {
-                print(CardData.CardList[GuestBattleList[0].Item2]);
-                if (CardData.CardList[GuestBattleList[0].Item2].targetType == TargetType.ME)
+                var firstGuestCard = CardData.CardList[GuestBattleList[0].Item2];
+                
+                print(firstGuestCard);
+                if (firstGuestCard.targetType == TargetType.ME)
                 {
-                    CardData.CardList[GuestBattleList[0].Item2]
-                        ?.CardEffective(GuestPlayer, GuestBattleList[0].Item1);
+                    firstGuestCard?.CardEffective(GuestPlayer, GuestBattleList[0].Item1);
                 }
 
-                else if (CardData.CardList[GuestBattleList[0].Item2].targetType == TargetType.ENEMY)
+                else if (firstGuestCard.targetType == TargetType.ENEMY)
                 {
-                    CardData.CardList[GuestBattleList[0].Item2]?.CardEffective(HostPlayer, GuestBattleList[0].Item1);
+                    firstGuestCard?.CardEffective(HostPlayer, GuestBattleList[0].Item1);
                 }
 
                 GuestBattleList.RemoveAt(0);
@@ -182,6 +191,21 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
 
             CardInvokeTimer = 0;
+        }
+        
+        if (PhotonNetwork.IsMasterClient)
+        {
+            myHpBar.value = HostPlayer.CurHp / HostPlayer.MaxHp;
+            myMpBar.value = HostPlayer.CurMp / HostPlayer.MaxMp;
+            EnemyHpBar.value = GuestPlayer.CurHp / GuestPlayer.MaxHp;
+            EnemyMpBar.value = GuestPlayer.CurMp / GuestPlayer.MaxMp;
+        }
+        else
+        {
+            myHpBar.value = GuestPlayer.CurHp / GuestPlayer.MaxHp;
+            myMpBar.value = GuestPlayer.CurMp / GuestPlayer.MaxMp;
+            EnemyHpBar.value = HostPlayer.CurHp / HostPlayer.MaxHp;
+            EnemyMpBar.value = HostPlayer.CurMp / HostPlayer.MaxMp;
         }
     }
 
