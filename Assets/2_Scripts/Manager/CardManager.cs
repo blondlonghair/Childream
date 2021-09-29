@@ -31,7 +31,7 @@ public class CardManager : MonoBehaviourPunCallbacks
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
-            AddCard(PhotonNetwork.IsMasterClient);
+            AddCard(PV.IsMine);
     }
 
     public void AddCard(bool isMine)

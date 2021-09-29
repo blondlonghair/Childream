@@ -50,16 +50,19 @@ public class Player : MonoBehaviourPunCallbacks
     {
         raycastTarget = null;
 
+        if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
+            return;
+
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        RaycastHit2D[] hits = Physics2D.RaycastAll(pos, Vector2.zero, 0f);
+        RaycastHit2D hits = Physics2D.Raycast(pos, Vector2.zero, 0f);
         
-        for (int i = 0; i < hits.Length; i++)
+        // for (int i = 0; i < hits.Length; i++)
         {
             foreach (var tag in _tag)
             {
-                if (hits[i].collider != null && hits[i].collider.gameObject.CompareTag(tag))
+                if (hits.collider != null && hits.collider.gameObject.CompareTag(tag))
                 {
-                    raycastTarget = hits[i].collider.gameObject;
+                    raycastTarget = hits.collider.gameObject;
                 }
             }
         }
@@ -103,6 +106,7 @@ public class Player : MonoBehaviourPunCallbacks
                 transform.position = new Vector3(0, -5, 0);
                 transform.Rotate(0, 0, 180);
                 gameObject.name = "GuestPlayer";
+                transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
                 // print("Guest");
             }
         }
@@ -118,12 +122,13 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 transform.position = new Vector3(0, 5, 0);
                 gameObject.name = "HostPlayer";
+                transform.localScale = new Vector3(0.7f, 0.7f, 0.7f);
                 // print("Host");
             }
         }
     }
 
-    void PlayerMove() //키보드 이동
+    void PlayerMove() //키보드
     {
         if (CurMoveCount <= 0)
             return;

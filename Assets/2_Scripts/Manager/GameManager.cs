@@ -48,13 +48,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     void Start()
     {
         PV = this.PV();
+        gameState = GameState.GameSetup;
+        
         // AddBattleList(1, 0, PhotonNetwork.IsMasterClient);
         // AddBattleList(1, 0, !PhotonNetwork.IsMasterClient);
-    }
-
-    public override void OnJoinedRoom()
-    {
-        gameState = GameState.GameSetup;
     }
 
     void Update()
@@ -64,6 +61,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         print(HostBattleList.Count);
         print(GuestBattleList.Count);
+        
         switch (gameState)
         {
             case GameState.GameSetup:
@@ -315,10 +313,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     bool Checkplayers() => GameObject.FindGameObjectsWithTag("Player").Length == 2;
 
-    public bool AllPlayerIn()
-    {
-        return PhotonNetwork.PlayerList.Length == 2;
-    }
+    public bool AllPlayerIn() => PhotonNetwork.PlayerList.Length == 2;
 
     // public void AddPlayer(Player player, bool isMaster)
     // {

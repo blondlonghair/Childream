@@ -5,16 +5,20 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 using System;
 using ExitGames.Client.Photon;
+using UnityEngine.SceneManagement;
 using Utils;
 
 public class ServerManager : MonoBehaviourPunCallbacks
 {
-    [SerializeField] Text text;
-    PhotonView PV;
+    [SerializeField] private Text text;
+    private PhotonView PV;
+    
+    public static float netTime = 0;
 
-    void Awake()
+    void Start()
     {
         // PhotonPeer.RegisterType(typeof(ThisCard), (byte)'W', SerializeCard, DeserializeCard);
         
@@ -34,24 +38,38 @@ public class ServerManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
+        print("JoinLobby");
+
+        // PhotonNetwork.LoadLevel("LobbyScene");
+        SceneManager.LoadScene("LobbyScene");
+    }
+
+    public void MatchStartButton()
+    {
         PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 2 }, null);
     }
 
     public override void OnJoinedRoom()
     {
-        Spawn();
-    }
+        print("JoinRoom");
 
-    public void Spawn()
-    {
+        // PhotonNetwork.LoadLevel("IngameScene");
     }
 
     void Update()
     {
-        text.text = PhotonNetwork.NetworkClientState.ToString();
-    }
+        // text.text = PhotonNetwork.NetworkClientState.ToString();
+        
+        print(PhotonNetwork.PlayerList.Length);
 
-    static float netTime = 0;
+        if (AllPlayerIn() && SceneManager.GetActiveScene().name != "IngameScene")
+        {
+            SceneManager.LoadScene("IngameScene");
+        }
+            // PhotonNetwork.LoadLevel("IngameScene");
+    }
+    
+    public bool AllPlayerIn() => PhotonNetwork.PlayerList.Length == 2;
 
     IEnumerator WebCheck()
     {
