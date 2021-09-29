@@ -39,8 +39,6 @@ public class ServerManager : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         print("JoinLobby");
-
-        // PhotonNetwork.LoadLevel("LobbyScene");
         SceneManager.LoadScene("LobbyScene");
     }
 
@@ -52,8 +50,6 @@ public class ServerManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         print("JoinRoom");
-
-        // PhotonNetwork.LoadLevel("IngameScene");
     }
 
     void Update()
@@ -66,7 +62,6 @@ public class ServerManager : MonoBehaviourPunCallbacks
         {
             SceneManager.LoadScene("IngameScene");
         }
-            // PhotonNetwork.LoadLevel("IngameScene");
     }
     
     public bool AllPlayerIn() => PhotonNetwork.PlayerList.Length == 2;
