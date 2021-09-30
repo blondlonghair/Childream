@@ -1644,10 +1644,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1699881609}
-        m_TargetAssemblyTypeName: SceneChange, Assembly-CSharp
-        m_MethodName: ChangeScene
-        m_Mode: 5
+      - m_Target: {fileID: 1475316641}
+        m_TargetAssemblyTypeName: ServerManager, Assembly-CSharp
+        m_MethodName: SurrenderButton
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1773,7 +1773,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75690207e6eb4af4288756bdfc1845bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 1150140115}
 --- !u!1 &1490661261
 GameObject:
   m_ObjectHideFlags: 0

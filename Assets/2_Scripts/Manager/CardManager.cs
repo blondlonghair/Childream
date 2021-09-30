@@ -34,6 +34,7 @@ public class CardManager : MonoBehaviourPunCallbacks
             AddCard(PhotonNetwork.IsMasterClient);
     }
 
+    //카드 뽑기
     public void AddCard(bool isMine)
     {
         if (isMine)
@@ -43,37 +44,17 @@ public class CardManager : MonoBehaviourPunCallbacks
             var card = cardObject.GetComponent<ThisCard>();
             card.Setup(PopCard(), isMine);
         }
-        // (isMine ? hostCards : guestCards).Add(card);
 
         CardAlignment(isMine);
     }
 
+    //카드 없에기(지금 안씀)
     public void RemoveCard(bool isMine, GameObject card)
     {
         PhotonNetwork.Destroy(card);
         
         CardAlignment(isMine);
     }
-    
-    // [PunRPC]
-    // public void _AddCard(bool isMine)
-    // {
-    //     var cardObject = PhotonNetwork.Instantiate("Prefab/Card", Vector3.zero, Quaternion.identity);
-    //     var card = cardObject.GetComponent<ThisCard>();
-    //     card.Setup(PopCard(), isMine);
-    //     (isMine ? hostCards : guestCards).Add(card);
-    //
-    //     CardAlignment(isMine);
-    // }
-
-    // [PunRPC]
-    // public void AddList(bool isMine, ThisCard card)
-    // {
-    //     if (isMine)
-    //         hostCards.Add(card);
-    //     else
-    //         guestCards.Add(card);
-    // }
 
     public int PopCard()
     {
@@ -87,6 +68,7 @@ public class CardManager : MonoBehaviourPunCallbacks
         return temp;
     }
 
+    //카드 뽑을때 카드 9장 랜덤 셔플
     void SetupCard()
     {
         for (int i = 1; i < CardData.CardList.Count - 1; i++)
@@ -102,14 +84,8 @@ public class CardManager : MonoBehaviourPunCallbacks
         }
     }
 
+    //카드 ismine확인 후 정렬하는 함수
     public void CardAlignment(bool isMine)
-    {
-        _CardAlignment(isMine);
-        // PV.RPC(nameof(_CardAlignment), RpcTarget.AllBuffered, isMine);
-    }
-
-    // [PunRPC]
-    public void _CardAlignment(bool isMine)
     {
         var originCardRPS = new List<PRS>();
         originCardRPS = isMine
@@ -126,11 +102,13 @@ public class CardManager : MonoBehaviourPunCallbacks
         }
     }
 
+    //카드 정렬하는 함수
     List<PRS> RondAlignment(Transform leftTr, Transform rightTr, int objCount, float height, Vector3 scale, bool isMine)
     {
         float[] objLerps = new float[objCount];
         List<PRS> results = new List<PRS>(objCount);
 
+        //카드 로테이션
         switch (objCount)
         {
             case 1:
@@ -148,10 +126,10 @@ public class CardManager : MonoBehaviourPunCallbacks
                 {
                     objLerps[i] = interval * i;
                 }
-
                 break;
         }
 
+        //카드 위치
         for (int i = 0; i < objCount; i++)
         {
             var targetPos = Vector3.Lerp(leftTr.position, rightTr.position, objLerps[i]);
@@ -170,6 +148,8 @@ public class CardManager : MonoBehaviourPunCallbacks
                 targetRot = Quaternion.Slerp(leftTr.rotation, rightTr.rotation, objLerps[i]);
             }
 
+            targetPos.z = -i + 10;
+            
             results.Add(new PRS(targetPos, targetRot, scale));
         }
 

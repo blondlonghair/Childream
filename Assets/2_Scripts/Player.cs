@@ -7,6 +7,7 @@ using System;
 using System.Text.RegularExpressions;
 using Utils;
 using Enums;
+using UnityEngine.EventSystems;
 
 public class Player : MonoBehaviourPunCallbacks
 {
@@ -46,26 +47,25 @@ public class Player : MonoBehaviourPunCallbacks
         MouseInput();
     }
 
-    void CastRay(params string[] _tag)
+    bool CastRay(params string[] _tag)
     {
         raycastTarget = null;
 
-        if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
-            return;
+        if (EventSystem.current.IsPointerOverGameObject())
+            return false;
 
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D hits = Physics2D.Raycast(pos, Vector2.zero, 0f);
-        
-        // for (int i = 0; i < hits.Length; i++)
+
+        foreach (var tag in _tag)
         {
-            foreach (var tag in _tag)
+            if (hits.collider != null && hits.collider.gameObject.CompareTag(tag))
             {
-                if (hits.collider != null && hits.collider.gameObject.CompareTag(tag))
-                {
-                    raycastTarget = hits.collider.gameObject;
-                }
+                raycastTarget = hits.collider.gameObject;
             }
         }
+
+        return true;
     }
 
     void CastRayRange()
@@ -132,19 +132,19 @@ public class Player : MonoBehaviourPunCallbacks
     {
         if (CurMoveCount <= 0)
             return;
-    
+
         if (Input.GetKeyDown(KeyCode.Q))
         {
             GameManager.Instance.AddBattleList(1, 10, PhotonNetwork.IsMasterClient);
             CurMoveCount--;
         }
-    
+
         if (Input.GetKeyDown(KeyCode.W))
         {
-            GameManager.Instance.AddBattleList(2, 10, PhotonNetwork.IsMasterClient); 
+            GameManager.Instance.AddBattleList(2, 10, PhotonNetwork.IsMasterClient);
             CurMoveCount--;
         }
-    
+
         if (Input.GetKeyDown(KeyCode.E))
         {
             GameManager.Instance.AddBattleList(3, 10, PhotonNetwork.IsMasterClient);
@@ -166,6 +166,10 @@ public class Player : MonoBehaviourPunCallbacks
                 raycastTarget.transform.rotation = Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0);
                 // print("down");
             }
+        }
+
+        if (CastRay("Card") == )
+        {
         }
 
         if (Input.GetMouseButton(0))
@@ -190,10 +194,11 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 if (CurMp < raycastTarget.GetComponent<ThisCard>().cost)
                     return;
-                
+
                 CurMp -= raycastTarget.GetComponent<ThisCard>().cost;
 
-                GameManager.Instance.AddBattleList(SelectRange, raycastTarget is Move ? 10 : raycastTarget.GetComponent<ThisCard>().id,
+                GameManager.Instance.AddBattleList(SelectRange,
+                    raycastTarget is Move ? 10 : raycastTarget.GetComponent<ThisCard>().id,
                     PhotonNetwork.IsMasterClient);
 
                 var targetPV = raycastTarget.GetComponent<PhotonView>().ViewID;

@@ -13,7 +13,6 @@ using Utils;
 
 public class ServerManager : MonoBehaviourPunCallbacks
 {
-    [SerializeField] private Text text;
     private PhotonView PV;
     
     public static float netTime = 0;
@@ -42,11 +41,6 @@ public class ServerManager : MonoBehaviourPunCallbacks
         SceneManager.LoadScene("LobbyScene");
     }
 
-    public void MatchStartButton()
-    {
-        PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 2 }, null);
-    }
-
     public override void OnJoinedRoom()
     {
         print("JoinRoom");
@@ -54,10 +48,6 @@ public class ServerManager : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        // text.text = PhotonNetwork.NetworkClientState.ToString();
-        
-        print(PhotonNetwork.PlayerList.Length);
-
         if (AllPlayerIn() && SceneManager.GetActiveScene().name != "IngameScene")
         {
             SceneManager.LoadScene("IngameScene");
@@ -66,6 +56,17 @@ public class ServerManager : MonoBehaviourPunCallbacks
     
     public bool AllPlayerIn() => PhotonNetwork.PlayerList.Length == 2;
 
+    public void MatchStartButton()
+    {
+        PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 2 }, null);
+    }
+
+    public void SurrenderButton()
+    {
+        PhotonNetwork.LeaveRoom();
+        SceneManager.LoadScene("LobbyScene");
+    }
+    
     IEnumerator WebCheck()
     {
         DateTime tTime = DateTime.Now.ToUniversalTime();
