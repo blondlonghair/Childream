@@ -68,6 +68,17 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
     void Update()
     {
+        CastRay();
+
+        if (target == gameObject && !Input.GetMouseButton(0))
+        {
+            transform.localScale = new Vector3(2, 2, 2);
+            // originRPS.pos = new Vector3(originRPS.pos.x, originRPS.pos.y + 3, originRPS.pos.z);
+        }
+        
+        else
+            transform.localScale = Vector3.one;
+        
         if (Input.GetKeyDown(KeyCode.D))
         {
             if (PV.IsMine)

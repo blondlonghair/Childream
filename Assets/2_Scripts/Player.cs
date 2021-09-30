@@ -22,9 +22,9 @@ public class Player : MonoBehaviourPunCallbacks
     public bool IsLocked = false;
     public int SelectRange;
 
+    GameObject raycastTarget = null;
+    GameObject rangeTarget = null;
     PhotonView PV;
-    GameObject raycastTarget;
-    GameObject rangeTarget;
 
     public static Vector3 worldMousePos;
 
@@ -47,12 +47,12 @@ public class Player : MonoBehaviourPunCallbacks
         MouseInput();
     }
 
-    bool CastRay(params string[] _tag)
+    void CastRay(ref GameObject obj, params string[] _tag)
     {
-        raycastTarget = null;
+        obj = null;
 
         if (EventSystem.current.IsPointerOverGameObject())
-            return false;
+            return;
 
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D hits = Physics2D.Raycast(pos, Vector2.zero, 0f);
@@ -61,16 +61,14 @@ public class Player : MonoBehaviourPunCallbacks
         {
             if (hits.collider != null && hits.collider.gameObject.CompareTag(tag))
             {
-                raycastTarget = hits.collider.gameObject;
+                obj = hits.collider.gameObject;
             }
         }
-
-        return true;
     }
 
-    void CastRayRange()
+    void CastRayRange(ref GameObject obj)
     {
-        rangeTarget = null;
+        obj = null;
 
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D[] hits = Physics2D.RaycastAll(pos, Vector2.zero, 0f);
@@ -80,7 +78,7 @@ public class Player : MonoBehaviourPunCallbacks
             if (hits[i].collider != null && hits[i].collider.gameObject.tag.Contains("Range"))
             {
                 SelectRange = int.Parse(hits[i].collider.gameObject.tag.Replace("Range", ""));
-                rangeTarget = hits[i].collider.gameObject;
+                obj = hits[i].collider.gameObject;
             }
         }
     }
@@ -156,20 +154,14 @@ public class Player : MonoBehaviourPunCallbacks
     {
         if (Input.GetMouseButtonDown(0))
         {
-            CastRay("Card");
-
+            CastRay(ref raycastTarget, "Card");
             if (raycastTarget == null)
                 return;
 
             if (raycastTarget.GetComponent<PhotonView>().IsMine)
             {
                 raycastTarget.transform.rotation = Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0);
-                // print("down");
             }
-        }
-
-        if (CastRay("Card") == )
-        {
         }
 
         if (Input.GetMouseButton(0))
@@ -183,7 +175,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (Input.GetMouseButtonUp(0))
         {
-            CastRayRange();
+            CastRayRange(ref rangeTarget);
 
             CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
 
