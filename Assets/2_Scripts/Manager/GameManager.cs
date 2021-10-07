@@ -49,9 +49,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         PV = this.PV();
         gameState = GameState.GameSetup;
-        
-        // AddBattleList(1, 0, PhotonNetwork.IsMasterClient);
-        // AddBattleList(1, 0, !PhotonNetwork.IsMasterClient);
     }
 
     void Update()
@@ -59,9 +56,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (!AllPlayerIn())
             return;
 
-        print(HostBattleList.Count);
-        print(GuestBattleList.Count);
-        
         switch (gameState)
         {
             case GameState.GameSetup:
@@ -85,6 +79,21 @@ public class GameManager : MonoBehaviourPunCallbacks
             case GameState.GameEnd:
                 OnGameEnd();
                 break;
+        }
+        
+        if (PhotonNetwork.IsMasterClient)
+        {
+            myHpBar.value = HostPlayer.CurHp / HostPlayer.MaxHp;
+            myMpBar.value = HostPlayer.CurMp / HostPlayer.MaxMp;
+            EnemyHpBar.value = GuestPlayer.CurHp / GuestPlayer.MaxHp;
+            EnemyMpBar.value = GuestPlayer.CurMp / GuestPlayer.MaxMp;
+        }
+        else
+        {
+            myHpBar.value = GuestPlayer.CurHp / GuestPlayer.MaxHp;
+            myMpBar.value = GuestPlayer.CurMp / GuestPlayer.MaxMp;
+            EnemyHpBar.value = HostPlayer.CurHp / HostPlayer.MaxHp;
+            EnemyMpBar.value = HostPlayer.CurMp / HostPlayer.MaxMp;
         }
     }
 
@@ -120,7 +129,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         HostPlayer.CurMoveCount = HostPlayer.MaxMoveCount;
         GuestPlayer.CurMoveCount = GuestPlayer.MaxMoveCount;
-
+        
         gameState = GameState.LastTurn;
         PV.RPC(nameof(DestoryCard), RpcTarget.AllViaServer);
     }
@@ -161,7 +170,6 @@ public class GameManager : MonoBehaviourPunCallbacks
                     firstHostCard?.CardEffective(GuestPlayer, HostBattleList[0].Item1);
                 }
 
-                HostPlayer.CurMp -= firstHostCard.cost;
                 HostBattleList.RemoveAt(0);
             }
 
@@ -189,40 +197,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             }
 
             CardInvokeTimer = 0;
-        }
-        
-        if (PhotonNetwork.IsMasterClient)
-        {
-            myHpBar.value = HostPlayer.CurHp / HostPlayer.MaxHp;
-            myMpBar.value = HostPlayer.CurMp / HostPlayer.MaxMp;
-            EnemyHpBar.value = GuestPlayer.CurHp / GuestPlayer.MaxHp;
-            EnemyMpBar.value = GuestPlayer.CurMp / GuestPlayer.MaxMp;
-        }
-        else
-        {
-            myHpBar.value = GuestPlayer.CurHp / GuestPlayer.MaxHp;
-            myMpBar.value = GuestPlayer.CurMp / GuestPlayer.MaxMp;
-            EnemyHpBar.value = HostPlayer.CurHp / HostPlayer.MaxHp;
-            EnemyMpBar.value = HostPlayer.CurMp / HostPlayer.MaxMp;
-        }
-    }
-
-    [PunRPC]
-    void DestoryCard(bool isHost)
-    {
-        if (isHost)
-        {
-            var t = CardManager.Instance.hostCards[HostBattleList[0].Item1];
-            CardManager.Instance.hostCards.Remove(t);
-            PhotonNetwork.Destroy(t.gameObject);
-            HostBattleList.RemoveAt(0);
-        }
-        else
-        {
-            var t = CardManager.Instance.guestCards[GuestBattleList[0].Item1];
-            CardManager.Instance.guestCards.Remove(t);
-            PhotonNetwork.Destroy(t.gameObject);
-            GuestBattleList.RemoveAt(0);
         }
     }
 
@@ -268,6 +242,25 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
+    [PunRPC]
+    void DestoryCard(bool isHost)
+    {
+        if (isHost)
+        {
+            var t = CardManager.Instance.hostCards[HostBattleList[0].Item1];
+            CardManager.Instance.hostCards.Remove(t);
+            PhotonNetwork.Destroy(t.gameObject);
+            HostBattleList.RemoveAt(0);
+        }
+        else
+        {
+            var t = CardManager.Instance.guestCards[GuestBattleList[0].Item1];
+            CardManager.Instance.guestCards.Remove(t);
+            PhotonNetwork.Destroy(t.gameObject);
+            GuestBattleList.RemoveAt(0);
+        }
+    }
+    
     [PunRPC]
     void _HostReady()
     {

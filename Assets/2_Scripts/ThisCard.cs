@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using Photon.Pun;
 using Photon.Realtime;
 using Utils;
 using Enums;
+using Unity.Mathematics;
 
 public class ThisCard : MonoBehaviourPunCallbacks
 {
@@ -61,24 +63,12 @@ public class ThisCard : MonoBehaviourPunCallbacks
     {
         if (PV.IsMine)
             CardFront(true);
-
         else
             CardFront(false);
     }
 
     void Update()
     {
-        CastRay();
-
-        if (target == gameObject && !Input.GetMouseButton(0))
-        {
-            transform.localScale = new Vector3(2, 2, 2);
-            // originRPS.pos = new Vector3(originRPS.pos.x, originRPS.pos.y + 3, originRPS.pos.z);
-        }
-        
-        else
-            transform.localScale = Vector3.one;
-        
         if (Input.GetKeyDown(KeyCode.D))
         {
             if (PV.IsMine)
@@ -93,16 +83,59 @@ public class ThisCard : MonoBehaviourPunCallbacks
         }
     }
 
+    void FixedUpdate()
+    {
+        CastRay();
+
+        CardZoom();
+    }
+
+    void CardZoom()
+    {
+        if (!PV.IsMine || EventSystem.current.IsPointerOverGameObject())
+            return;
+
+        if (target == gameObject && !Input.GetMouseButton(0))
+        {
+            transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(2, 2, 2), 0.5f);
+
+            if (PhotonNetwork.IsMasterClient)
+            {
+                transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, 7, -9), 0.5f);
+                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 180), 0.5f);
+            }
+            else
+            {
+                transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, -7, -9), 0.5f);
+                transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 0), 0.5f);
+            }
+        }
+
+        else
+        {
+            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, 0.5f);
+            transform.position = Vector3.Lerp(transform.position, originRPS.pos, 0.5f);
+            if (!Input.GetMouseButton(0))
+            {
+                transform.rotation = Quaternion.Lerp(transform.rotation, originRPS.rot, 0.5f);
+            }
+        }
+    }
+
     void CastRay()
     {
         target = null;
 
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 0f);
+        RaycastHit2D[] hit = Physics2D.RaycastAll(pos, Vector2.zero, 0f);
 
-        if (hit.collider != null && hit.collider.gameObject.CompareTag("Card"))
+        foreach (var hit2D in hit)
         {
-            target = hit.collider.gameObject;
+            if (hit2D.collider != null && hit2D.collider.gameObject.CompareTag("Card"))
+            {
+                target = hit2D.collider.gameObject;
+                return;
+            }
         }
     }
 

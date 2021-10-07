@@ -39,7 +39,7 @@ public class CardManager : MonoBehaviourPunCallbacks
     {
         if (isMine)
         {
-            print("카드 생성");
+            // print("카드 생성");
             var cardObject = PhotonNetwork.Instantiate("Prefab/Card", Vector3.zero, Quaternion.identity);
             var card = cardObject.GetComponent<ThisCard>();
             card.Setup(PopCard(), isMine);
@@ -148,6 +148,7 @@ public class CardManager : MonoBehaviourPunCallbacks
                 targetRot = Quaternion.Slerp(leftTr.rotation, rightTr.rotation, objLerps[i]);
             }
 
+            //카드 z값 변경
             targetPos.z = -i + 10;
             
             results.Add(new PRS(targetPos, targetRot, scale));
