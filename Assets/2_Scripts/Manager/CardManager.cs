@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
@@ -30,6 +31,8 @@ public class CardManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        print($"hostcard : {hostCards.Count}, guestcard : {guestCards.Count}");
+
         if (Input.GetKeyDown(KeyCode.Alpha1))
             AddCard(PhotonNetwork.IsMasterClient);
     }
@@ -48,12 +51,59 @@ public class CardManager : MonoBehaviourPunCallbacks
         CardAlignment(isMine);
     }
 
-    //카드 없에기(지금 안씀)
-    public void RemoveCard(bool isMine, GameObject card)
+    //카드 없에기
+    public void DestroyCard(GameObject card, bool isMaster)
     {
-        PhotonNetwork.Destroy(card);
-        
-        CardAlignment(isMine);
+        print("DestroyCard");
+        int index;
+
+        if (isMaster)
+        {
+            index = hostCards.FindIndex(x => x == card.GetComponent<ThisCard>());
+        }
+
+        else
+        {
+            index = guestCards.FindIndex(x => x == card.GetComponent<ThisCard>());
+        }
+
+        print($"index : {index}");
+
+        PV.RPC(nameof(_DestroyCard), RpcTarget.AllBuffered, index, isMaster);
+
+        if (isMaster)
+        {
+            var targetPV = card.GetComponent<PhotonView>().ViewID;
+            PhotonNetwork.Destroy(PhotonView.Find(targetPV));
+            print($"ismine : {isMaster}");
+        }
+        else
+        {
+            var targetPV = card.GetComponent<PhotonView>().ViewID;
+            PhotonNetwork.Destroy(PhotonView.Find(targetPV));
+            print($"ismine : {isMaster}");
+        }
+    }
+
+    [PunRPC]
+    void _DestroyCard(int index, bool isMaster)
+    {
+        if (isMaster)
+        {
+            print("_DestroyCard host");
+            hostCards.RemoveAt(index);
+        }
+
+        else
+        {
+            print("_DestroyCard host");
+            guestCards.RemoveAt(index);
+        }
+
+        CardAlignment(isMaster);
+        CardAlignment(!isMaster);
+        // PV.RPC(nameof(sync_CardAlignment), RpcTarget.AllBuffered, PV.IsMine);
+        // PV.RPC(nameof(sync_CardAlignment), RpcTarget.AllBuffered, !PV.IsMine);
     }
 
     public int PopCard()
@@ -102,6 +152,24 @@ public class CardManager : MonoBehaviourPunCallbacks
         }
     }
 
+    [PunRPC]
+    public void sync_CardAlignment(bool isMine)
+    {
+        var originCardRPS = new List<PRS>();
+        originCardRPS = isMine
+            ? RondAlignment(hostCardLeft, hostCardRight, hostCards.Count, 0.5f, Vector3.one, isMine)
+            : RondAlignment(guestCardLeft, guestCardRight, guestCards.Count, -0.5f, Vector3.one, isMine);
+
+        var targetCards = isMine ? hostCards : guestCards;
+        for (var i = 0; i < targetCards.Count; i++)
+        {
+            var targetCard = targetCards[i];
+
+            targetCard.originRPS = originCardRPS[i];
+            targetCard.MoveTransform(targetCard.originRPS);
+        }
+    }
+
     //카드 정렬하는 함수
     List<PRS> RondAlignment(Transform leftTr, Transform rightTr, int objCount, float height, Vector3 scale, bool isMine)
     {
@@ -126,6 +194,7 @@ public class CardManager : MonoBehaviourPunCallbacks
                 {
                     objLerps[i] = interval * i;
                 }
+
                 break;
         }
 
@@ -150,7 +219,7 @@ public class CardManager : MonoBehaviourPunCallbacks
 
             //카드 z값 변경
             targetPos.z = -i + 10;
-            
+
             results.Add(new PRS(targetPos, targetRot, scale));
         }
 

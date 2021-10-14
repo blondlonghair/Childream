@@ -189,9 +189,10 @@ public class Player : MonoBehaviourPunCallbacks
                     raycastTarget is Move ? 10 : raycastTarget.GetComponent<ThisCard>().id,
                     PhotonNetwork.IsMasterClient);
 
-                var targetPV = raycastTarget.GetComponent<PhotonView>().ViewID;
-                PhotonNetwork.Destroy(PhotonView.Find(targetPV));
+                CardManager.Instance.DestroyCard(raycastTarget, PhotonNetwork.IsMasterClient);
             }
+            
+            CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
 
             raycastTarget = null;
         }

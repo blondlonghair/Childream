@@ -551,7 +551,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0732b3a96039f0b468656363aa36908c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardId: 1
+  cardId: 0
   id: 0
   cardName: 
   cost: 0
@@ -604,7 +604,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_SynchronizePosition: 0
-  m_SynchronizeRotation: 1
+  m_SynchronizeRotation: 0
   m_SynchronizeScale: 0
   m_UseLocal: 1
 --- !u!61 &7514355708811014575
