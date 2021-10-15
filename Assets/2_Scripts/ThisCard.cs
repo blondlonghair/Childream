@@ -91,6 +91,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
         if (isLerp)
         {
             transform.position = Vector3.Lerp(transform.position, originRPS.pos, 0.2f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, originRPS.rot, 0.2f);
 
             if (transform.position == originRPS.pos)
             {
@@ -201,40 +202,33 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
     public void MoveTransform(PRS prs)
     {
-        // // transform.position = Vector3.Lerp(transform.position, prs.pos, 0.5f);
-        // // transform.rotation = Quaternion.Lerp(transform.rotation, prs.rot, 0.5f);
-        // transform.position = prs.pos;
-        // transform.rotation = prs.rot;
-        // transform.localScale = prs.scale;
-        
-        // StartCoroutine(nameof(moveCard), prs);
-
+        canvas.sortingOrder = prs.index;
         isLerp = true;
     }
 
-    IEnumerator moveCard(PRS prs)
-    {
-        canvas.sortingOrder = prs.index;
-        
-        while (Vector3.Distance(transform.position, prs.pos) > 0.1f)
-        {
-            print(Vector3.Distance(transform.position, prs.pos));
-            print($"prs.pos : {prs.pos}");
-        
-            // transform.position = Vector3.Lerp(transform.position, prs.pos, 0.5f);
-
-            transform.position -= (transform.position - prs.pos) / 2;
-            
-            transform.rotation = prs.rot;
-            transform.localScale = prs.scale;
-        
-            yield return null;
-        }
-        
-        transform.position = prs.pos;
-        transform.rotation = prs.rot;
-        transform.localScale = prs.scale;
-
-        yield return null;
-    }
+    // IEnumerator moveCard(PRS prs)
+    // {
+    //     canvas.sortingOrder = prs.index;
+    //     
+    //     while (Vector3.Distance(transform.position, prs.pos) > 0.1f)
+    //     {
+    //         print(Vector3.Distance(transform.position, prs.pos));
+    //         print($"prs.pos : {prs.pos}");
+    //     
+    //         // transform.position = Vector3.Lerp(transform.position, prs.pos, 0.5f);
+    //
+    //         transform.position -= (transform.position - prs.pos) / 2;
+    //         
+    //         transform.rotation = prs.rot;
+    //         transform.localScale = prs.scale;
+    //     
+    //         yield return null;
+    //     }
+    //     
+    //     transform.position = prs.pos;
+    //     transform.rotation = prs.rot;
+    //     transform.localScale = prs.scale;
+    //
+    //     yield return null;
+    // }
 }

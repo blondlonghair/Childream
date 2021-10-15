@@ -36,8 +36,6 @@ public class CardManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
-        print($"hostcard : {hostCards.Count}, guestcard : {guestCards.Count}");
-
         if (Input.GetKeyDown(KeyCode.Alpha1))
             AddCard(PhotonNetwork.IsMasterClient);
     }
