@@ -568,6 +568,7 @@ MonoBehaviour:
   CardImage: {fileID: 2056631417460249793}
   CardImageBG: {fileID: 4208667778330270614}
   PV: {fileID: 0}
+  canvas: {fileID: 0}
 --- !u!114 &5860495970024549474
 MonoBehaviour:
   m_ObjectHideFlags: 0

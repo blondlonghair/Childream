@@ -11,10 +11,15 @@ public class CardManager : MonoBehaviourPunCallbacks
     public List<ThisCard> hostCards;
     public List<ThisCard> guestCards;
 
+    [Header("카드 덱 위치")]
     [SerializeField] Transform hostCardLeft;
     [SerializeField] Transform hostCardRight;
     [SerializeField] Transform guestCardLeft;
     [SerializeField] Transform guestCardRight;
+
+    [Header("카드 드로우 위치")] 
+    [SerializeField] private Transform hostCardDraw;
+    [SerializeField] private Transform guestCardDraw;
 
     public static CardManager Instance;
     private PhotonView PV;
@@ -43,7 +48,21 @@ public class CardManager : MonoBehaviourPunCallbacks
         if (isMine)
         {
             // print("카드 생성");
-            var cardObject = PhotonNetwork.Instantiate("Prefab/Card", Vector3.zero, Quaternion.identity);
+            Vector3 initPos;
+            Quaternion initRot;
+
+            if (PhotonNetwork.IsMasterClient)
+            {
+                initPos = hostCardDraw.position;
+                initRot = Quaternion.Euler(0,0,180);
+            }
+            else
+            {
+                initPos = guestCardDraw.position;
+                initRot = Quaternion.Euler(0,0,0);
+            }
+
+            var cardObject = PhotonNetwork.Instantiate("Prefab/Card", initPos, initRot);
             var card = cardObject.GetComponent<ThisCard>();
             card.Setup(PopCard(), isMine);
         }
@@ -217,10 +236,7 @@ public class CardManager : MonoBehaviourPunCallbacks
                 targetRot = Quaternion.Slerp(leftTr.rotation, rightTr.rotation, objLerps[i]);
             }
 
-            //카드 z값 변경
-            targetPos.z = -i + 10;
-
-            results.Add(new PRS(targetPos, targetRot, scale));
+            results.Add(new PRS(targetPos, targetRot, scale, i));
         }
 
         return results;
