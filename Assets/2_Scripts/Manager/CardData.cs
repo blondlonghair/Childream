@@ -57,9 +57,9 @@ public abstract class DefCard : Card
     public abstract override void CardSecondAbility(Player _caster, Player _target, int _index);
 }
 
-public abstract class ActCard : Card
+public abstract class SupCard : Card
 {
-    public ActCard()
+    public SupCard()
     {
         cardImageBG = Resources.Load<Sprite>("Card/카드-지원");
         cardType = CardType.SUP;
@@ -119,7 +119,14 @@ public class AtkCard1 : AtkCard
     {
         if (_target.CurState == _index)
         {
-            _target.CurHp -= damage;
+            if (_target.DefMagic)
+            {
+                _target.DefMagic = false;
+            }
+            else
+            {
+                _target.CurHp -= damage;
+            }
         }
     }
 }
@@ -143,14 +150,14 @@ public class AtkCard2 : AtkCard
     
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
-        if (_target.DefElectricity <= 0)
+        if (_target.DefElectricity)
         {
-            _target.CurHp -= damage;
+            _caster.CurHp -= 1;
+            _target.DefElectricity = false;   
         }
         else
         {
-            _caster.CurHp -= 1;
-            _target.DefElectricity -= 1;
+            _target.CurHp -= damage;
         }
     }
 }
@@ -176,14 +183,14 @@ public class AtkCard3 : AtkCard
     {
         if (_target.CurState == _index)
         {
-            if (_target.DefExplosion <= 0)
+            if (_target.DefExplosion)
             {
-                _target.CurHp -= damage;
+                _caster.CurHp -= damage / 2;
+                _target.DefExplosion = false;
             }
             else
             {
-                _caster.CurHp -= damage / 2;
-                _target.DefExplosion -= 1;
+                _target.CurHp -= damage;
             }
         }
     }
@@ -207,6 +214,7 @@ public class DefCard1 : DefCard
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
+        _caster.DefMagic = true;
     }
 }
 
@@ -223,11 +231,11 @@ public class DefCard2 : DefCard
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
     {
-        _caster.DefElectricity += 1;
     }
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
+        _caster.DefElectricity = true;
     }
 }
 
@@ -244,15 +252,15 @@ public class DefCard3 : DefCard
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
     {
-        _caster.DefExplosion += 1;
     }
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
+        _caster.DefExplosion = true;
     }
 }
 
-public class SupCard1 : ActCard
+public class SupCard1 : SupCard
 {
     public SupCard1()
     {
@@ -275,7 +283,7 @@ public class SupCard1 : ActCard
     }
 }
 
-public class SupCard2 : ActCard
+public class SupCard2 : SupCard
 {
     public SupCard2()
     {
@@ -306,7 +314,7 @@ public class SupCard2 : ActCard
     }
 }
 
-public class SupCard3 : ActCard
+public class SupCard3 : SupCard
 {
     public SupCard3()
     {

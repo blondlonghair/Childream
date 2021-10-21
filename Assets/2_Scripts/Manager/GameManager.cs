@@ -291,6 +291,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void _AddHostBattleList(int SelectRange, int cardId)
     {
         CardData.CardList[cardId].CardFirstAbility(HostPlayer, GuestPlayer, SelectRange);
+        if (CardData.CardList[cardId] is null)
         HostBattleList.Add(new Tuple<int, int>(SelectRange, cardId));
     }
 

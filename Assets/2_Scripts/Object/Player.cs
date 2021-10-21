@@ -18,8 +18,9 @@ public class Player : MonoBehaviourPunCallbacks
     public float CurMp;
     public int MaxMoveCount;
     public int CurMoveCount;
-    public int DefElectricity;
-    public int DefExplosion;
+    public bool DefMagic;
+    public bool DefElectricity;
+    public bool DefExplosion;
 
     public int CurState;
     public bool IsLocked = false;
