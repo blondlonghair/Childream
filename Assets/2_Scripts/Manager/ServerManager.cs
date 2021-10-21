@@ -14,13 +14,13 @@ using Utils;
 public class ServerManager : MonoBehaviourPunCallbacks
 {
     private PhotonView PV;
-    
+
     public static float netTime = 0;
 
     void Start()
     {
         // PhotonPeer.RegisterType(typeof(ThisCard), (byte)'W', SerializeCard, DeserializeCard);
-        
+
         PhotonNetwork.SendRate = 60;
         PhotonNetwork.SerializationRate = 30;
         PhotonNetwork.ConnectUsingSettings();
@@ -53,12 +53,18 @@ public class ServerManager : MonoBehaviourPunCallbacks
             SceneManager.LoadScene("IngameScene");
         }
     }
-    
+
     public bool AllPlayerIn() => PhotonNetwork.PlayerList.Length == 2;
 
     public void MatchStartButton()
     {
-        PhotonNetwork.JoinOrCreateRoom("Room", new RoomOptions { MaxPlayers = 2 }, null);
+        PhotonNetwork.JoinRandomOrCreateRoom(null, 2, MatchmakingMode.FillRoom, null, null, null,
+            new RoomOptions {MaxPlayers = 2});
+    }
+
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        print(message);
     }
 
     public void SurrenderButton()
@@ -66,7 +72,7 @@ public class ServerManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LeaveRoom();
         SceneManager.LoadScene("LobbyScene");
     }
-    
+
     IEnumerator WebCheck()
     {
         DateTime tTime = DateTime.Now.ToUniversalTime();
@@ -107,7 +113,7 @@ public class ServerManager : MonoBehaviourPunCallbacks
         time = netTime - fdsa;
         return time;
     }
-    
+
     // public static readonly byte[] memCard = new byte[3 * 4];
     // private static short SerializeCard(StreamBuffer outStream, object customobject)
     // {
@@ -140,5 +146,4 @@ public class ServerManager : MonoBehaviourPunCallbacks
     //
     //     return memCard;
     // }
-    
 }
