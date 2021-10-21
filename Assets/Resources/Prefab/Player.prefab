@@ -124,6 +124,7 @@ MonoBehaviour:
   CurMp: 5
   MaxMoveCount: 1
   CurMoveCount: 1
+  DefMagic: 0
   DefElectricity: 0
   DefExplosion: 0
   CurState: 0

@@ -23,22 +23,20 @@ public class GameManager : MonoBehaviourPunCallbacks
         GameEnd
     }
 
-    public GameState gameState = GameState.None;
+    [Header("Manager")] public GameState gameState = GameState.None;
     public Player HostPlayer, GuestPlayer;
     public bool isHostReady, isGuestReady;
     public List<Tuple<int, int>> HostBattleList = new List<Tuple<int, int>>(); //first : 카드 ID, second : range 번호
     public List<Tuple<int, int>> GuestBattleList = new List<Tuple<int, int>>();
-  
-    [Header("Timer")]
-    [SerializeField] private float CardInvokeTimer;
+
+    [Header("Timer")] [SerializeField] private float CardInvokeTimer;
     [SerializeField] private float CardInovkeInvaldTime;
 
-    [Header("UI")]
-    [SerializeField] private GameObject matchingPanel;
-    [SerializeField] private Slider myHpBar;
+    [Header("UI")] [SerializeField] private Slider myHpBar;
     [SerializeField] private Slider myMpBar;
     [SerializeField] private Slider EnemyHpBar;
     [SerializeField] private Slider EnemyMpBar;
+    [SerializeField] private GameObject GameEndPanel;
 
     public static GameManager Instance;
     private PhotonView PV;
@@ -53,8 +51,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        if (!AllPlayerIn())
-            return;
+        if (!AllPlayerIn()) return;
 
         //스위치 분기 나누기
         switch (gameState)
@@ -81,7 +78,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 OnGameEnd();
                 break;
         }
-        
+
         if (PhotonNetwork.IsMasterClient)
         {
             myHpBar.value = HostPlayer.CurHp / HostPlayer.MaxHp;
@@ -95,6 +92,11 @@ public class GameManager : MonoBehaviourPunCallbacks
             myMpBar.value = GuestPlayer.CurMp / GuestPlayer.MaxMp;
             EnemyHpBar.value = HostPlayer.CurHp / HostPlayer.MaxHp;
             EnemyMpBar.value = HostPlayer.CurMp / HostPlayer.MaxMp;
+        }
+
+        if (HostPlayer.CurHp <= 0 || GuestPlayer.CurHp <= 0)
+        {
+            gameState = GameState.GameEnd;
         }
     }
 
@@ -112,7 +114,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             return;
 
         PV.RPC(nameof(InitPlayers), RpcTarget.AllBuffered);
-        matchingPanel.SetActive(false);
         gameState = GameState.StartTurn;
     }
 
@@ -130,7 +131,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         HostPlayer.CurMoveCount = HostPlayer.MaxMoveCount;
         GuestPlayer.CurMoveCount = GuestPlayer.MaxMoveCount;
-        
+
         gameState = GameState.LastTurn;
         PV.RPC(nameof(DestoryCard), RpcTarget.AllViaServer);
     }
@@ -160,7 +161,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             if (HostBattleList.Count > 0)
             {
                 var firstHostCard = CardData.CardList[HostBattleList[0].Item2];
-                
+
                 print(firstHostCard);
                 if (firstHostCard.targetType == TargetType.ME)
                 {
@@ -178,7 +179,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             if (GuestBattleList.Count > 0)
             {
                 var firstGuestCard = CardData.CardList[GuestBattleList[0].Item2];
-                
+
                 print(firstGuestCard);
                 if (firstGuestCard.targetType == TargetType.ME)
                 {
@@ -228,7 +229,33 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnGameEnd()
     {
-        // PhotonNetwork.LoadLevel("MainScene");
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (HostPlayer.CurHp <= 0)
+            {
+                GameEndPanel.transform.Find("GameEndText").GetComponent<Text>().text = "패배";
+            }
+
+            else if (GuestPlayer.CurHp <= 0)
+            {
+                GameEndPanel.transform.Find("GameEndText").GetComponent<Text>().text = "승리";
+            }
+        }
+
+        else
+        {
+            if (HostPlayer.CurHp <= 0)
+            {
+                GameEndPanel.transform.Find("GameEndText").GetComponent<Text>().text = "승리";
+            }
+
+            else if (GuestPlayer.CurHp <= 0)
+            {
+                GameEndPanel.transform.Find("GameEndText").GetComponent<Text>().text = "패배";
+            }
+        }
+        
+        GameEndPanel.SetActive(true);
     }
 
     public void TurnEndButton()
@@ -262,7 +289,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             GuestBattleList.RemoveAt(0);
         }
     }
-    
+
     [PunRPC]
     void _HostReady()
     {
@@ -291,8 +318,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void _AddHostBattleList(int SelectRange, int cardId)
     {
         CardData.CardList[cardId].CardFirstAbility(HostPlayer, GuestPlayer, SelectRange);
+
         if (CardData.CardList[cardId] is null)
-        HostBattleList.Add(new Tuple<int, int>(SelectRange, cardId));
+        {
+            HostBattleList.Add(new Tuple<int, int>(SelectRange, cardId));
+        }
     }
 
     [PunRPC]
