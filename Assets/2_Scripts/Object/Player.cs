@@ -11,12 +11,15 @@ using UnityEngine.EventSystems;
 
 public class Player : MonoBehaviourPunCallbacks
 {
-    [Header("플레이어 정보")] public float MaxHp;
+    [Header("플레이어 정보")] 
+    public float MaxHp;
     public float CurHp;
     public float MaxMp;
     public float CurMp;
     public int MaxMoveCount;
     public int CurMoveCount;
+    public int DefElectricity;
+    public int DefExplosion;
 
     public int CurState;
     public bool IsLocked = false;

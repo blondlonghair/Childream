@@ -124,6 +124,8 @@ MonoBehaviour:
   CurMp: 5
   MaxMoveCount: 1
   CurMoveCount: 1
+  DefElectricity: 0
+  DefExplosion: 0
   CurState: 0
   IsLocked: 0
   SelectRange: 0

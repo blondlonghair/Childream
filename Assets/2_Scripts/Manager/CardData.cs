@@ -143,7 +143,15 @@ public class AtkCard2 : AtkCard
     
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
-        _target.CurHp -= damage;
+        if (_target.DefElectricity <= 0)
+        {
+            _target.CurHp -= damage;
+        }
+        else
+        {
+            _caster.CurHp -= 1;
+            _target.DefElectricity -= 1;
+        }
     }
 }
 
@@ -168,7 +176,15 @@ public class AtkCard3 : AtkCard
     {
         if (_target.CurState == _index)
         {
-            _target.CurHp -= damage;
+            if (_target.DefExplosion <= 0)
+            {
+                _target.CurHp -= damage;
+            }
+            else
+            {
+                _caster.CurHp -= damage / 2;
+                _target.DefExplosion -= 1;
+            }
         }
     }
 }
@@ -207,7 +223,7 @@ public class DefCard2 : DefCard
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
     {
-        
+        _caster.DefElectricity += 1;
     }
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
@@ -228,7 +244,7 @@ public class DefCard3 : DefCard
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
     {
-        
+        _caster.DefExplosion += 1;
     }
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)

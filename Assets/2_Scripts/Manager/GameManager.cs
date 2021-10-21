@@ -279,12 +279,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (isHost)
         {
-            CardData.CardList[id].CardFirstAbility(HostPlayer, GuestPlayer, SelectRange);
             PV.RPC(nameof(_AddHostBattleList), RpcTarget.AllBuffered, SelectRange, id);
         }
         else
         {
-            CardData.CardList[id].CardFirstAbility(GuestPlayer, HostPlayer, SelectRange);
             PV.RPC(nameof(_AddGuestBattleList), RpcTarget.AllBuffered, SelectRange, id);
         }
     }
@@ -292,12 +290,14 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void _AddHostBattleList(int SelectRange, int cardId)
     {
+        CardData.CardList[cardId].CardFirstAbility(HostPlayer, GuestPlayer, SelectRange);
         HostBattleList.Add(new Tuple<int, int>(SelectRange, cardId));
     }
 
     [PunRPC]
     private void _AddGuestBattleList(int SelectRange, int cardId)
     {
+        CardData.CardList[cardId].CardFirstAbility(GuestPlayer, HostPlayer, SelectRange);
         GuestBattleList.Add(new Tuple<int, int>(SelectRange, cardId));
     }
 
