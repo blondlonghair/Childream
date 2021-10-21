@@ -58,8 +58,7 @@ public class ServerManager : MonoBehaviourPunCallbacks
 
     public void MatchStartButton()
     {
-        PhotonNetwork.JoinRandomOrCreateRoom(null, 2, MatchmakingMode.FillRoom, null, null, null,
-            new RoomOptions {MaxPlayers = 2});
+        PhotonNetwork.JoinRandomOrCreateRoom(roomOptions : new RoomOptions {MaxPlayers = 2});
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)

@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public GameState gameState = GameState.None;
     public Player HostPlayer, GuestPlayer;
     public bool isHostReady, isGuestReady;
-    public List<Tuple<int, int>> HostBattleList = new List<Tuple<int, int>>();
+    public List<Tuple<int, int>> HostBattleList = new List<Tuple<int, int>>(); //first : 카드 ID, second : range 번호
     public List<Tuple<int, int>> GuestBattleList = new List<Tuple<int, int>>();
   
     [Header("Timer")]
@@ -56,6 +56,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (!AllPlayerIn())
             return;
 
+        //스위치 분기 나누기
         switch (gameState)
         {
             case GameState.GameSetup:
@@ -141,6 +142,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         //3초마다 리스트 인보크
         if (CardInvokeTimer >= 3)
         {
+            //플레이어 이동 잠금은 첫번째로 발동되게 
             if (HostBattleList.Any(x => CardData.CardList[x.Item2]?.id == 7))
             {
                 var hostSupCard = HostBattleList.Find(x => CardData.CardList[x.Item2]?.id == 7);
@@ -162,12 +164,12 @@ public class GameManager : MonoBehaviourPunCallbacks
                 print(firstHostCard);
                 if (firstHostCard.targetType == TargetType.ME)
                 {
-                    firstHostCard?.CardEffective(HostPlayer, HostBattleList[0].Item1);
+                    firstHostCard?.CardSecondAbility(GuestPlayer, HostPlayer, HostBattleList[0].Item1);
                 }
 
                 else if (firstHostCard.targetType == TargetType.ENEMY)
                 {
-                    firstHostCard?.CardEffective(GuestPlayer, HostBattleList[0].Item1);
+                    firstHostCard?.CardSecondAbility(HostPlayer, GuestPlayer, HostBattleList[0].Item1);
                 }
 
                 HostBattleList.RemoveAt(0);
@@ -180,12 +182,12 @@ public class GameManager : MonoBehaviourPunCallbacks
                 print(firstGuestCard);
                 if (firstGuestCard.targetType == TargetType.ME)
                 {
-                    firstGuestCard?.CardEffective(GuestPlayer, GuestBattleList[0].Item1);
+                    firstGuestCard?.CardSecondAbility(HostPlayer, GuestPlayer, GuestBattleList[0].Item1);
                 }
 
                 else if (firstGuestCard.targetType == TargetType.ENEMY)
                 {
-                    firstGuestCard?.CardEffective(HostPlayer, GuestBattleList[0].Item1);
+                    firstGuestCard?.CardSecondAbility(GuestPlayer, HostPlayer, GuestBattleList[0].Item1);
                 }
 
                 GuestBattleList.RemoveAt(0);
@@ -277,10 +279,12 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (isHost)
         {
+            CardData.CardList[id].CardFirstAbility(HostPlayer, GuestPlayer, SelectRange);
             PV.RPC(nameof(_AddHostBattleList), RpcTarget.AllBuffered, SelectRange, id);
         }
         else
         {
+            CardData.CardList[id].CardFirstAbility(GuestPlayer, HostPlayer, SelectRange);
             PV.RPC(nameof(_AddGuestBattleList), RpcTarget.AllBuffered, SelectRange, id);
         }
     }

@@ -11,6 +11,7 @@ using Utils;
 
 public class Card
 {
+    //카드 정보들
     public int id;
     public string cardName;
     public int cost;
@@ -20,9 +21,9 @@ public class Card
     public CardType cardType;
     public TargetType targetType;
 
-    public virtual void CardEffective(Player _target, int _index)
-    {
-    }
+    //카드 효과들 First는 시전시 발동, Second는 카드 인보크시 발동
+    public virtual void CardFirstAbility(Player _caster, Player _target, int _index) {}
+    public virtual void CardSecondAbility(Player _caster, Player _target, int index) {}
 }
 
 public abstract class AtkCard : Card
@@ -36,7 +37,8 @@ public abstract class AtkCard : Card
         targetType = TargetType.ENEMY;
     }
 
-    public abstract override void CardEffective(Player _target, int _index);
+    public abstract override void CardFirstAbility(Player _caster, Player _target, int _index);
+    public abstract override void CardSecondAbility(Player _caster, Player _target, int index);
 }
 
 public abstract class DefCard : Card
@@ -51,7 +53,8 @@ public abstract class DefCard : Card
         targetType = TargetType.ME;
     }
 
-    public abstract override void CardEffective(Player _target, int _index);
+    public abstract override void CardFirstAbility(Player _caster, Player _target, int _index);
+    public abstract override void CardSecondAbility(Player _caster, Player _target, int _index);
 }
 
 public abstract class ActCard : Card
@@ -62,18 +65,19 @@ public abstract class ActCard : Card
         cardType = CardType.SUP;
     }
 
-    public abstract override void CardEffective(Player _target, int _index);
+    public abstract override void CardFirstAbility(Player _caster, Player _target, int _index);
+    public abstract override void CardSecondAbility(Player _caster, Player _target, int _index);
 }
 
-public abstract class Actions : Card
-{
-    public Actions()
-    {
-        cardType = CardType.NONE;
-    }
-
-    public abstract override void CardEffective(Player _target, int _index);
-}
+// public abstract class Actions : Card
+// {
+//     public Actions()
+//     {
+//         cardType = CardType.NONE;
+//     }
+//
+//     public abstract override void CardSecondAbility(Player _caster, Player _target, int _index);
+// }
 
 public class EmptyCard : Card
 {
@@ -89,7 +93,7 @@ public class EmptyCard : Card
         cardImage = Resources.Load<Sprite>("Card/Cards/None");
     }
 
-    public override void CardEffective(Player _target, int _index)
+    public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
     }
 }
@@ -106,7 +110,12 @@ public class AtkCard1 : AtkCard
         damage = 5;
     }
 
-    public override void CardEffective(Player _target, int _index)
+    public override void CardFirstAbility(Player _caster, Player _target, int _index)
+    {
+        
+    }
+    
+    public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
         if (_target.CurState == _index)
         {
@@ -127,7 +136,12 @@ public class AtkCard2 : AtkCard
         damage = 2;
     }
 
-    public override void CardEffective(Player _target, int _index)
+    public override void CardFirstAbility(Player _caster, Player _target, int _index)
+    {
+        
+    }
+    
+    public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
         _target.CurHp -= damage;
     }
@@ -144,8 +158,13 @@ public class AtkCard3 : AtkCard
         cardImage = Resources.Load<Sprite>("Card/Cards/Atk_3");
         damage = 10;
     }
+    
+    public override void CardFirstAbility(Player _caster, Player _target, int _index)
+    {
+        
+    }
 
-    public override void CardEffective(Player _target, int _index)
+    public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
         if (_target.CurState == _index)
         {
@@ -165,7 +184,12 @@ public class DefCard1 : DefCard
         cardImage = Resources.Load<Sprite>("Card/Cards/Def_1");
     }
 
-    public override void CardEffective(Player _target, int _index)
+    public override void CardFirstAbility(Player _caster, Player _target, int _index)
+    {
+        
+    }
+
+    public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
     }
 }
@@ -181,7 +205,12 @@ public class DefCard2 : DefCard
         cardImage = Resources.Load<Sprite>("Card/Cards/Def_2");
     }
 
-    public override void CardEffective(Player _target, int _index)
+    public override void CardFirstAbility(Player _caster, Player _target, int _index)
+    {
+        
+    }
+
+    public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
     }
 }
@@ -197,7 +226,12 @@ public class DefCard3 : DefCard
         cardImage = Resources.Load<Sprite>("Card/Cards/Def_3");
     }
 
-    public override void CardEffective(Player _target, int _index)
+    public override void CardFirstAbility(Player _caster, Player _target, int _index)
+    {
+        
+    }
+
+    public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
     }
 }
@@ -214,7 +248,12 @@ public class SupCard1 : ActCard
         targetType = TargetType.ENEMY;
     }
 
-    public override void CardEffective(Player _target, int _index)
+    public override void CardFirstAbility(Player _caster, Player _target, int _index)
+    {
+        
+    }
+
+    public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
         _target.IsLocked = true;
     }
@@ -232,7 +271,12 @@ public class SupCard2 : ActCard
         targetType = TargetType.ME;
     }
 
-    public override void CardEffective(Player _target, int _index)
+    public override void CardFirstAbility(Player _caster, Player _target, int _index)
+    {
+        
+    }
+
+    public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
         for (int i = 0; i < 3; i++)
         {
@@ -258,7 +302,12 @@ public class SupCard3 : ActCard
         targetType = TargetType.ME;
     }
 
-    public override void CardEffective(Player _target, int _index)
+    public override void CardFirstAbility(Player _caster, Player _target, int _index)
+    {
+        
+    }
+
+    public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
         CardManager.Instance.AddCard(_target.PV().IsMine);
         CardManager.Instance.AddCard(_target.PV().IsMine);
@@ -273,7 +322,7 @@ public class Move : Card
         targetType = TargetType.ME;
     }
 
-    public override void CardEffective(Player _target, int _index)
+    public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
         if (_target.IsLocked)
         {
