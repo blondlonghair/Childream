@@ -133,7 +133,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         GuestPlayer.CurMoveCount = GuestPlayer.MaxMoveCount;
 
         gameState = GameState.LastTurn;
-        PV.RPC(nameof(DestoryCard), RpcTarget.AllViaServer);
     }
 
     void OnLastTurn()
