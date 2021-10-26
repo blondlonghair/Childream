@@ -119,6 +119,18 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnStartTurn()
     {
+        foreach (var card in CardManager.Instance.guestCards)
+        {
+            CardManager.Instance.DestroyCard(card.gameObject, PV.IsMine);
+            print("host card 삭제");
+        }
+        
+        foreach (var card in CardManager.Instance.hostCards)
+        {
+            CardManager.Instance.DestroyCard(card.gameObject, PV.IsMine);
+            print("guest card 삭제");
+        }        
+    
         CardManager.Instance.AddCard(HostPlayer.PV().IsMine);
         CardManager.Instance.AddCard(HostPlayer.PV().IsMine);
         CardManager.Instance.AddCard(HostPlayer.PV().IsMine);
