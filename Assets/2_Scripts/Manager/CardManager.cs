@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
@@ -20,6 +22,8 @@ public class CardManager : MonoBehaviourPunCallbacks
     [Header("카드 드로우 위치")] 
     [SerializeField] private Transform hostCardDraw;
     [SerializeField] private Transform guestCardDraw;
+
+    [Header("max카드 수"), SerializeField] private int maxCard = 4;
 
     public static CardManager Instance;
     private PhotonView PV;
@@ -43,27 +47,34 @@ public class CardManager : MonoBehaviourPunCallbacks
     //카드 뽑기
     public void AddCard(bool isMine)
     {
-        if (isMine)
+        if (!isMine) return;
+
+        if (PhotonNetwork.IsMasterClient)
         {
-            // print("카드 생성");
-            Vector3 initPos;
-            Quaternion initRot;
-
-            if (PhotonNetwork.IsMasterClient)
-            {
-                initPos = hostCardDraw.position;
-                initRot = Quaternion.Euler(0,0,180);
-            }
-            else
-            {
-                initPos = guestCardDraw.position;
-                initRot = Quaternion.Euler(0,0,0);
-            }
-
-            var cardObject = PhotonNetwork.Instantiate("Prefab/Card", initPos, initRot);
-            var card = cardObject.GetComponent<ThisCard>();
-            card.Setup(PopCard(), isMine);
+            if (hostCards.Count >= maxCard) return;
         }
+        else
+        {
+            if (guestCards.Count >= maxCard) return;
+        }
+
+        Vector3 initPos;
+        Quaternion initRot;
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            initPos = hostCardDraw.position;
+            initRot = Quaternion.Euler(0,0,180);
+        }
+        else
+        {
+            initPos = guestCardDraw.position;
+            initRot = Quaternion.Euler(0,0,0);
+        }
+
+        var cardObject = PhotonNetwork.Instantiate("Prefab/Card", initPos, initRot);
+        var card = cardObject.GetComponent<ThisCard>();
+        card.Setup(PopCard(), isMine);
 
         CardAlignment(isMine);
     }

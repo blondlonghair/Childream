@@ -2,18 +2,9 @@ Shader "Sprites/Outline"
 {
     Properties
     {
-        [PerRendererData] _MainTex ("Sprite Texture", 2D) = "white" {}
-        _Color ("Tint", Color) = (1,1,1,1)
-        [MaterialToggle] PixelSnap ("Pixel snap", Float) = 0
-        [HideInInspector] _RendererColor ("RendererColor", Color) = (1,1,1,1)
-        [HideInInspector] _Flip ("Flip", Vector) = (1,1,1,1)
-        [PerRendererData] _AlphaTex ("External Alpha", 2D) = "white" {}
-        [PerRendererData] _EnableExternalAlpha ("Enable External Alpha", Float) = 0
-
-        // Add values to determine if outlining is enabled and outline color.
-        [PerRendererData] _Outline("Outline", Float) = 0
-        [PerRendererData] _OutlineColor("Outline Color", Color) = (1,1,1,1)
-        [PerRendererData] _OutlineSize("Outline Size", int) = 1
+        _MainTex ("Sprite Texture", 2D) = "white" {}
+        _OutlineColor ("OutlineColor", Color) = (1,1,1,1)
+        _OutlineSize ("OutlineSize", Range(0.0, 0.1)) = 0.1
     }
 
     SubShader
@@ -21,62 +12,66 @@ Shader "Sprites/Outline"
         Tags
         {
             "Queue"="Transparent"
-            "IgnoreProjector"="True"
-            "RenderType"="Transparent"
-            "PreviewType"="Plane"
-            "CanUseSpriteAtlas"="True"
         }
 
-        Cull Off
-        Lighting Off
-        ZWrite Off
-        Blend One OneMinusSrcAlpha
+        Blend SrcAlpha OneMinusSrcAlpha
 
         Pass
         {
             CGPROGRAM
-            #pragma vertex SpriteVert
+            #pragma vertex vert
             #pragma fragment frag
-            #pragma target 2.0
-            #pragma multi_compile_instancing
-            #pragma multi_compile _ PIXELSNAP_ON
-            #pragma multi_compile _ ETC1_EXTERNAL_ALPHA
-            #include "UnitySprites.cginc"
-
-            float _Outline;
-            fixed4 _OutlineColor;
-            int _OutlineSize;
-            float4 _MainTex_TexelSize;
-
-            fixed4 frag(v2f IN) : SV_Target
+         
+            #include "UnityCG.cginc"
+         
+            struct appdata
             {
-                fixed4 c = SampleSpriteTexture(IN.texcoord) * IN.color;
+                float4 vertex : POSITION;
+                float2 uv : TEXCOORD0;
+            };
+         
+            struct v2f
+            {
+                float2 uv : TEXCOORD0;
+                float4 vertex : SV_POSITION;
+            };
+         
+            sampler2D _MainTex;
+            float4 _MainTex_ST;
+            float4 _MainTex_TexelSize;
+         
+            fixed4 _OutlineColor;
+            float _OutlineSize;
+         
+            v2f vert (appdata v)
+            {
+                v2f o;
+                o.vertex = UnityObjectToClipPos(v.vertex);
+                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                return o;
+            }
+         
+            fixed4 frag (v2f i) : SV_Target
+            {
+                fixed4 col = tex2D(_MainTex, i.uv);
 
-                // If outline is enabled and there is a pixel, try to draw an outline.
-                if (_Outline > 0 && c.a != 0)
+
+                if (_OutlineSize != 0)
                 {
-                    float totalAlpha = 1.0;
-
-                    [unroll(16)]
-                    for (int i = 1; i < _OutlineSize + 1; i++)
-                    {
-                        fixed4 pixelUp = tex2D(_MainTex, IN.texcoord + fixed2(0, i * _MainTex_TexelSize.y));
-                        fixed4 pixelDown = tex2D(_MainTex, IN.texcoord - fixed2(0, i * _MainTex_TexelSize.y));
-                        fixed4 pixelRight = tex2D(_MainTex, IN.texcoord + fixed2(i * _MainTex_TexelSize.x, 0));
-                        fixed4 pixelLeft = tex2D(_MainTex, IN.texcoord - fixed2(i * _MainTex_TexelSize.x, 0));
-
-                        totalAlpha = totalAlpha * pixelUp.a * pixelDown.a * pixelRight.a * pixelLeft.a;
-                    }
-
-                    if (totalAlpha == 0)
-                    {
-                        c.rgba = fixed4(1, 1, 1, 1) * _OutlineColor;
-                    }
+                    fixed leftPixel = tex2D(_MainTex, i.uv + float2(-_MainTex_TexelSize.x - _OutlineSize, 0)).a;
+                    fixed upPixel = tex2D(_MainTex, i.uv + float2(0, _MainTex_TexelSize.y + _OutlineSize)).a;
+                    fixed rightPixel = tex2D(_MainTex, i.uv + float2(_MainTex_TexelSize.x + _OutlineSize, 0)).a;
+                    fixed bottomPixel = tex2D(_MainTex, i.uv + float2(0, -_MainTex_TexelSize.y - _OutlineSize)).a;
+                    
+                    fixed outline = (1 - leftPixel * upPixel * rightPixel * bottomPixel) * col.a;
+                    
+                    return lerp(col, _OutlineColor, outline);
                 }
-
-                c.rgb *= c.a;
-
-                return c;
+                
+                else
+                {
+                    return col;
+                }
             }
             ENDCG
         }

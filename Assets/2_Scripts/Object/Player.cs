@@ -184,18 +184,23 @@ public class Player : MonoBehaviourPunCallbacks
 
             if (!rangeTarget.GetComponent<PhotonView>().IsMine)
             {
+                //마나 0보다 작으면 return
                 if (CurMp < raycastTarget.GetComponent<ThisCard>().cost)
                     return;
 
+                //카드 코스트만큼 마나 제거
                 CurMp -= raycastTarget.GetComponent<ThisCard>().cost;
 
+                //카드 리스트에 행동추가
                 GameManager.Instance.AddBattleList(SelectRange,
                     raycastTarget is Move ? 10 : raycastTarget.GetComponent<ThisCard>().id,
                     PhotonNetwork.IsMasterClient);
 
+                //다 하고 나면 카드 삭제
                 CardManager.Instance.DestroyCard(raycastTarget, PhotonNetwork.IsMasterClient);
             }
             
+            //카드 정렬
             CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
 
             raycastTarget = null;
