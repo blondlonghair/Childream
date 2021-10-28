@@ -2929,3 +2929,4 @@ MonoBehaviour:
   guestCardRight: {fileID: 709215313}
   hostCardDraw: {fileID: 1231598258}
   guestCardDraw: {fileID: 898508409}
+  maxCard: 4
