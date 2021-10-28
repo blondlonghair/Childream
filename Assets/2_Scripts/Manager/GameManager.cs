@@ -6,6 +6,7 @@ using Enums;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Utils;
 
@@ -41,12 +42,21 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static GameManager Instance;
     private PhotonView PV;
 
-    void Awake() => Instance = this;
+    void Awake()
+    {
+        Instance = this;
+    }
 
-    void Start()
+    private void Start()
     {
         PV = this.PV();
         gameState = GameState.GameSetup;
+    }
+
+    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
+    {
+        GameEndPanel.SetActive(true);
+        GameEndPanel.transform.Find("GameEndText").GetComponent<Text>().text = "플레이어 나감";
     }
 
     void Update()
@@ -354,17 +364,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public bool AllPlayerIn() => PhotonNetwork.PlayerList.Length == 2;
 
-    // public void AddPlayer(Player player, bool isMaster)
-    // {
-    //     PV.RPC(nameof(_AddPlayer), RpcTarget.AllBuffered, player, isMaster);
-    // }
-    //
-    // [PunRPC]
-    // void _AddPlayer(Player player, bool isMaster)
-    // {
-    //     if (isMaster)
-    //         HostPlayer = player;
-    //     else
-    //         GuestPlayer = player;
-    // }
+    public void ChangeScene(string scene)
+    {
+        SceneManager.LoadScene(scene);
+    }
 }

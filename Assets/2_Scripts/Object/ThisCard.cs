@@ -75,6 +75,8 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
     void Update()
     {
+        CastRay();
+
         if (Input.GetKeyDown(KeyCode.D))
         {
             if (PV.IsMine)
@@ -102,19 +104,23 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
     void FixedUpdate()
     {
-        CastRay();
-
         CardZoom();
-        
-        // transform.position = Vector3.Lerp(transform.position, originRPS.pos, 0.5f);
-        // transform.rotation = originRPS.rot;
-        // transform.localScale = originRPS.scale;
     }
 
     void CardZoom()
     {
         if (!PV.IsMine || EventSystem.current.IsPointerOverGameObject())
+        {
+            canvas.sortingOrder = originRPS.index;
+            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, 0.5f);
+            transform.position = Vector3.Lerp(transform.position, originRPS.pos, 0.5f);
+            if (!Input.GetMouseButton(0))
+            {
+                transform.rotation = Quaternion.Lerp(transform.rotation, originRPS.rot, 0.5f);
+            }
+            
             return;
+        }
 
         if (target == gameObject && !Input.GetMouseButton(0))
         {
