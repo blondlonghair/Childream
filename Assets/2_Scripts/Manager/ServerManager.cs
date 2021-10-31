@@ -19,27 +19,12 @@ public class ServerManager : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        // PhotonPeer.RegisterType(typeof(ThisCard), (byte)'W', SerializeCard, DeserializeCard);
-
-        PhotonNetwork.SendRate = 60;
-        PhotonNetwork.SerializationRate = 30;
-        PhotonNetwork.ConnectUsingSettings();
-
-        StartCoroutine(WebCheck());
-
         PV = this.PV();
     }
 
-    public override void OnConnectedToMaster()
-    {
-        PhotonNetwork.JoinLobby();
-    }
+    
 
-    public override void OnJoinedLobby()
-    {
-        print("JoinLobby");
-        SceneManager.LoadScene("LobbyScene");
-    }
+    
 
     public override void OnJoinedRoom()
     {
