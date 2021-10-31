@@ -1,14 +1,8 @@
 using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
 using Photon.Pun;
-using Photon.Realtime;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using System;
-using ExitGames.Client.Photon;
-using UnityEngine.SceneManagement;
 using Utils;
 
 public class ServerManager : MonoBehaviourPunCallbacks
@@ -20,41 +14,6 @@ public class ServerManager : MonoBehaviourPunCallbacks
     void Start()
     {
         PV = this.PV();
-    }
-
-    
-
-    
-
-    public override void OnJoinedRoom()
-    {
-        print("JoinRoom");
-    }
-
-    void Update()
-    {
-        if (AllPlayerIn() && SceneManager.GetActiveScene().name != "IngameScene")
-        {
-            SceneManager.LoadScene("IngameScene");
-        }
-    }
-
-    public bool AllPlayerIn() => PhotonNetwork.PlayerList.Length == 2;
-
-    public void MatchStartButton()
-    {
-        PhotonNetwork.JoinRandomOrCreateRoom(roomOptions : new RoomOptions {MaxPlayers = 2});
-    }
-
-    public override void OnJoinRoomFailed(short returnCode, string message)
-    {
-        print(message);
-    }
-
-    public void SurrenderButton()
-    {
-        PhotonNetwork.LeaveRoom();
-        SceneManager.LoadScene("LobbyScene");
     }
 
     IEnumerator WebCheck()

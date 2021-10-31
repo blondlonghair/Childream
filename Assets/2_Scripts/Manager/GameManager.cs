@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         GameEndPanel.SetActive(true);
         GameEndPanel.transform.Find("GameEndText").GetComponent<Text>().text = "플레이어 나감";
+        PhotonNetwork.LeaveRoom();
     }
 
     void Update()
@@ -89,6 +90,8 @@ public class GameManager : MonoBehaviourPunCallbacks
                 break;
         }
 
+        if (!Checkplayers()) return;
+
         if (PhotonNetwork.IsMasterClient)
         {
             myHpBar.value = HostPlayer.CurHp / HostPlayer.MaxHp;
@@ -104,10 +107,6 @@ public class GameManager : MonoBehaviourPunCallbacks
             EnemyMpBar.value = HostPlayer.CurMp / HostPlayer.MaxMp;
         }
 
-        if (HostPlayer.CurHp <= 0 || GuestPlayer.CurHp <= 0)
-        {
-            gameState = GameState.GameEnd;
-        }
     }
 
     void OnGameSetup()
@@ -160,6 +159,12 @@ public class GameManager : MonoBehaviourPunCallbacks
     void OnLastTurn()
     {
         CardInvokeTimer += Time.deltaTime;
+        
+        //게임 끝인지 확인
+        if (HostPlayer.CurHp <= 0 || GuestPlayer.CurHp <= 0)
+        {
+            gameState = GameState.GameEnd;
+        }
 
         //3초마다 리스트 인보크
         if (CardInvokeTimer >= 3)
@@ -367,5 +372,11 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void ChangeScene(string scene)
     {
         SceneManager.LoadScene(scene);
+    }
+    
+    public void SurrenderButton()
+    {
+        PhotonNetwork.LeaveRoom();
+        SceneManager.LoadScene("LobbyScene");
     }
 }

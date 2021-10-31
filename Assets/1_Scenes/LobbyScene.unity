@@ -205,8 +205,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 879577009}
-        m_TargetAssemblyTypeName: ServerManager, Assembly-CSharp
+      - m_Target: {fileID: 1413626357}
+        m_TargetAssemblyTypeName: LobbyScene, Assembly-CSharp
         m_MethodName: MatchStartButton
         m_Mode: 1
         m_Arguments:
