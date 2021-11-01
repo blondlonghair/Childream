@@ -8,7 +8,7 @@ TagManager:
   - Range1
   - Range2
   - Range3
-  - Range
+  - EffectRange
   layers:
   - Default
   - TransparentFX

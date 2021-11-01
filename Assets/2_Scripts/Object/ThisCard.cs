@@ -92,18 +92,17 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
         if (isLerp)
         {
+            canvas.sortingOrder = originRPS.index;
             transform.position = Vector3.Lerp(transform.position, originRPS.pos, 0.2f);
             transform.rotation = Quaternion.Lerp(transform.rotation, originRPS.rot, 0.2f);
+            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, 0.2f);
 
             if (transform.position == originRPS.pos)
             {
                 isLerp = false;
             }
         }
-    }
-
-    void FixedUpdate()
-    {
+        
         CardZoom();
     }
 
@@ -139,7 +138,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
             }
         }
 
-        else
+        else if (target != gameObject && !Input.GetMouseButton(0))
         {
             canvas.sortingOrder = originRPS.index;
             transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, 0.5f);
@@ -206,10 +205,31 @@ public class ThisCard : MonoBehaviourPunCallbacks
         }
     }
 
-    public void MoveTransform(PRS prs)
+    public void MoveTransform()
     {
-        canvas.sortingOrder = prs.index;
         isLerp = true;
+    }
+
+    public void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!PV.IsMine) return;
+        
+        if (other.CompareTag("EffectRange"))
+        {
+            transform.GetChild(0).gameObject.SetActive(false);
+            transform.GetChild(1).gameObject.SetActive(true);
+        }
+    }
+
+    public void OnTriggerExit2D(Collider2D other)
+    {
+        if (!PV.IsMine) return;
+
+        if (other.CompareTag("EffectRange"))
+        {
+            transform.GetChild(0).gameObject.SetActive(true);
+            transform.GetChild(1).gameObject.SetActive(false);
+        }
     }
 
     // IEnumerator moveCard(PRS prs)

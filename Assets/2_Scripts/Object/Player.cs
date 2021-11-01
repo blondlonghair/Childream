@@ -79,8 +79,11 @@ public class Player : MonoBehaviourPunCallbacks
 
         for (int i = 0; i < hits.Length; i++)
         {
-            if (hits[i].collider != null && hits[i].collider.gameObject.tag.Contains("Range"))
+            print(hits[i].transform.name);
+            
+            if (hits[i].collider != null && hits[i].collider.gameObject.tag.Contains("Range") && !hits[i].collider.gameObject.CompareTag("EffectRange"))
             {
+                print($"{hits[i].collider.gameObject.tag}, {hits[i].collider.gameObject.tag.Replace("Range", "")}");
                 SelectRange = int.Parse(hits[i].collider.gameObject.tag.Replace("Range", ""));
                 obj = hits[i].collider.gameObject;
             }
@@ -171,7 +174,10 @@ public class Player : MonoBehaviourPunCallbacks
                 return;
 
             if (raycastTarget.GetComponent<PhotonView>().IsMine)
+            {
                 raycastTarget.transform.position = worldMousePos;
+                raycastTarget.transform.localScale = Vector3.one;
+            }
         }
 
         if (Input.GetMouseButtonUp(0))

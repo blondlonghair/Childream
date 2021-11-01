@@ -176,7 +176,7 @@ public class CardManager : MonoBehaviourPunCallbacks
             var targetCard = targetCards[i];
 
             targetCard.originRPS = originCardRPS[i];
-            targetCard.MoveTransform(targetCard.originRPS);
+            targetCard.MoveTransform();
         }
     }
 
@@ -194,7 +194,7 @@ public class CardManager : MonoBehaviourPunCallbacks
             var targetCard = targetCards[i];
 
             targetCard.originRPS = originCardRPS[i];
-            targetCard.MoveTransform(targetCard.originRPS);
+            targetCard.MoveTransform();
         }
     }
 
