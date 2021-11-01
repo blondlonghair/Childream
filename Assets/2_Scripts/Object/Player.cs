@@ -155,6 +155,7 @@ public class Player : MonoBehaviourPunCallbacks
         if (Input.GetMouseButtonDown(0))
         {
             CastRay(ref raycastTarget, "Card");
+            
             if (raycastTarget == null)
                 return;
 
