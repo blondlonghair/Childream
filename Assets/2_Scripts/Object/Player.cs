@@ -11,8 +11,7 @@ using UnityEngine.EventSystems;
 
 public class Player : MonoBehaviourPunCallbacks
 {
-    [Header("플레이어 정보")] 
-    public float MaxHp;
+    [Header("플레이어 정보")] public float MaxHp;
     public float CurHp;
     public float MaxMp;
     public float CurMp;
@@ -51,7 +50,7 @@ public class Player : MonoBehaviourPunCallbacks
         MouseInput();
     }
 
-    void CastRay(ref GameObject obj, params string[] _tag)
+    void CastRay(ref GameObject obj, string tag)
     {
         obj = null;
 
@@ -59,15 +58,35 @@ public class Player : MonoBehaviourPunCallbacks
             return;
 
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        RaycastHit2D hits = Physics2D.Raycast(pos, Vector2.zero, 0f);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(pos, Vector2.zero, 0f);
 
-        foreach (var tag in _tag)
+        foreach (var hit2D in hits)
         {
-            if (hits.collider != null && hits.collider.gameObject.CompareTag(tag))
+            if (hit2D.collider != null && hit2D.collider.gameObject.CompareTag(tag))
             {
-                obj = hits.collider.gameObject;
+                obj = hit2D.collider.gameObject;
+                return;
             }
         }
+    }
+
+    bool CastRay(string tag)
+    {
+        if (EventSystem.current.IsPointerOverGameObject())
+            return false;
+        
+        Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(pos, Vector2.zero, 0f);
+
+        foreach (var hit2D in hits)
+        {
+            if (hit2D.collider != null && hit2D.collider.gameObject.CompareTag(tag))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     void CastRayRange(ref GameObject obj)
@@ -80,8 +99,9 @@ public class Player : MonoBehaviourPunCallbacks
         for (int i = 0; i < hits.Length; i++)
         {
             print(hits[i].transform.name);
-            
-            if (hits[i].collider != null && hits[i].collider.gameObject.tag.Contains("Range") && !hits[i].collider.gameObject.CompareTag("EffectRange"))
+
+            if (hits[i].collider != null && hits[i].collider.gameObject.tag.Contains("Range") &&
+                !hits[i].collider.gameObject.CompareTag("EffectRange"))
             {
                 print($"{hits[i].collider.gameObject.tag}, {hits[i].collider.gameObject.tag.Replace("Range", "")}");
                 SelectRange = int.Parse(hits[i].collider.gameObject.tag.Replace("Range", ""));
@@ -101,7 +121,7 @@ public class Player : MonoBehaviourPunCallbacks
         {
             if (PV.IsMine)
             {
-                transform.position = new Vector3(0, 5, 0);
+                transform.position = new Vector3(0, 2.5f, 0);
                 transform.Rotate(0, 0, 180);
                 gameObject.name = "HostPlayer";
             }
@@ -117,7 +137,7 @@ public class Player : MonoBehaviourPunCallbacks
         {
             if (PV.IsMine)
             {
-                transform.position = new Vector3(0, -5, 0);
+                transform.position = new Vector3(0, -2.5f, 0);
                 gameObject.name = "GuestPlayer";
             }
             else
@@ -158,7 +178,7 @@ public class Player : MonoBehaviourPunCallbacks
         if (Input.GetMouseButtonDown(0))
         {
             CastRay(ref raycastTarget, "Card");
-            
+
             if (raycastTarget == null)
                 return;
 
@@ -173,6 +193,14 @@ public class Player : MonoBehaviourPunCallbacks
             if (raycastTarget == null)
                 return;
 
+            // raycastTarget.GetComponent<BoxCollider2D>().size = new Vector2(2.3f / 2, 3.8f / 2);
+            // raycastTarget.GetComponent<BoxCollider2D>().offset = Vector2.down;
+
+            if (CastRay("EffectRange"))
+            {
+                raycastTarget.GetComponent<ThisCard>().ChangetoEffect(true);
+            }
+            
             if (raycastTarget.GetComponent<PhotonView>().IsMine)
             {
                 raycastTarget.transform.position = worldMousePos;
@@ -185,10 +213,12 @@ public class Player : MonoBehaviourPunCallbacks
             CastRayRange(ref rangeTarget);
 
             CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
+            
+            raycastTarget.GetComponent<ThisCard>().ChangetoEffect(false);
 
             if (rangeTarget == null)
                 return;
-
+            
             if (!rangeTarget.GetComponent<PhotonView>().IsMine)
             {
                 //마나 0보다 작으면 return
@@ -206,7 +236,7 @@ public class Player : MonoBehaviourPunCallbacks
                 //다 하고 나면 카드 삭제
                 CardManager.Instance.DestroyCard(raycastTarget, PhotonNetwork.IsMasterClient);
             }
-            
+
             //카드 정렬
             CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
 

@@ -26,7 +26,7 @@ public class Range : MonoBehaviourPunCallbacks
             
             if (PV.IsMine)
             {
-                transform.position = new Vector3(0, 7.2f, 0);
+                transform.position = new Vector3(0, 5f, 0);
                 (childs[0].transform.position, childs[2].transform.position) = (childs[2].transform.position, childs[0].transform.position);
                 gameObject.name = "MasterRange";
                 SR.sprite = frontRange;
@@ -43,7 +43,7 @@ public class Range : MonoBehaviourPunCallbacks
         {
             if (PV.IsMine)
             {
-                transform.position = new Vector3(0, -7.2f, 0);
+                transform.position = new Vector3(0, -5f, 0);
                 SR.sprite = frontRange;
                 gameObject.name = "GuestRange";
                 (childs[0].transform.position, childs[2].transform.position) = (childs[2].transform.position, childs[0].transform.position);

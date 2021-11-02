@@ -210,51 +210,42 @@ public class ThisCard : MonoBehaviourPunCallbacks
         isLerp = true;
     }
 
-    public void OnTriggerEnter2D(Collider2D other)
+    public void ChangetoEffect(bool isChange)
     {
         if (!PV.IsMine) return;
-        
-        if (other.CompareTag("EffectRange"))
+
+        if (isChange)
         {
             transform.GetChild(0).gameObject.SetActive(false);
             transform.GetChild(1).gameObject.SetActive(true);
         }
-    }
 
-    public void OnTriggerExit2D(Collider2D other)
-    {
-        if (!PV.IsMine) return;
-
-        if (other.CompareTag("EffectRange"))
+        else
         {
             transform.GetChild(0).gameObject.SetActive(true);
             transform.GetChild(1).gameObject.SetActive(false);
         }
     }
 
-    // IEnumerator moveCard(PRS prs)
+    // public void OnTriggerEnter2D(Collider2D other)
     // {
-    //     canvas.sortingOrder = prs.index;
+    //     if (!PV.IsMine) return;
     //     
-    //     while (Vector3.Distance(transform.position, prs.pos) > 0.1f)
+    //     if (other.CompareTag("EffectRange"))
     //     {
-    //         print(Vector3.Distance(transform.position, prs.pos));
-    //         print($"prs.pos : {prs.pos}");
-    //     
-    //         // transform.position = Vector3.Lerp(transform.position, prs.pos, 0.5f);
-    //
-    //         transform.position -= (transform.position - prs.pos) / 2;
-    //         
-    //         transform.rotation = prs.rot;
-    //         transform.localScale = prs.scale;
-    //     
-    //         yield return null;
+    //         transform.GetChild(0).gameObject.SetActive(false);
+    //         transform.GetChild(1).gameObject.SetActive(true);
     //     }
-    //     
-    //     transform.position = prs.pos;
-    //     transform.rotation = prs.rot;
-    //     transform.localScale = prs.scale;
+    // }
     //
-    //     yield return null;
+    // public void OnTriggerExit2D(Collider2D other)
+    // {
+    //     if (!PV.IsMine) return;
+    //
+    //     if (other.CompareTag("EffectRange"))
+    //     {
+    //         transform.GetChild(0).gameObject.SetActive(true);
+    //         transform.GetChild(1).gameObject.SetActive(false);
+    //     }
     // }
 }
