@@ -13,6 +13,11 @@ public class LobbyScene : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinRandomOrCreateRoom(roomOptions : new RoomOptions {MaxPlayers = 2});
     }
 
+    public void GoShopScene()
+    {
+        SceneManager.LoadScene("ShopScene");
+    }
+
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
         print(message);
