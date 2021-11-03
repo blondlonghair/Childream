@@ -44,38 +44,35 @@ public class EffectManager : MonoBehaviourPunCallbacks
                 StartCoroutine(EffectAtk1Update(_caster, _target, targetPos, Atk1_1, Atk1_2));
                 break;
             case 2:
-                Instantiate(Atk2, new Vector3(3.5f, targetPos.y, 0), quaternion.identity);
-                Instantiate(Atk2, new Vector3(0, targetPos.y, 0), quaternion.identity);
-                Instantiate(Atk2, new Vector3(-3.5f, targetPos.y, 0), quaternion.identity);
+                StartCoroutine(EffectAtk2Update(_caster, _target, targetPos, Atk2));
                 break;
             case 3:
-                Instantiate(Atk3, targetPos, Quaternion.Euler(90, 0, 0));
+                StartCoroutine(EffectAtk3Update(_caster, _target, targetPos, Atk3));
                 break;
             case 4:
+                StartCoroutine(EffectDefUpdate(_caster, _target, targetPos, Def1_1));
                 break;
             case 5:
+                StartCoroutine(EffectDefUpdate(_caster, _target, targetPos, Def1_1));
                 break;
             case 6:
+                StartCoroutine(EffectDefUpdate(_caster, _target, targetPos, Def1_1));
                 break;
             case 7:
                 StartCoroutine(EffectSup1Update(_caster, _target, targetPos, Sup1_1, Sup1_2));
-                StartCoroutine(EffectSup1Update(_caster, _target, targetPos, Sup1_1, Sup1_2));
-                StartCoroutine(EffectSup1Update(_caster, _target, targetPos, Sup1_1, Sup1_2));
                 break;
             case 8:
-                
+                StartCoroutine(EffectSup2Update(_caster, _target, targetPos, Sup2));
                 break;
             case 9:
-
+                StartCoroutine(EffectSup3Update(_caster, _target, targetPos, Sup3));
                 break;
         }
     }
 
     IEnumerator EffectAtk1Update(Player _caster, Player _target, Vector3 _targetPos, params GameObject[] _effect)
     {
-        GameObject effectObj;
-        
-        effectObj = Instantiate(_effect[0], _caster.transform.position, quaternion.identity);
+        GameObject effectObj = Instantiate(_effect[0], _caster.transform.position, quaternion.identity);
         yield return null;
 
         while (effectObj.transform.position != _targetPos)
@@ -84,31 +81,96 @@ public class EffectManager : MonoBehaviourPunCallbacks
             effectObj.transform.position = Vector3.Lerp(effectObj.transform.position, _targetPos, 0.1f);
             yield return null;
         }
+        Destroy(effectObj);
+        yield return null;
+        
+        GameObject effectobj = Instantiate(_effect[1], _targetPos, quaternion.identity);
+        yield return new WaitForSeconds(1);
+        
+        Destroy(effectobj);
+        yield return null;
+    }
 
-        Instantiate(_effect[1], _targetPos, quaternion.identity);
+    IEnumerator EffectAtk2Update(Player _caster, Player _target, Vector3 _targetPos, params GameObject[] _effect)
+    {
+        GameObject[] effectObj = new GameObject[] { };
+        effectObj[0] = Instantiate(_effect[0], new Vector3(3.5f, _targetPos.y, 0), quaternion.identity);
+        effectObj[1] = Instantiate(_effect[0], new Vector3(0, _targetPos.y, 0), quaternion.identity);
+        effectObj[2] = Instantiate(_effect[0], new Vector3(-3.5f, _targetPos.y, 0), quaternion.identity);
+
+        yield return new WaitForSeconds(2);
+        for (int i = 0; i < 3; i++)
+        {
+            Destroy(effectObj[i]);
+        }
+
+        yield return null;
+    }
+
+    IEnumerator EffectAtk3Update(Player _caster, Player _target, Vector3 _targetPos, params GameObject[] _effect)
+    {
+        GameObject effectObj = Instantiate(_effect[0], _targetPos, Quaternion.Euler(90,0,0));
+        yield return new WaitForSeconds(2);
+
+        Destroy(effectObj);
         yield return null;
     }
 
     IEnumerator EffectDefUpdate(Player _caster, Player _target, Vector3 _targetPos, params GameObject[] _effect)
     {
+        GameObject effectObj = Instantiate(_effect[0], _targetPos, quaternion.identity);
+        yield return new WaitForSeconds(2);
+        
+        Destroy(effectObj);
         yield return null;
     }
 
     IEnumerator EffectSup1Update(Player _caster, Player _target, Vector3 _targetPos, params GameObject[] _effect)
     {
-        GameObject effectObj;
+        GameObject[] effectObj = new GameObject[] {};
         
-        effectObj = Instantiate(_effect[0], _caster.transform.position, quaternion.identity);
+        effectObj[0] = Instantiate(_effect[0], new Vector3(3.5f, _caster.transform.position.y, 0), quaternion.identity);
+        effectObj[1] = Instantiate(_effect[0], new Vector3(0, _caster.transform.position.y, 0), quaternion.identity);
+        effectObj[2] = Instantiate(_effect[0], new Vector3(-3.5f, _caster.transform.position.y, 0), quaternion.identity);
         yield return null;
 
-        while (effectObj.transform.position != _targetPos)
+        while (effectObj[0].transform.position != _targetPos)
         {
             print(effectObj);
-            effectObj.transform.position = Vector3.Lerp(effectObj.transform.position, _targetPos, 0.1f);
+            effectObj[0].transform.position = Vector3.Lerp(effectObj[0].transform.position, _targetPos, 0.1f);
+            effectObj[1].transform.position = Vector3.Lerp(effectObj[1].transform.position, _targetPos, 0.1f);
+            effectObj[2].transform.position = Vector3.Lerp(effectObj[2].transform.position, _targetPos, 0.1f);
             yield return null;
         }
 
-        Instantiate(_effect[1], _targetPos, quaternion.identity);
+        for (int i = 0; i < 3; i++)
+        {
+            Destroy(effectObj[i]);
+        }
+
+        effectObj[3] = Instantiate(_effect[1], _targetPos, quaternion.identity);
+        yield return null;
+
+        yield return new WaitForSeconds(1);
+        Destroy(effectObj[3]);
+        yield return null;
+    }
+
+    IEnumerator EffectSup2Update(Player _caster, Player _target, Vector3 _targetPos, params GameObject[] _effect)
+    {
+        GameObject effectObj = Instantiate(_effect[0], _caster.transform.position, Quaternion.identity);
+        yield return new WaitForSeconds(2);
+
+        Destroy(effectObj);
+        yield return null;
+    }
+
+    IEnumerator EffectSup3Update(Player _caster, Player _target, Vector3 _targetPos, params GameObject[] _effect)
+    {
+        GameObject effectObj = Instantiate(_effect[0], Vector3.zero, quaternion.identity);
+        yield return new WaitForSeconds(2);
+
+        Destroy(effectObj);
         yield return null;
     }
 }

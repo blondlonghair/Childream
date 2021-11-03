@@ -127,6 +127,7 @@ public class AtkCard1 : AtkCard
         {
             if (_target.DefMagic)
             {
+                EffectManager.Instance.InitEffect(_caster, _target, _index, 4);
                 _target.DefMagic = false;
             }
             else
@@ -160,6 +161,7 @@ public class AtkCard2 : AtkCard
         
         if (_target.DefElectricity)
         {
+            EffectManager.Instance.InitEffect(_caster, _target, _index, 5);
             _caster.CurHp -= 1;
             _target.DefElectricity = false;   
         }
@@ -195,6 +197,7 @@ public class AtkCard3 : AtkCard
         {
             if (_target.DefExplosion)
             {
+                EffectManager.Instance.InitEffect(_caster, _target, _index, 6);
                 _caster.CurHp -= damage / 2;
                 _target.DefExplosion = false;
             }
@@ -224,7 +227,7 @@ public class DefCard1 : DefCard
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
-        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
+        // EffectManager.Instance.InitEffect(_caster, _target, _index, id);
 
         _caster.DefMagic = true;
     }
@@ -247,7 +250,7 @@ public class DefCard2 : DefCard
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
-        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
+        // EffectManager.Instance.InitEffect(_caster, _target, _index, id);
 
         _caster.DefElectricity = true;
     }
@@ -270,7 +273,7 @@ public class DefCard3 : DefCard
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
-        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
+        // EffectManager.Instance.InitEffect(_caster, _target, _index, id);
 
         _caster.DefExplosion = true;
     }
@@ -315,7 +318,6 @@ public class SupCard2 : SupCard
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
     {
-        
     }
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
@@ -348,13 +350,11 @@ public class SupCard3 : SupCard
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
     {
-        
+        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
     }
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
-        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
-
         CardManager.Instance.AddCard(_target.PV().IsMine);
         CardManager.Instance.AddCard(_target.PV().IsMine);
     }

@@ -132,7 +132,7 @@ public class CardManager : MonoBehaviourPunCallbacks
 
     public int PopCard()
     {
-        if (cardBuffer.Count == 0)
+        if (cardBuffer.Count <= 0)
         {
             SetupCard();
         }

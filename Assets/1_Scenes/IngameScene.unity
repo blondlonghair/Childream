@@ -743,8 +743,8 @@ MonoBehaviour:
   Def3_2: {fileID: 0}
   Sup1_1: {fileID: 0}
   Sup1_2: {fileID: 0}
-  Sup2: {fileID: 0}
-  Sup3: {fileID: 0}
+  Sup2: {fileID: 9051024948467331885, guid: fce4197f04f7edb4da71ed7184518288, type: 3}
+  Sup3: {fileID: 2615890099774669274, guid: ea9c7b36dabff9c4fb84555afded7e9c, type: 3}
 --- !u!1 &610262992
 GameObject:
   m_ObjectHideFlags: 0
