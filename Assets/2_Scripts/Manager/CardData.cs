@@ -118,6 +118,8 @@ public class AtkCard1 : AtkCard
     
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
+        EffectManager.Instance.InitEffect(_caster, _target, _index, "Atk1");
+
         if (_target.CurState == _index)
         {
             if (_target.DefMagic)
@@ -418,6 +420,8 @@ public class CardData : MonoBehaviour
     public static List<CardTable> CardTable = new List<CardTable>();
 
     [SerializeField] private TextAsset cardTable;
+
+    [SerializeField] private GameObject testEffect;
 
     private void Awake()
     {

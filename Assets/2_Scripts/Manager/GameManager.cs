@@ -189,15 +189,9 @@ public class GameManager : MonoBehaviourPunCallbacks
                 var firstHostCard = CardData.CardList[HostBattleList[0].Item2];
 
                 print(firstHostCard);
-                if (firstHostCard.targetType == TargetType.ME)
-                {
-                    firstHostCard?.CardSecondAbility(GuestPlayer, HostPlayer, HostBattleList[0].Item1);
-                }
-
-                else if (firstHostCard.targetType == TargetType.ENEMY)
-                {
-                    firstHostCard?.CardSecondAbility(HostPlayer, GuestPlayer, HostBattleList[0].Item1);
-                }
+                print("¼½½º");
+                
+                firstHostCard?.CardSecondAbility(HostPlayer, GuestPlayer, HostBattleList[0].Item1);
 
                 HostBattleList.RemoveAt(0);
             }
@@ -207,15 +201,8 @@ public class GameManager : MonoBehaviourPunCallbacks
                 var firstGuestCard = CardData.CardList[GuestBattleList[0].Item2];
 
                 print(firstGuestCard);
-                if (firstGuestCard.targetType == TargetType.ME)
-                {
-                    firstGuestCard?.CardSecondAbility(HostPlayer, GuestPlayer, GuestBattleList[0].Item1);
-                }
-
-                else if (firstGuestCard.targetType == TargetType.ENEMY)
-                {
-                    firstGuestCard?.CardSecondAbility(GuestPlayer, HostPlayer, GuestBattleList[0].Item1);
-                }
+                
+                firstGuestCard?.CardSecondAbility(GuestPlayer, HostPlayer, GuestBattleList[0].Item1);
 
                 GuestBattleList.RemoveAt(0);
             }
@@ -344,11 +331,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void _AddHostBattleList(int SelectRange, int cardId)
     {
         CardData.CardList[cardId].CardFirstAbility(HostPlayer, GuestPlayer, SelectRange);
-
-        if (CardData.CardList[cardId] is null)
-        {
-            HostBattleList.Add(new Tuple<int, int>(SelectRange, cardId));
-        }
+        HostBattleList.Add(new Tuple<int, int>(SelectRange, cardId));
     }
 
     [PunRPC]

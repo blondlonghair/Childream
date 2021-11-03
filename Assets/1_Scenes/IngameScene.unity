@@ -337,6 +337,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cardTable: {fileID: 4900000, guid: 03f77e2c93418a1449a62a395b76add0, type: 3}
+  testEffect: {fileID: 1795506282810059084, guid: 865dc75d06916964da13a405505492b5, type: 3}
 --- !u!4 &140673505
 Transform:
   m_ObjectHideFlags: 0
@@ -730,8 +731,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e26b47f7de88f5f4cb794c5b686306d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Atk1_1: {fileID: 2918283050943460148, guid: 0bb011aa41dbc8e428caf93f686f7e1c, type: 3}
-  Atk1_2: {fileID: 0}
+  Atk1_1: {fileID: 6918217010181138708, guid: 0c6661fc7695f4d49a37d4c2c01ccad8, type: 3}
+  Atk1_2: {fileID: 7188493989774981430, guid: bd193acebb56e1f49b2f766fd8d65458, type: 3}
 --- !u!1 &610262992
 GameObject:
   m_ObjectHideFlags: 0
