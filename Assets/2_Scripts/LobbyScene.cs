@@ -8,9 +8,21 @@ using UnityEngine.SceneManagement;
 
 public class LobbyScene : MonoBehaviourPunCallbacks
 {
+    [SerializeField] private GameObject MatchingDoor;
+    
     public void MatchStartButton()
     {
+        StartCoroutine(MatchStart());
+        
+        MatchingDoor.SetActive(true);
+        MatchingDoor.GetComponent<Animator>().SetTrigger("DoorClose");
+    }
+
+    IEnumerator MatchStart()
+    {
+        yield return new WaitForSeconds(2);
         PhotonNetwork.JoinRandomOrCreateRoom(roomOptions : new RoomOptions {MaxPlayers = 2});
+        yield return null;
     }
 
     public void GoShopScene()

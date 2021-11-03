@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] private Slider EnemyHpBar;
     [SerializeField] private Slider EnemyMpBar;
     [SerializeField] private GameObject GameEndPanel;
+    [SerializeField] private GameObject MatchingDoor;
 
     public static GameManager Instance;
     private PhotonView PV;
@@ -111,6 +112,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnGameSetup()
     {
+        MatchingDoor.SetActive(true);
+        MatchingDoor.GetComponent<Animator>().SetTrigger("DoorOpen");
+        
         PhotonNetwork.Instantiate("Prefab/Player", Vector3.zero, Quaternion.identity);
         PhotonNetwork.Instantiate("Prefab/Ranges", Vector3.zero, Quaternion.identity);
 
