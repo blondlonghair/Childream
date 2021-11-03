@@ -108,7 +108,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
     void CardZoom()
     {
-        if (!PV.IsMine || EventSystem.current.IsPointerOverGameObject())
+        if (!PV.IsMine || EventSystem.current.IsPointerOverGameObject() || (target != gameObject && !Input.GetMouseButton(0)))
         {
             canvas.sortingOrder = originRPS.index;
             transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, 0.5f);
@@ -121,7 +121,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
             return;
         }
 
-        if (target == gameObject && !Input.GetMouseButton(0))
+        else if (target == gameObject && !Input.GetMouseButton(0))
         {
             transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(2, 2, 2), 0.5f);
             canvas.sortingOrder = 100;
@@ -135,17 +135,6 @@ public class ThisCard : MonoBehaviourPunCallbacks
             {
                 transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, -7, -9), 0.5f);
                 transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 0), 0.5f);
-            }
-        }
-
-        else if (target != gameObject && !Input.GetMouseButton(0))
-        {
-            canvas.sortingOrder = originRPS.index;
-            transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, 0.5f);
-            transform.position = Vector3.Lerp(transform.position, originRPS.pos, 0.5f);
-            if (!Input.GetMouseButton(0))
-            {
-                transform.rotation = Quaternion.Lerp(transform.rotation, originRPS.rot, 0.5f);
             }
         }
     }

@@ -20,6 +20,7 @@ public class Card
     public Sprite cardImageBG;
     public CardType cardType;
     public TargetType targetType;
+    public GameObject Effect;
 
     //카드 효과들 First는 시전시 발동, Second는 카드 인보크시 발동
     public virtual void CardFirstAbility(Player _caster, Player _target, int _index) {}

@@ -70,7 +70,23 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
-    bool CastRay(string tag)
+    GameObject CastRay(string tag)
+    {
+        Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(pos, Vector2.zero, 0f);
+
+        foreach (var hit2D in hits)
+        {
+            if (hit2D.collider != null && hit2D.collider.gameObject.CompareTag(tag))
+            {
+                return hit2D.collider.gameObject;
+            }
+        }
+
+        return null;
+    }
+
+    bool CheckCastRay(string tag)
     {
         if (EventSystem.current.IsPointerOverGameObject())
             return false;
@@ -193,10 +209,7 @@ public class Player : MonoBehaviourPunCallbacks
             if (raycastTarget == null)
                 return;
 
-            // raycastTarget.GetComponent<BoxCollider2D>().size = new Vector2(2.3f / 2, 3.8f / 2);
-            // raycastTarget.GetComponent<BoxCollider2D>().offset = Vector2.down;
-
-            if (CastRay("EffectRange"))
+            if (CheckCastRay("EffectRange"))
             {
                 raycastTarget.GetComponent<ThisCard>().ChangetoEffect(true);
             }
@@ -210,9 +223,9 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (Input.GetMouseButtonUp(0))
         {
-            CastRayRange(ref rangeTarget);
-
             CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
+
+            CastRayRange(ref rangeTarget);
             
             raycastTarget.GetComponent<ThisCard>().ChangetoEffect(false);
 
@@ -241,6 +254,33 @@ public class Player : MonoBehaviourPunCallbacks
             CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
 
             raycastTarget = null;
+        }
+    }
+    
+    void CardZoom()
+    {
+        GameObject card = CastRay("Card");
+
+        if (card == null) return;
+        
+        Canvas canvas = card.GetComponentInChildren<Canvas>();
+        PRS originRPS = card.GetComponent<ThisCard>().originRPS;
+    
+        if (!Input.GetMouseButton(0))
+        {
+            card.transform.localScale = Vector3.Lerp(card.transform.localScale, new Vector3(2, 2, 2), 0.5f);
+            canvas.sortingOrder = 100;
+    
+            if (PhotonNetwork.IsMasterClient)
+            {
+                card.transform.position = Vector3.Lerp(card.transform.position, new Vector3(card.transform.position.x, 7, -9), 0.5f);
+                card.transform.rotation = Quaternion.Lerp(card.transform.rotation, Quaternion.Euler(0, 0, 180), 0.5f);
+            }
+            else
+            {
+                card.transform.position = Vector3.Lerp(card.transform.position, new Vector3(card.transform.position.x, -7, -9), 0.5f);
+                card.transform.rotation = Quaternion.Lerp(card.transform.rotation, Quaternion.Euler(0, 0, 0), 0.5f);
+            }
         }
     }
 }
