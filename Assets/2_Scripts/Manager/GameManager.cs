@@ -189,7 +189,6 @@ public class GameManager : MonoBehaviourPunCallbacks
                 var firstHostCard = CardData.CardList[HostBattleList[0].Item2];
 
                 print(firstHostCard);
-                print("¼½½º");
                 
                 firstHostCard?.CardSecondAbility(HostPlayer, GuestPlayer, HostBattleList[0].Item1);
 

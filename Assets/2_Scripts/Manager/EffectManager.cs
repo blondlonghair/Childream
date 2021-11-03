@@ -29,77 +29,86 @@ public class EffectManager : MonoBehaviourPunCallbacks
     {
         Instance = this;
     }
-
-    private void Update()
-    {
-        
-    }
-
-    public GameObject FindEffect(string effect)
-    {
-        switch (effect)
-        {
-            case "Atk1_1":
-                return Atk1_1;
-            case "Atk1_2":
-                return Atk1_2;
-            default:
-                return null;
-        }
-    }
     
-    public void InitEffect(Player _caster, Player _target, int _index, string _effect)
+    public void InitEffect(Player _caster, Player _target, int _index, int _effectId)
     {
-        print("InitEffect");
-        Vector3 targetPos = Vector3.one;
-
-        // if (PhotonNetwork.IsMasterClient)
-        // {
-        //     GameObject temp = GameObject.FindWithTag($"Range{_index}");
-        //     if (temp.transform.parent.name == "GuestRange")
-        //         targetPos = temp.transform.position;
-        // }
-        // else
-        // {
-        //     GameObject temp = GameObject.FindWithTag($"Range{_index}");
-        //     if (temp.transform.parent.name == "MasterRange")
-        //         targetPos = temp.transform.position;
-        // }
-
-        targetPos = _target.transform.position;
+        print(_effectId);
+        Vector3 targetPos = new Vector3(PhotonNetwork.IsMasterClient ? 
+            (float)(_index switch{1 => 3.5, 2 => 0, 3 => -3.5, _ => 0}) : 
+            (float)(_index switch{1 => -3.5, 2 => 0, 3 => 3.5, _ => 0}), 
+            _target.transform.position.y, 0);
         
-        switch (_effect)
+        switch (_effectId)
         {
-            case "Atk1":
-                StartCoroutine(EffectUpdate(_caster, _target, targetPos, Atk1_1, Atk1_2));
+            case 1:
+                StartCoroutine(EffectAtk1Update(_caster, _target, targetPos, Atk1_1, Atk1_2));
                 break;
-            case "Atk2":
-                Instantiate(Atk1_2, transform.position, quaternion.identity);
+            case 2:
+                Instantiate(Atk2, new Vector3(3.5f, targetPos.y, 0), quaternion.identity);
+                Instantiate(Atk2, new Vector3(0, targetPos.y, 0), quaternion.identity);
+                Instantiate(Atk2, new Vector3(-3.5f, targetPos.y, 0), quaternion.identity);
                 break;
-            default:
+            case 3:
+                Instantiate(Atk3, targetPos, Quaternion.Euler(90, 0, 0));
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
+            case 7:
+                StartCoroutine(EffectSup1Update(_caster, _target, targetPos, Sup1_1, Sup1_2));
+                StartCoroutine(EffectSup1Update(_caster, _target, targetPos, Sup1_1, Sup1_2));
+                StartCoroutine(EffectSup1Update(_caster, _target, targetPos, Sup1_1, Sup1_2));
+                break;
+            case 8:
+                
+                break;
+            case 9:
+
                 break;
         }
     }
 
-    IEnumerator EffectUpdate(Player _caster, Player _target, Vector3 targetPos, params GameObject[] _effect)
+    IEnumerator EffectAtk1Update(Player _caster, Player _target, Vector3 _targetPos, params GameObject[] _effect)
     {
-        print("EffectUpdate");
-
         GameObject effectObj;
-        
-        print(targetPos);
         
         effectObj = Instantiate(_effect[0], _caster.transform.position, quaternion.identity);
         yield return null;
 
-        while (effectObj.transform.position != targetPos)
+        while (effectObj.transform.position != _targetPos)
         {
             print(effectObj);
-            effectObj.transform.position = Vector3.Lerp(effectObj.transform.position, targetPos, 0.1f);
+            effectObj.transform.position = Vector3.Lerp(effectObj.transform.position, _targetPos, 0.1f);
             yield return null;
         }
 
-        Instantiate(_effect[1], targetPos, quaternion.identity);
+        Instantiate(_effect[1], _targetPos, quaternion.identity);
+        yield return null;
+    }
+
+    IEnumerator EffectDefUpdate(Player _caster, Player _target, Vector3 _targetPos, params GameObject[] _effect)
+    {
+        yield return null;
+    }
+
+    IEnumerator EffectSup1Update(Player _caster, Player _target, Vector3 _targetPos, params GameObject[] _effect)
+    {
+        GameObject effectObj;
+        
+        effectObj = Instantiate(_effect[0], _caster.transform.position, quaternion.identity);
+        yield return null;
+
+        while (effectObj.transform.position != _targetPos)
+        {
+            print(effectObj);
+            effectObj.transform.position = Vector3.Lerp(effectObj.transform.position, _targetPos, 0.1f);
+            yield return null;
+        }
+
+        Instantiate(_effect[1], _targetPos, quaternion.identity);
         yield return null;
     }
 }

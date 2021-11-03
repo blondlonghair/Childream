@@ -733,6 +733,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Atk1_1: {fileID: 6918217010181138708, guid: 0c6661fc7695f4d49a37d4c2c01ccad8, type: 3}
   Atk1_2: {fileID: 7188493989774981430, guid: bd193acebb56e1f49b2f766fd8d65458, type: 3}
+  Atk2: {fileID: 8590303970720729661, guid: 065ab27f22c3e3e4dbb1dd64addb2dd7, type: 3}
+  Atk3: {fileID: 8322869630432374934, guid: 8bbdb9cd06aae944faf7128f78882cdc, type: 3}
+  Def1_1: {fileID: 1795506282810059084, guid: 865dc75d06916964da13a405505492b5, type: 3}
+  Def1_2: {fileID: 0}
+  Def2_1: {fileID: 0}
+  Def2_2: {fileID: 0}
+  Def3_1: {fileID: 0}
+  Def3_2: {fileID: 0}
+  Sup1_1: {fileID: 0}
+  Sup1_2: {fileID: 0}
+  Sup2: {fileID: 0}
+  Sup3: {fileID: 0}
 --- !u!1 &610262992
 GameObject:
   m_ObjectHideFlags: 0

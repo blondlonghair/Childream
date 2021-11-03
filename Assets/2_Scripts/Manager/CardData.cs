@@ -24,7 +24,10 @@ public class Card
 
     //카드 효과들 First는 시전시 발동, Second는 카드 인보크시 발동
     public virtual void CardFirstAbility(Player _caster, Player _target, int _index) {}
-    public virtual void CardSecondAbility(Player _caster, Player _target, int index) {}
+
+    public virtual void CardSecondAbility(Player _caster, Player _target, int _index)
+    {
+    }
 }
 
 public abstract class AtkCard : Card
@@ -39,7 +42,7 @@ public abstract class AtkCard : Card
     }
 
     public abstract override void CardFirstAbility(Player _caster, Player _target, int _index);
-    public abstract override void CardSecondAbility(Player _caster, Player _target, int index);
+    public abstract override void CardSecondAbility(Player _caster, Player _target, int _index);
 }
 
 public abstract class DefCard : Card
@@ -118,7 +121,7 @@ public class AtkCard1 : AtkCard
     
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
-        EffectManager.Instance.InitEffect(_caster, _target, _index, "Atk1");
+        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
 
         if (_target.CurState == _index)
         {
@@ -153,6 +156,8 @@ public class AtkCard2 : AtkCard
     
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
+        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
+        
         if (_target.DefElectricity)
         {
             _caster.CurHp -= 1;
@@ -184,6 +189,8 @@ public class AtkCard3 : AtkCard
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
+        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
+
         if (_target.CurState == _index)
         {
             if (_target.DefExplosion)
@@ -217,6 +224,8 @@ public class DefCard1 : DefCard
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
+        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
+
         _caster.DefMagic = true;
     }
 }
@@ -238,6 +247,8 @@ public class DefCard2 : DefCard
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
+        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
+
         _caster.DefElectricity = true;
     }
 }
@@ -259,6 +270,8 @@ public class DefCard3 : DefCard
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
+        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
+
         _caster.DefExplosion = true;
     }
 }
@@ -282,6 +295,8 @@ public class SupCard1 : SupCard
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
+        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
+
         _target.IsLocked = true;
     }
 }
@@ -305,6 +320,8 @@ public class SupCard2 : SupCard
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
+        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
+
         for (int i = 0; i < 3; i++)
         {
             if (_target.CurHp == _target.MaxHp)
@@ -336,6 +353,8 @@ public class SupCard3 : SupCard
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
+        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
+
         CardManager.Instance.AddCard(_target.PV().IsMine);
         CardManager.Instance.AddCard(_target.PV().IsMine);
     }

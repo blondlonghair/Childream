@@ -95,21 +95,17 @@ public class CardManager : MonoBehaviourPunCallbacks
             index = guestCards.FindIndex(x => x == card.GetComponent<ThisCard>());
         }
 
-        print($"index : {index}");
-
         PV.RPC(nameof(_DestroyCard), RpcTarget.AllBuffered, index, isMaster);
 
         if (isMaster)
         {
             var targetPV = card.GetComponent<PhotonView>().ViewID;
             PhotonNetwork.Destroy(PhotonView.Find(targetPV));
-            print($"ismine : {isMaster}");
         }
         else
         {
             var targetPV = card.GetComponent<PhotonView>().ViewID;
             PhotonNetwork.Destroy(PhotonView.Find(targetPV));
-            print($"ismine : {isMaster}");
         }
     }
 
