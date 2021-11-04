@@ -350,11 +350,12 @@ public class SupCard3 : SupCard
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
     {
-        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
     }
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
+        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
+
         CardManager.Instance.AddCard(_target.PV().IsMine);
         CardManager.Instance.AddCard(_target.PV().IsMine);
     }

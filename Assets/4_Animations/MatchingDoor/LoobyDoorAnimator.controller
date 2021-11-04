@@ -11,7 +11,6 @@ AnimatorState:
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
-  - {fileID: 8875159947109123368}
   - {fileID: 35748259896159821}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
@@ -22,7 +21,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 89f1857885adae943943e7a11aad9e86, type: 2}
+  m_Motion: {fileID: 7400000, guid: d933532781bdb1c4f8c4be7641309901, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -40,9 +39,6 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: -8775533306617380093}
     m_Position: {x: 30, y: 230, z: 0}
-  - serializedVersion: 1
-    m_State: {fileID: 8832130103565546676}
-    m_Position: {x: -130, y: 370, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -939186630064772052}
     m_Position: {x: 180, y: 370, z: 0}
@@ -88,15 +84,9 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: OpenAnimator
+  m_Name: LoobyDoorAnimator
   serializedVersion: 5
   m_AnimatorParameters:
-  - m_Name: DoorOpen
-    m_Type: 9
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 0}
   - m_Name: DoorClose
     m_Type: 9
     m_DefaultFloat: 0

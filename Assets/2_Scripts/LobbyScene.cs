@@ -37,15 +37,13 @@ public class LobbyScene : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
+        SceneManager.LoadScene("IngameScene");
         print("JoinRoom");
     }
-
+    
     public void Update()
     {
-        if (AllPlayerIn() && SceneManager.GetActiveScene().name != "IngameScene")
-        {
-            SceneManager.LoadScene("IngameScene");
-        }
+        print(PhotonNetwork.NetworkClientState);
     }
 
     public bool AllPlayerIn() => PhotonNetwork.PlayerList.Length == 2;

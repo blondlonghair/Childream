@@ -37,7 +37,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] private Slider myMpBar;
     [SerializeField] private Slider EnemyHpBar;
     [SerializeField] private Slider EnemyMpBar;
-    [SerializeField] private GameObject GameEndPanel;
+    [SerializeField] private GameObject GameWinPanel;
+    [SerializeField] private GameObject GameLosePanel;
     [SerializeField] private GameObject MatchingDoor;
 
     public static GameManager Instance;
@@ -51,13 +52,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         PV = this.PV();
+        MatchingDoor.SetActive(true);
         gameState = GameState.GameSetup;
     }
 
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
     {
-        GameEndPanel.SetActive(true);
-        GameEndPanel.transform.Find("GameEndText").GetComponent<Text>().text = "플레이어 나감";
+        GameWinPanel.SetActive(true);
         PhotonNetwork.LeaveRoom();
     }
 
@@ -112,7 +113,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnGameSetup()
     {
-        MatchingDoor.SetActive(true);
         MatchingDoor.GetComponent<Animator>().SetTrigger("DoorOpen");
         
         PhotonNetwork.Instantiate("Prefab/Player", Vector3.zero, Quaternion.identity);
@@ -249,12 +249,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             if (HostPlayer.CurHp <= 0)
             {
-                GameEndPanel.transform.Find("GameEndText").GetComponent<Text>().text = "패배";
+                GameLosePanel.SetActive(true);
             }
 
             else if (GuestPlayer.CurHp <= 0)
             {
-                GameEndPanel.transform.Find("GameEndText").GetComponent<Text>().text = "승리";
+                GameWinPanel.SetActive(true);
             }
         }
 
@@ -262,16 +262,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         {
             if (HostPlayer.CurHp <= 0)
             {
-                GameEndPanel.transform.Find("GameEndText").GetComponent<Text>().text = "승리";
+                GameWinPanel.SetActive(true);
             }
 
             else if (GuestPlayer.CurHp <= 0)
             {
-                GameEndPanel.transform.Find("GameEndText").GetComponent<Text>().text = "패배";
+                GameLosePanel.SetActive(true);
             }
         }
-        
-        GameEndPanel.SetActive(true);
     }
 
     public void TurnEndButton()
@@ -357,12 +355,12 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void ChangeScene(string scene)
     {
+        PhotonNetwork.LeaveRoom();
         SceneManager.LoadScene(scene);
     }
     
     public void SurrenderButton()
     {
-        PhotonNetwork.LeaveRoom();
-        SceneManager.LoadScene("LobbyScene");
+        GameLosePanel.SetActive(true);
     }
 }
