@@ -3077,8 +3077,8 @@ MonoBehaviour:
   GuestPlayer: {fileID: 0}
   isHostReady: 0
   isGuestReady: 0
-  CardInvokeTimer: 0
-  CardInovkeInvaldTime: 0
+  CardInvokeTimer: 3
+  CardInovkeInvaldTime: 3
   myHpBar: {fileID: 942972867}
   myMpBar: {fileID: 1547702017}
   EnemyHpBar: {fileID: 108702442}

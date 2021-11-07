@@ -223,11 +223,12 @@ public class Player : MonoBehaviourPunCallbacks
             CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
 
             CastRayRange(ref rangeTarget);
+
+            if (raycastTarget == null) return;
             
             raycastTarget.GetComponent<ThisCard>().ChangetoEffect(false);
 
-            if (rangeTarget == null)
-                return;
+            if (rangeTarget == null) return;
             
             if (!rangeTarget.GetComponent<PhotonView>().IsMine)
             {

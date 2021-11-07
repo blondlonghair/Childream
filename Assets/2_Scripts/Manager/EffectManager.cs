@@ -32,7 +32,6 @@ public class EffectManager : MonoBehaviourPunCallbacks
     
     public void InitEffect(Player _caster, Player _target, int _index, int _effectId)
     {
-        print(_effectId);
         Vector3 targetPos = new Vector3(PhotonNetwork.IsMasterClient ? 
             (float)(_index switch{1 => 3.5, 2 => 0, 3 => -3.5, _ => 0}) : 
             (float)(_index switch{1 => -3.5, 2 => 0, 3 => 3.5, _ => 0}), 

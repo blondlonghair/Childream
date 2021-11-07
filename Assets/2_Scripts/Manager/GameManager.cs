@@ -132,36 +132,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnStartTurn()
     {
-        // foreach (var card in CardManager.Instance.guestCards)
-        // {
-        //     CardManager.Instance.DestroyCard(card.gameObject, PV.IsMine);
-        //     print("host card 삭제");
-        // }
-        //
-        // foreach (var card in CardManager.Instance.hostCards)
-        // {
-        //     CardManager.Instance.DestroyCard(card.gameObject, PV.IsMine);
-        //     print("guest card 삭제");
-        // }
-
-        CardManager.Instance.AddCard(HostPlayer.PV().IsMine);
-        CardManager.Instance.AddCard(HostPlayer.PV().IsMine);
-        CardManager.Instance.AddCard(HostPlayer.PV().IsMine);
-        CardManager.Instance.AddCard(GuestPlayer.PV().IsMine);
-        CardManager.Instance.AddCard(GuestPlayer.PV().IsMine);
-        CardManager.Instance.AddCard(GuestPlayer.PV().IsMine);
-
-        HostPlayer.CurMp = HostPlayer.MaxMp;
-        GuestPlayer.CurMp = GuestPlayer.MaxMp;
-
-        HostPlayer.CurMoveCount = HostPlayer.MaxMoveCount;
-        GuestPlayer.CurMoveCount = GuestPlayer.MaxMoveCount;
-
-        gameState = GameState.LastTurn;
-    }
-
-    void OnLastTurn()
-    {
         CardInvokeTimer += Time.deltaTime;
         
         //게임 끝인지 확인
@@ -171,7 +141,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
 
         //3초마다 리스트 인보크
-        if (CardInvokeTimer >= 3)
+        if (CardInvokeTimer >= CardInovkeInvaldTime)
         {
             //플레이어 이동 잠금은 첫번째로 발동되게 
             if (HostBattleList.Any(x => CardData.CardList[x.Item2]?.id == 7))
@@ -212,11 +182,29 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             if (HostBattleList.Count <= 0 && GuestBattleList.Count <= 0)
             {
-                gameState = GameState.PlayerTurn;
+                gameState = GameState.LastTurn;
             }
 
             CardInvokeTimer = 0;
         }
+    }
+
+    void OnLastTurn()
+    {
+        CardManager.Instance.AddCard(HostPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(HostPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(HostPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(GuestPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(GuestPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(GuestPlayer.PV().IsMine);
+
+        HostPlayer.CurMp = HostPlayer.MaxMp;
+        GuestPlayer.CurMp = GuestPlayer.MaxMp;
+
+        HostPlayer.CurMoveCount = HostPlayer.MaxMoveCount;
+        GuestPlayer.CurMoveCount = GuestPlayer.MaxMoveCount;
+        
+        gameState = GameState.PlayerTurn;
     }
 
     void OnPlayerTurn()

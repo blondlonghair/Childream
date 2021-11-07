@@ -222,14 +222,11 @@ public class DefCard1 : DefCard
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
     {
-        
+        _caster.DefMagic = true;
     }
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
-        // EffectManager.Instance.InitEffect(_caster, _target, _index, id);
-
-        _caster.DefMagic = true;
     }
 }
 
@@ -246,13 +243,11 @@ public class DefCard2 : DefCard
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
     {
+        _caster.DefElectricity = true;
     }
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
-        // EffectManager.Instance.InitEffect(_caster, _target, _index, id);
-
-        _caster.DefElectricity = true;
     }
 }
 
@@ -269,13 +264,11 @@ public class DefCard3 : DefCard
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
     {
+        _caster.DefExplosion = true;
     }
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
-        // EffectManager.Instance.InitEffect(_caster, _target, _index, id);
-
-        _caster.DefExplosion = true;
     }
 }
 
@@ -326,12 +319,12 @@ public class SupCard2 : SupCard
 
         for (int i = 0; i < 3; i++)
         {
-            if (_target.CurHp == _target.MaxHp)
+            if (_caster.CurHp == _caster.MaxHp)
             {
                 break;
             }
 
-            _target.CurHp++;
+            _caster.CurHp++;
         }
     }
 }
@@ -371,48 +364,53 @@ public class Move : Card
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
-        if (_target.IsLocked)
+        if (_caster.IsLocked)
         {
             return;
         }
 
-        if (_index == 1)
-        {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                _target.transform.position = new Vector3(3.5f, _target.transform.position.y, 0);
-            }
-            else
-            {
-                _target.transform.position = new Vector3(-3.5f, _target.transform.position.y, 0);
-            }
+        _caster.transform.position = new Vector3(PhotonNetwork.IsMasterClient ? 
+                (float)(_index switch{1 => 3.5, 2 => 0, 3 => -3.5, _ => 0}) : 
+                (float)(_index switch{1 => -3.5, 2 => 0, 3 => 3.5, _ => 0}), 
+            _caster.transform.position.y, 0);
+        
+        // if (_index == 1)
+        // {
+        //     if (PhotonNetwork.IsMasterClient)
+        //     {
+        //         _caster.transform.position = new Vector3(3.5f, _caster.transform.position.y, 0);
+        //     }
+        //     else
+        //     {
+        //         _caster.transform.position = new Vector3(-3.5f, _caster.transform.position.y, 0);
+        //     }
+        //
+        //     _caster.CurState = _index;
+        // }
+        //
+        // else if (_index == 2)
+        // {
+        //     _caster.transform.position = new Vector3(0, _caster.transform.position.y, 0);
+        //
+        //     _caster.CurState = _index;
+        // }
+        //
+        // else if (_index == 3)
+        // {
+        //     if (PhotonNetwork.IsMasterClient)
+        //     {
+        //         _caster.transform.position = new Vector3(-3.5f, _caster.transform.position.y, 0);
+        //     }
+        //     else
+        //     {
+        //         _caster.transform.position = new Vector3(3.5f, _caster.transform.position.y, 0);
+        //     }
+        //
+        //     _caster.CurState = _index;
+        // }
 
-            _target.CurState = _index;
-        }
-
-        else if (_index == 2)
-        {
-            _target.transform.position = new Vector3(0, _target.transform.position.y, 0);
-
-            _target.CurState = _index;
-        }
-
-        else if (_index == 3)
-        {
-            if (PhotonNetwork.IsMasterClient)
-            {
-                _target.transform.position = new Vector3(-3.5f, _target.transform.position.y, 0);
-            }
-            else
-            {
-                _target.transform.position = new Vector3(3.5f, _target.transform.position.y, 0);
-            }
-
-            _target.CurState = _index;
-        }
-
-        _target.CurState = _index;
-        _target.CurMoveCount--;
+        _caster.CurState = _index;
+        _caster.CurMoveCount--;
     }
 }
 
