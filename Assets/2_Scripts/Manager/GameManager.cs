@@ -58,7 +58,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
     {
-        GameWinPanel.SetActive(true);
+        StartCoroutine(PanelAnimation(GameWinPanel));
+        
         PhotonNetwork.LeaveRoom();
     }
 
@@ -108,13 +109,12 @@ public class GameManager : MonoBehaviourPunCallbacks
             EnemyHpBar.value = HostPlayer.CurHp / HostPlayer.MaxHp;
             EnemyMpBar.value = HostPlayer.CurMp / HostPlayer.MaxMp;
         }
-
     }
 
     void OnGameSetup()
     {
         MatchingDoor.GetComponent<Animator>().SetTrigger("DoorOpen");
-        
+
         PhotonNetwork.Instantiate("Prefab/Player", Vector3.zero, Quaternion.identity);
         PhotonNetwork.Instantiate("Prefab/Ranges", Vector3.zero, Quaternion.identity);
 
@@ -133,7 +133,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     void OnStartTurn()
     {
         CardInvokeTimer += Time.deltaTime;
-        
+
         //게임 끝인지 확인
         if (HostPlayer.CurHp <= 0 || GuestPlayer.CurHp <= 0)
         {
@@ -163,7 +163,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 var firstHostCard = CardData.CardList[HostBattleList[0].Item2];
 
                 print(firstHostCard);
-                
+
                 firstHostCard?.CardSecondAbility(HostPlayer, GuestPlayer, HostBattleList[0].Item1);
 
                 HostBattleList.RemoveAt(0);
@@ -174,7 +174,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 var firstGuestCard = CardData.CardList[GuestBattleList[0].Item2];
 
                 print(firstGuestCard);
-                
+
                 firstGuestCard?.CardSecondAbility(GuestPlayer, HostPlayer, GuestBattleList[0].Item1);
 
                 GuestBattleList.RemoveAt(0);
@@ -203,7 +203,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         HostPlayer.CurMoveCount = HostPlayer.MaxMoveCount;
         GuestPlayer.CurMoveCount = GuestPlayer.MaxMoveCount;
-        
+
         gameState = GameState.PlayerTurn;
     }
 
@@ -233,31 +233,12 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnGameEnd()
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            if (HostPlayer.CurHp <= 0)
-            {
-                GameLosePanel.SetActive(true);
-            }
+        GameObject panel = PhotonNetwork.IsMasterClient
+            ? (HostPlayer.CurHp <= 0 ? GameLosePanel : GameWinPanel)
+            : (GuestPlayer.CurHp <= 0 ? GameLosePanel : GameWinPanel);
 
-            else if (GuestPlayer.CurHp <= 0)
-            {
-                GameWinPanel.SetActive(true);
-            }
-        }
+        StartCoroutine(PanelAnimation(panel));
 
-        else
-        {
-            if (HostPlayer.CurHp <= 0)
-            {
-                GameWinPanel.SetActive(true);
-            }
-
-            else if (GuestPlayer.CurHp <= 0)
-            {
-                GameLosePanel.SetActive(true);
-            }
-        }
     }
 
     public void TurnEndButton()
@@ -346,9 +327,26 @@ public class GameManager : MonoBehaviourPunCallbacks
         PhotonNetwork.LeaveRoom();
         SceneManager.LoadScene(scene);
     }
-    
+
     public void SurrenderButton()
     {
-        GameLosePanel.SetActive(true);
+        StartCoroutine(PanelAnimation(GameLosePanel));
+    }
+    
+    IEnumerator PanelAnimation(GameObject panel)
+    {
+        panel.SetActive(true);
+        yield return null;
+        
+        while (true)
+        {
+            if (panel.GetComponent<IsAnimationOver>().isAnimationOver)
+            {
+                panel.transform.GetChild(0).gameObject.SetActive(true);
+                yield break;
+            }
+            
+            yield return null;
+        }
     }
 }

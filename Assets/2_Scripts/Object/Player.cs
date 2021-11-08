@@ -188,6 +188,9 @@ public class Player : MonoBehaviourPunCallbacks
 
     void MouseInput()
     {
+        //11_08
+        // GameObject player = CastRay("Card");
+        
         if (Input.GetMouseButtonDown(0))
         {
             CastRay(ref raycastTarget, "Card");
