@@ -322,6 +322,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 5c7b59f266c59274a84e2a3a756ec84e, type: 3}
   - {fileID: 21300000, guid: a10d24b4ac31ec843b254e37960901f2, type: 3}
   - {fileID: 21300000, guid: 53f6e1ba2d85d0f4ab733d023adcabc2, type: 3}
+  - {fileID: 21300000, guid: 3192d612513b76343a5d0ee30fa6116f, type: 3}
   cutSceneBG: {fileID: 1296370287}
 --- !u!4 &926537489
 Transform:
