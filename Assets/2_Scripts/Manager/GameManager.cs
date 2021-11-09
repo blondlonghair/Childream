@@ -24,16 +24,19 @@ public class GameManager : MonoBehaviourPunCallbacks
         GameEnd
     }
 
-    [Header("Manager")] public GameState gameState = GameState.None;
+    [Header("Manager")] 
+    public GameState gameState = GameState.None;
     public Player HostPlayer, GuestPlayer;
     public bool isHostReady, isGuestReady;
     public List<Tuple<int, int>> HostBattleList = new List<Tuple<int, int>>(); //first : 카드 ID, second : range 번호
     public List<Tuple<int, int>> GuestBattleList = new List<Tuple<int, int>>();
 
-    [Header("Timer")] [SerializeField] private float CardInvokeTimer;
+    [Header("Timer")] 
+    [SerializeField] private float CardInvokeTimer;
     [SerializeField] private float CardInovkeInvaldTime;
 
-    [Header("UI")] [SerializeField] private Slider myHpBar;
+    [Header("UI")] 
+    [SerializeField] private Slider myHpBar;
     [SerializeField] private Slider myMpBar;
     [SerializeField] private Slider EnemyHpBar;
     [SerializeField] private Slider EnemyMpBar;
@@ -58,9 +61,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
     {
-        StartCoroutine(PanelAnimation(GameWinPanel));
-        
-        PhotonNetwork.LeaveRoom();
+        EnemyLeftRoom();
     }
 
     void Update()
@@ -330,7 +331,16 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void SurrenderButton()
     {
+        PhotonNetwork.LeaveRoom();
+    
         StartCoroutine(PanelAnimation(GameLosePanel));
+    }
+
+    private void EnemyLeftRoom()
+    {
+        PhotonNetwork.LeaveRoom();
+
+        StartCoroutine(PanelAnimation(GameWinPanel));
     }
     
     IEnumerator PanelAnimation(GameObject panel)

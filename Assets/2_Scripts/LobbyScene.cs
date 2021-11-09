@@ -9,13 +9,22 @@ using UnityEngine.SceneManagement;
 public class LobbyScene : MonoBehaviourPunCallbacks
 {
     [SerializeField] private GameObject MatchingDoor;
-    
+    private Animator matchingAnim;
+
+    private void Start()
+    {
+        matchingAnim = MatchingDoor.GetComponent<Animator>();
+
+        MatchingDoor.SetActive(true);
+        matchingAnim.SetTrigger("DoorOpen");
+    }
+
     public void MatchStartButton()
     {
         StartCoroutine(MatchStart());
         
         MatchingDoor.SetActive(true);
-        MatchingDoor.GetComponent<Animator>().SetTrigger("DoorClose");
+        matchingAnim.SetTrigger("DoorClose");
     }
 
     IEnumerator MatchStart()
@@ -23,11 +32,6 @@ public class LobbyScene : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(2);
         PhotonNetwork.JoinRandomOrCreateRoom(roomOptions : new RoomOptions {MaxPlayers = 2});
         yield return null;
-    }
-
-    public void GoShopScene()
-    {
-        SceneManager.LoadScene("ShopScene");
     }
 
     public override void OnJoinRoomFailed(short returnCode, string message)

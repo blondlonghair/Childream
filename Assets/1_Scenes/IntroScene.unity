@@ -317,6 +317,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffab25d145cb1254f9d02ac8d687b53c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cutScene:
+  - {fileID: 21300000, guid: da7bd5994de216b4294ab04decbbbe44, type: 3}
+  - {fileID: 21300000, guid: 5c7b59f266c59274a84e2a3a756ec84e, type: 3}
+  - {fileID: 21300000, guid: a10d24b4ac31ec843b254e37960901f2, type: 3}
+  - {fileID: 21300000, guid: 53f6e1ba2d85d0f4ab733d023adcabc2, type: 3}
+  cutSceneBG: {fileID: 1296370287}
 --- !u!4 &926537489
 Transform:
   m_ObjectHideFlags: 0
@@ -343,7 +349,7 @@ GameObject:
   - component: {fileID: 1296370287}
   - component: {fileID: 1296370289}
   m_Layer: 0
-  m_Name: CutSceneAnimation
+  m_Name: CutScene
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -389,7 +395,7 @@ SpriteRenderer:
   m_SortingLayerID: -680780303
   m_SortingLayer: -3
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 091a410f47f1aa74ba63685e68350ef7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: da7bd5994de216b4294ab04decbbbe44, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -422,7 +428,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1296370286}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 8e81b647bd9fd844daad50249f400b5c, type: 2}
   m_CullingMode: 0
