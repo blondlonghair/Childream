@@ -112,13 +112,16 @@ public class Player : MonoBehaviourPunCallbacks
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D[] hits = Physics2D.RaycastAll(pos, Vector2.zero, 0f);
 
-        for (int i = 0; i < hits.Length; i++)
+        foreach (var hit in hits)
         {
-            if (hits[i].collider != null && hits[i].collider.gameObject.tag.Contains("Range") &&
-                !hits[i].collider.gameObject.CompareTag("EffectRange"))
+            if (hit.collider != null && hit.collider.gameObject.tag.Contains("Range") &&
+                !hit.collider.gameObject.CompareTag("EffectRange"))
             {
-                SelectRange = int.Parse(hits[i].collider.gameObject.tag.Replace("Range", ""));
-                obj = hits[i].collider.gameObject;
+                SelectRange = int.Parse(hit.collider.gameObject.tag.Replace("Range", ""));
+                if (hit.collider.gameObject.GetPhotonView().IsMine)
+                    SelectRange += 3;
+                print(SelectRange);
+                obj = hit.collider.gameObject;
             }
         }
     }
@@ -233,7 +236,7 @@ public class Player : MonoBehaviourPunCallbacks
 
             if (rangeTarget == null) return;
             
-            if (!rangeTarget.GetComponent<PhotonView>().IsMine)
+            // if (!rangeTarget.GetComponent<PhotonView>().IsMine)
             {
                 //마나 0보다 작으면 return
                 if (CurMp < raycastTarget.GetComponent<ThisCard>().cost)

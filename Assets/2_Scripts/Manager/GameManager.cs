@@ -347,10 +347,12 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         panel.SetActive(true);
         yield return null;
+
+        IsAnimationOver anim = panel.GetComponent<IsAnimationOver>();
         
         while (true)
         {
-            if (panel.GetComponent<IsAnimationOver>().isAnimationOver)
+            if (anim.isAnimationOver)
             {
                 panel.transform.GetChild(0).gameObject.SetActive(true);
                 yield break;

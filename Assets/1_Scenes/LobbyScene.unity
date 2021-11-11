@@ -2386,7 +2386,7 @@ GameObject:
   - component: {fileID: 1946915073}
   - component: {fileID: 1946915072}
   m_Layer: 5
-  m_Name: MatchPanel
+  m_Name: MatchUnderPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
