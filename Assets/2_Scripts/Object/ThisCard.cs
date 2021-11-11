@@ -117,8 +117,6 @@ public class ThisCard : MonoBehaviourPunCallbacks
             {
                 transform.rotation = Quaternion.Lerp(transform.rotation, originRPS.rot, 0.5f);
             }
-            
-            return;
         }
 
         else if (target == gameObject && !Input.GetMouseButton(0))
