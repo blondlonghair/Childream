@@ -25,14 +25,4 @@ public class IntroScene : MonoBehaviourPunCallbacks
         print("JoinLobby");
         SceneManager.LoadScene("LobbyScene");
     }
-
-    private void Update()
-    {
-        // if (Time.time >= 8)
-        // {
-        //     PhotonNetwork.ConnectUsingSettings();
-        // }
-
-        
-    }
 }

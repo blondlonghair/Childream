@@ -55,8 +55,8 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (IsPlayerTurn)
         {
-            PlayerMove();
             MouseInput();
+            PlayerMove();
         }
     }
 
@@ -194,11 +194,15 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (Input.GetMouseButton(0))
         {
+            if (player is null) return;
+            
             player.transform.position = worldMousePos;
         }
 
         if (Input.GetMouseButtonUp(0))
         {
+            if (player is null) return;
+
             int range = CastRayRangeInt();
 
             if (range == 0)
