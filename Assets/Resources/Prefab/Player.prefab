@@ -130,6 +130,7 @@ MonoBehaviour:
   CurState: 0
   IsLocked: 0
   SelectRange: 0
+  IsPlayerTurn: 0
 --- !u!114 &6467517843919791293
 MonoBehaviour:
   m_ObjectHideFlags: 0

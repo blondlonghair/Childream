@@ -205,6 +205,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         HostPlayer.CurMoveCount = HostPlayer.MaxMoveCount;
         GuestPlayer.CurMoveCount = GuestPlayer.MaxMoveCount;
 
+        HostPlayer.IsPlayerTurn = true;
+        GuestPlayer.IsPlayerTurn = true;
+
         gameState = GameState.PlayerTurn;
     }
 
@@ -225,9 +228,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         //플레이어 잠금효과 헤제
         HostPlayer.IsLocked = false;
         GuestPlayer.IsLocked = false;
-
-        HostPlayer.CurMoveCount = HostPlayer.MaxMoveCount;
-        GuestPlayer.CurMoveCount = GuestPlayer.MaxMoveCount;
+        
+        HostPlayer.IsPlayerTurn = false;
+        GuestPlayer.IsPlayerTurn = false;
 
         gameState = GameState.StartTurn;
     }

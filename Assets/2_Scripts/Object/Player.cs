@@ -29,6 +29,7 @@ public class Player : MonoBehaviourPunCallbacks
     public int CurState;
     public bool IsLocked = false;
     public int SelectRange;
+    public bool IsPlayerTurn = false;
 
     GameObject raycastTarget = null;
     GameObject rangeTarget = null;
@@ -52,8 +53,11 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (!PV.IsMine) return;
 
-        PlayerMove();
-        MouseInput();
+        if (IsPlayerTurn)
+        {
+            PlayerMove();
+            MouseInput();
+        }
     }
 
     GameObject CastRay(string tag)
@@ -190,7 +194,6 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (Input.GetMouseButton(0))
         {
-            
             player.transform.position = worldMousePos;
         }
 
@@ -232,11 +235,11 @@ public class Player : MonoBehaviourPunCallbacks
 
     void MouseInput()
     {
-        //11_08
-        // GameObject player = CastRay("Card");
-        
+        print("MouseInput");
+
         if (Input.GetMouseButtonDown(0))
         {
+            print("MouseInputDown");
             raycastTarget = CastRay("Card");
 
             if (raycastTarget == null)
@@ -250,6 +253,8 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (Input.GetMouseButton(0))
         {
+            print("MouseInputButton");
+
             if (raycastTarget == null) return;
 
             if (CheckCastRay("EffectRange"))
@@ -266,6 +271,8 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (Input.GetMouseButtonUp(0))
         {
+            print("MouseInputUp");
+
             CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
 
             rangeTarget = CastRayRange();

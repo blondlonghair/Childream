@@ -8,11 +8,9 @@ using UnityEngine.SceneManagement;
 
 public class IntroScene : MonoBehaviourPunCallbacks
 {
-    [SerializeField] private Sprite[] cutScene;
-    [SerializeField] private SpriteRenderer cutSceneBG;
-    private int curCutScene = 0;
     private void Start()
     {
+        PhotonNetwork.ConnectUsingSettings();
         PhotonNetwork.SendRate = 60;
         PhotonNetwork.SerializationRate = 30;
     }
@@ -35,15 +33,6 @@ public class IntroScene : MonoBehaviourPunCallbacks
         //     PhotonNetwork.ConnectUsingSettings();
         // }
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            curCutScene++;
-            cutSceneBG.sprite = cutScene[curCutScene];
-
-            if (curCutScene >= cutScene.Length - 1)
-            {
-                PhotonNetwork.ConnectUsingSettings();
-            }
-        }
+        
     }
 }
