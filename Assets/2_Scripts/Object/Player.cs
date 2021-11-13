@@ -16,7 +16,7 @@ using Vector3 = UnityEngine.Vector3;
 
 public class Player : MonoBehaviourPunCallbacks
 {
-    [Header("ÇÃ·¹ÀÌ¾î Á¤º¸")] public float MaxHp;
+    [Header("ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½ï¿½ï¿½")] public float MaxHp;
     public float CurHp;
     public float MaxMp;
     public float CurMp;
@@ -288,23 +288,22 @@ public class Player : MonoBehaviourPunCallbacks
             if (rangeTarget == null) return;
             
             {
-                //¸¶³ª 0º¸´Ù ÀÛÀ¸¸é return
-                if (CurMp < raycastTarget.GetComponent<ThisCard>().cost)
-                    return;
+                //ï¿½ï¿½ï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ return
+                if (CurMp < raycastTarget.GetComponent<ThisCard>().cost) return;
 
-                //Ä«µå ÄÚ½ºÆ®¸¸Å­ ¸¶³ª Á¦°Å
+                //Ä«ï¿½ï¿½ ï¿½Ú½ï¿½Æ®ï¿½ï¿½Å­ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 CurMp -= raycastTarget.GetComponent<ThisCard>().cost;
 
-                //Ä«µå ¸®½ºÆ®¿¡ Çàµ¿Ãß°¡
+                //Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½àµ¿ï¿½ß°ï¿½
                 GameManager.Instance.AddBattleList(SelectRange,
                     raycastTarget is Move ? 10 : raycastTarget.GetComponent<ThisCard>().id,
                     PhotonNetwork.IsMasterClient);
 
-                //´Ù ÇÏ°í ³ª¸é Ä«µå »èÁ¦
+                //ï¿½ï¿½ ï¿½Ï°ï¿½ ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
                 CardManager.Instance.DestroyCard(raycastTarget, PhotonNetwork.IsMasterClient);
             }
 
-            //Ä«µå Á¤·Ä
+            //Ä«ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
             CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
 
             raycastTarget = null;
