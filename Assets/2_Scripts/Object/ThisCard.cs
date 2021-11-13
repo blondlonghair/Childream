@@ -126,12 +126,12 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
             if (PhotonNetwork.IsMasterClient)
             {
-                transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, 7, -9), 0.5f);
+                transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, 5, -9), 0.5f);
                 transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 180), 0.5f);
             }
             else
             {
-                transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, -7, -9), 0.5f);
+                transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, -5, -9), 0.5f);
                 transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 0), 0.5f);
             }
         }

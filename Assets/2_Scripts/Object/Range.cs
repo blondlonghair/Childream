@@ -21,13 +21,11 @@ public class Range : MonoBehaviourPunCallbacks
         
         if (PhotonNetwork.IsMasterClient)
         {
-            transform.position = new Vector3(0, -2, 0);
             transform.Rotate(0,0,180);
             
             if (PV.IsMine)
             {
-                transform.position = new Vector3(0, 5f, 0);
-                // (childs[0].transform.position, childs[2].transform.position) = (childs[2].transform.position, childs[0].transform.position);
+                transform.position = new Vector3(0, 3.5f, 0);
                 gameObject.name = "MasterRange";
                 SR.sprite = frontRange;
             }
@@ -43,10 +41,9 @@ public class Range : MonoBehaviourPunCallbacks
         {
             if (PV.IsMine)
             {
-                transform.position = new Vector3(0, -5f, 0);
+                transform.position = new Vector3(0, -3.5f, 0);
                 SR.sprite = frontRange;
                 gameObject.name = "GuestRange";
-                // (childs[0].transform.position, childs[2].transform.position) = (childs[2].transform.position, childs[0].transform.position);
             }
 
             else

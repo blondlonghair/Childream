@@ -153,7 +153,7 @@ public class Player : MonoBehaviourPunCallbacks
         {
             if (PV.IsMine)
             {
-                transform.position = new Vector3(0, 2.5f, 0);
+                transform.position = new Vector3(0, 1f, 0);
                 transform.Rotate(0, 0, 180);
                 gameObject.name = "HostPlayer";
             }
@@ -169,7 +169,7 @@ public class Player : MonoBehaviourPunCallbacks
         {
             if (PV.IsMine)
             {
-                transform.position = new Vector3(0, -2.5f, 0);
+                transform.position = new Vector3(0, -1, 0);
                 gameObject.name = "GuestPlayer";
             }
             else
