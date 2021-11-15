@@ -13,17 +13,17 @@ public class CardManager : MonoBehaviourPunCallbacks
     public List<ThisCard> hostCards;
     public List<ThisCard> guestCards;
 
-    [Header("Ä«µå µ¦ À§Ä¡")]
+    [Header("ì¹´ë“œ ë± ìœ„ì¹˜")]
     [SerializeField] Transform hostCardLeft;
     [SerializeField] Transform hostCardRight;
     [SerializeField] Transform guestCardLeft;
     [SerializeField] Transform guestCardRight;
 
-    [Header("Ä«µå µå·Î¿ì À§Ä¡")] 
+    [Header("ì¹´ë“œ ë“œë¡œìš° ìœ„ì¹˜")] 
     [SerializeField] private Transform hostCardDraw;
     [SerializeField] private Transform guestCardDraw;
 
-    [Header("maxÄ«µå ¼ö"), SerializeField] private int maxCard = 4;
+    [Header("maxì¹´ë“œ ìˆ˜"), SerializeField] private int maxCard = 4;
 
     public static CardManager Instance;
     private PhotonView PV;
@@ -44,7 +44,7 @@ public class CardManager : MonoBehaviourPunCallbacks
             AddCard(PhotonNetwork.IsMasterClient);
     }
 
-    //Ä«µå »Ì±â
+    //ì¹´ë“œ ë½‘ê¸°
     public void AddCard(bool isMine)
     {
         if (!isMine) return;
@@ -79,7 +79,7 @@ public class CardManager : MonoBehaviourPunCallbacks
         CardAlignment(isMine);
     }
 
-    //Ä«µå ¾ø¿¡±â
+    //ì¹´ë“œ ì—†ì—ê¸°
     public void DestroyCard(GameObject card, bool isMaster)
     {
         print("DestroyCard");
@@ -126,8 +126,6 @@ public class CardManager : MonoBehaviourPunCallbacks
 
         CardAlignment(isMaster);
         CardAlignment(!isMaster);
-        // PV.RPC(nameof(sync_CardAlignment), RpcTarget.AllBuffered, PV.IsMine);
-        // PV.RPC(nameof(sync_CardAlignment), RpcTarget.AllBuffered, !PV.IsMine);
     }
 
     public int PopCard()
@@ -142,7 +140,7 @@ public class CardManager : MonoBehaviourPunCallbacks
         return temp;
     }
 
-    //Ä«µå »ÌÀ»¶§ Ä«µå 9Àå ·£´ı ¼ÅÇÃ
+    //ì¹´ë“œ ë½‘ì„ë•Œ ì¹´ë“œ 9ì¥ ëœë¤ ì…”í”Œ
     void SetupCard()
     {
         for (int i = 1; i < CardData.CardList.Count - 1; i++)
@@ -158,7 +156,7 @@ public class CardManager : MonoBehaviourPunCallbacks
         }
     }
 
-    //Ä«µå ismineÈ®ÀÎ ÈÄ Á¤·ÄÇÏ´Â ÇÔ¼ö
+    //ì¹´ë“œ ismineí™•ì¸ í›„ ì •ë ¬í•˜ëŠ” í•¨ìˆ˜
     public void CardAlignment(bool isMine)
     {
         var originCardRPS = new List<PRS>();
@@ -194,13 +192,13 @@ public class CardManager : MonoBehaviourPunCallbacks
         }
     }
 
-    //Ä«µå Á¤·ÄÇÏ´Â ÇÔ¼ö
+    //ì¹´ë“œ ì •ë ¬í•˜ëŠ” í•¨ìˆ˜
     List<PRS> RondAlignment(Transform leftTr, Transform rightTr, int objCount, float height, Vector3 scale, bool isMine)
     {
         float[] objLerps = new float[objCount];
         List<PRS> results = new List<PRS>(objCount);
 
-        //Ä«µå ·ÎÅ×ÀÌ¼Ç
+        //ì¹´ë“œ ë¡œí…Œì´ì…˜
         switch (objCount)
         {
             case 1:
@@ -222,7 +220,7 @@ public class CardManager : MonoBehaviourPunCallbacks
                 break;
         }
 
-        //Ä«µå À§Ä¡
+        //ì¹´ë“œ ìœ„ì¹˜
         for (int i = 0; i < objCount; i++)
         {
             var targetPos = Vector3.Lerp(leftTr.position, rightTr.position, objLerps[i]);

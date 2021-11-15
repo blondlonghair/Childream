@@ -16,7 +16,7 @@ using Vector3 = UnityEngine.Vector3;
 
 public class Player : MonoBehaviourPunCallbacks
 {
-    [Header("�÷��̾� ����")] public float MaxHp;
+    [Header("플레이어 스탯")] public float MaxHp;
     public float CurHp;
     public float MaxMp;
     public float CurMp;
@@ -288,18 +288,14 @@ public class Player : MonoBehaviourPunCallbacks
             if (rangeTarget == null) return;
             
             {
-                //���� 0���� ������ return
                 if (CurMp < raycastTarget.GetComponent<ThisCard>().cost) return;
 
-                //ī�� �ڽ�Ʈ��ŭ ���� ����
                 CurMp -= raycastTarget.GetComponent<ThisCard>().cost;
 
-                //ī�� ����Ʈ�� �ൿ�߰�
                 GameManager.Instance.AddBattleList(SelectRange,
                     raycastTarget is Move ? 10 : raycastTarget.GetComponent<ThisCard>().id,
                     PhotonNetwork.IsMasterClient);
 
-                //�� �ϰ� ���� ī�� ����
                 CardManager.Instance.DestroyCard(raycastTarget, PhotonNetwork.IsMasterClient);
             }
 

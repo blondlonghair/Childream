@@ -213,26 +213,4 @@ public class ThisCard : MonoBehaviourPunCallbacks
             transform.GetChild(1).gameObject.SetActive(false);
         }
     }
-
-    // public void OnTriggerEnter2D(Collider2D other)
-    // {
-    //     if (!PV.IsMine) return;
-    //     
-    //     if (other.CompareTag("EffectRange"))
-    //     {
-    //         transform.GetChild(0).gameObject.SetActive(false);
-    //         transform.GetChild(1).gameObject.SetActive(true);
-    //     }
-    // }
-    //
-    // public void OnTriggerExit2D(Collider2D other)
-    // {
-    //     if (!PV.IsMine) return;
-    //
-    //     if (other.CompareTag("EffectRange"))
-    //     {
-    //         transform.GetChild(0).gameObject.SetActive(true);
-    //         transform.GetChild(1).gameObject.SetActive(false);
-    //     }
-    // }
 }

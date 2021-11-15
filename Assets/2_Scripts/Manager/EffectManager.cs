@@ -92,7 +92,7 @@ public class EffectManager : MonoBehaviourPunCallbacks
 
     IEnumerator EffectAtk2Update(Player _caster, Player _target, Vector3 _targetPos, params GameObject[] _effect)
     {
-        GameObject[] effectObj = new GameObject[] { };
+        GameObject[] effectObj = new GameObject[3];
         effectObj[0] = Instantiate(_effect[0], new Vector3(3.5f, _targetPos.y, 0), quaternion.identity);
         effectObj[1] = Instantiate(_effect[0], new Vector3(0, _targetPos.y, 0), quaternion.identity);
         effectObj[2] = Instantiate(_effect[0], new Vector3(-3.5f, _targetPos.y, 0), quaternion.identity);

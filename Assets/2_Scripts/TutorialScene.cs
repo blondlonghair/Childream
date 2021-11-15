@@ -21,7 +21,7 @@ public class TutorialScene : MonoBehaviour
 
             if (curCutScene >= cutScene.Length - 1)
             {
-                //튜토리얼 시작
+                //튜토리얼 시작 재생
             }
         }
     }

@@ -11,7 +11,7 @@ using Utils;
 
 public class Card
 {
-    //Ä«µå Á¤º¸µé
+    //ì¹´ë“œ ì •ë³´ë“¤
     public int id;
     public string cardName;
     public int cost;
@@ -22,7 +22,7 @@ public class Card
     public TargetType targetType;
     public GameObject Effect;
 
-    //Ä«µå È¿°úµé First´Â ½ÃÀü½Ã ¹ßµ¿, Second´Â Ä«µå ÀÎº¸Å©½Ã ¹ßµ¿
+    //ì¹´ë“œ íš¨ê³¼ë“¤ FirstëŠ” ì‹œì „ì‹œ ë°œë™, SecondëŠ” ì¹´ë“œ ì¸ë³´í¬ì‹œ ë°œë™
     public virtual void CardFirstAbility(Player _caster, Player _target, int _index) {}
 
     public virtual void CardSecondAbility(Player _caster, Player _target, int _index)
@@ -36,7 +36,7 @@ public abstract class AtkCard : Card
 
     public AtkCard()
     {
-        cardImageBG = Resources.Load<Sprite>("Card/Ä«µå-°ø°İ");
+        cardImageBG = Resources.Load<Sprite>("Card/ì¹´ë“œ-ê³µê²©");
         cardType = CardType.ATK;
         targetType = TargetType.ENEMY;
     }
@@ -52,7 +52,7 @@ public abstract class DefCard : Card
 
     public DefCard()
     {
-        cardImageBG = Resources.Load<Sprite>("Card/Ä«µå-¼öºñ");
+        cardImageBG = Resources.Load<Sprite>("Card/ì¹´ë“œ-ìˆ˜ë¹„");
         cardType = CardType.DEF;
         targetType = TargetType.ME;
     }
@@ -65,23 +65,13 @@ public abstract class SupCard : Card
 {
     public SupCard()
     {
-        cardImageBG = Resources.Load<Sprite>("Card/Ä«µå-Áö¿ø");
+        cardImageBG = Resources.Load<Sprite>("Card/ì¹´ë“œ-ì§€ì›");
         cardType = CardType.SUP;
     }
 
     public abstract override void CardFirstAbility(Player _caster, Player _target, int _index);
     public abstract override void CardSecondAbility(Player _caster, Player _target, int _index);
 }
-
-// public abstract class Actions : Card
-// {
-//     public Actions()
-//     {
-//         cardType = CardType.NONE;
-//     }
-//
-//     public abstract override void CardSecondAbility(Player _caster, Player _target, int _index);
-// }
 
 public class EmptyCard : Card
 {
@@ -373,48 +363,13 @@ public class Move : Card
                 (float)(_index switch{1 => 3.5, 2 => 0, 3 => -3.5, _ => 0}) : 
                 (float)(_index switch{1 => -3.5, 2 => 0, 3 => 3.5, _ => 0}), 
             _caster.transform.position.y, 0);
-        
-        // if (_index == 1)
-        // {
-        //     if (PhotonNetwork.IsMasterClient)
-        //     {
-        //         _caster.transform.position = new Vector3(3.5f, _caster.transform.position.y, 0);
-        //     }
-        //     else
-        //     {
-        //         _caster.transform.position = new Vector3(-3.5f, _caster.transform.position.y, 0);
-        //     }
-        //
-        //     _caster.CurState = _index;
-        // }
-        //
-        // else if (_index == 2)
-        // {
-        //     _caster.transform.position = new Vector3(0, _caster.transform.position.y, 0);
-        //
-        //     _caster.CurState = _index;
-        // }
-        //
-        // else if (_index == 3)
-        // {
-        //     if (PhotonNetwork.IsMasterClient)
-        //     {
-        //         _caster.transform.position = new Vector3(-3.5f, _caster.transform.position.y, 0);
-        //     }
-        //     else
-        //     {
-        //         _caster.transform.position = new Vector3(3.5f, _caster.transform.position.y, 0);
-        //     }
-        //
-        //     _caster.CurState = _index;
-        // }
 
         _caster.CurState = _index;
         _caster.CurMoveCount--;
     }
 }
 
-//¾ÆÀÌµğ	ÀÌ¸§	¸¶³ª	¼³¸í	Á¾·ù
+//ì•„ì´ë””	ì´ë¦„	ë§ˆë‚˜	ì„¤ëª…	ì¢…ë¥˜
 public class CardTable
 {
     public int id;

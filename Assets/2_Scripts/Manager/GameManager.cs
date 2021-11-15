@@ -17,10 +17,10 @@ public class GameManager : MonoBehaviourPunCallbacks
         None,
         GameSetup,
         GameStart,
-        StartTurn, //ÅÏÀÌ ½ÃÀÛµÉ¶§
-        LastTurn, //¸¶Áö¸· ÅÏÀÇ Ä«µåµéÀÇ È¿°ú ¹ßµ¿
-        PlayerTurn, //ÇÃ·¹ÀÌ¾î Çàµ¿ (ÀÌµ¿, Ä«µå »ç¿ë)
-        TurnEnd, //ÅÏÀÌ ³¡³¯¶§
+        StartTurn, //í„´ì´ ì‹œì‘ë ë•Œ
+        LastTurn, //ë§ˆì§€ë§‰ í„´ì˜ ì¹´ë“œë“¤ì˜ íš¨ê³¼ ë°œë™
+        PlayerTurn, //í”Œë ˆì´ì–´ í–‰ë™ (ì´ë™, ì¹´ë“œ ì‚¬ìš©)
+        TurnEnd, //í„´ì´ ëë‚ ë•Œ
         GameEnd
     }
 
@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public GameState gameState = GameState.None;
     public Player HostPlayer, GuestPlayer;
     public bool isHostReady, isGuestReady;
-    public List<Tuple<int, int>> HostBattleList = new List<Tuple<int, int>>(); //first : Ä«µå ID, second : range ¹øÈ£
+    public List<Tuple<int, int>> HostBattleList = new List<Tuple<int, int>>(); //first : ì¹´ë“œ ID, second : range ë²ˆí˜¸
     public List<Tuple<int, int>> GuestBattleList = new List<Tuple<int, int>>();
 
     [Header("Timer")] 
@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] private Slider EnemyMpBar;
     [SerializeField] private GameObject GameWinPanel;
     [SerializeField] private GameObject GameLosePanel;
-    [SerializeField] private GameObject MatchingDoor;
+    [SerializeField] private MatchingDoor matchingDoor;
 
     public static GameManager Instance;
     private PhotonView PV;
@@ -55,7 +55,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         PV = this.PV();
-        MatchingDoor.SetActive(true);
+        matchingDoor.gameObject.SetActive(true);
+        
         gameState = GameState.GameSetup;
     }
 
@@ -68,7 +69,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (!AllPlayerIn()) return;
 
-        //½ºÀ§Ä¡ ºĞ±â ³ª´©±â
+        //ìŠ¤ìœ„ì¹˜ ë¶„ê¸° ë‚˜ëˆ„ê¸°
         switch (gameState)
         {
             case GameState.GameSetup:
@@ -114,8 +115,6 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnGameSetup()
     {
-        MatchingDoor.GetComponent<Animator>().SetTrigger("DoorOpen");
-
         PhotonNetwork.Instantiate("Prefab/Player", Vector3.zero, Quaternion.identity);
         PhotonNetwork.Instantiate("Prefab/Ranges", Vector3.zero, Quaternion.identity);
 
@@ -128,6 +127,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             return;
 
         PV.RPC(nameof(InitPlayers), RpcTarget.AllBuffered);
+        matchingDoor.OpenDoor();
         gameState = GameState.StartTurn;
     }
 
@@ -135,16 +135,16 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         CardInvokeTimer += Time.deltaTime;
 
-        //°ÔÀÓ ³¡ÀÎÁö È®ÀÎ
+        //ê²Œì„ ëì¸ì§€ í™•ì¸
         if (HostPlayer.CurHp <= 0 || GuestPlayer.CurHp <= 0)
         {
             gameState = GameState.GameEnd;
         }
 
-        //3ÃÊ¸¶´Ù ¸®½ºÆ® ÀÎº¸Å©
+        //3ì´ˆë§ˆë‹¤ ë¦¬ìŠ¤íŠ¸ ì¸ë³´í¬
         if (CardInvokeTimer >= CardInovkeInvaldTime)
         {
-            //ÇÃ·¹ÀÌ¾î ÀÌµ¿ Àá±İÀº Ã¹¹øÂ°·Î ¹ßµ¿µÇ°Ô 
+            //í”Œë ˆì´ì–´ ì´ë™ ì ê¸ˆì€ ì²«ë²ˆì§¸ë¡œ ë°œë™ë˜ê²Œ  
             if (HostBattleList.Any(x => CardData.CardList[x.Item2]?.id == 7))
             {
                 var hostSupCard = HostBattleList.Find(x => CardData.CardList[x.Item2]?.id == 7);
@@ -213,7 +213,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnPlayerTurn()
     {
-        //ÇÃ·¹ÀÌ¾î ¸ğµÎ ¹öÆ° ´©¸£¸é ´ÙÀ½ ÅÏÀ¸·Î
+        //í”Œë ˆì´ì–´ ëª¨ë‘ ë²„íŠ¼ ëˆ„ë¥´ë©´ ë‹¤ìŒ í„´ìœ¼ë¡œ
         if (isHostReady && isGuestReady)
         {
             isHostReady = false;
@@ -225,7 +225,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnTurnEnd()
     {
-        //ÇÃ·¹ÀÌ¾î Àá±İÈ¿°ú ÇìÁ¦
+        //í”Œë ˆì´ì–´ ì ê¸ˆíš¨ê³¼ í—¤ì œ
         HostPlayer.IsLocked = false;
         GuestPlayer.IsLocked = false;
         

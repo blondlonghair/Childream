@@ -8,28 +8,26 @@ using UnityEngine.SceneManagement;
 
 public class LobbyScene : MonoBehaviourPunCallbacks
 {
-    [SerializeField] private GameObject MatchingDoor;
-    private Animator matchingAnim;
+    [SerializeField] private MatchingDoor matchingDoor;
 
     private void Start()
     {
-        matchingAnim = MatchingDoor.GetComponent<Animator>();
-
-        MatchingDoor.SetActive(true);
-        matchingAnim.SetTrigger("DoorOpen");
+        matchingDoor.OpenDoor();
     }
 
     public void MatchStartButton()
     {
-        StartCoroutine(MatchStart());
-        
-        MatchingDoor.SetActive(true);
-        matchingAnim.SetTrigger("DoorClose");
+        matchingDoor.CloseDoor();
+
+        if (matchingDoor.isAnimationOver)
+        {
+            StartCoroutine(time(2));
+        }
     }
 
-    IEnumerator MatchStart()
+    IEnumerator time(float t)
     {
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(t);
         PhotonNetwork.JoinRandomOrCreateRoom(roomOptions : new RoomOptions {MaxPlayers = 2});
         yield return null;
     }
@@ -47,7 +45,7 @@ public class LobbyScene : MonoBehaviourPunCallbacks
     
     public void Update()
     {
-        print(PhotonNetwork.NetworkClientState);
+        // print(PhotonNetwork.NetworkClientState);
     }
 
     public bool AllPlayerIn() => PhotonNetwork.PlayerList.Length == 2;
