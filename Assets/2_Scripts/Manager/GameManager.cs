@@ -39,7 +39,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] private Slider myHpBar;
     [SerializeField] private Slider myMpBar;
     [SerializeField] private Slider EnemyHpBar;
-    [SerializeField] private Slider EnemyMpBar;
     [SerializeField] private GameObject GameWinPanel;
     [SerializeField] private GameObject GameLosePanel;
     [SerializeField] private MatchingDoor matchingDoor;
@@ -102,14 +101,12 @@ public class GameManager : MonoBehaviourPunCallbacks
             myHpBar.value = HostPlayer.CurHp / HostPlayer.MaxHp;
             myMpBar.value = HostPlayer.CurMp / HostPlayer.MaxMp;
             EnemyHpBar.value = GuestPlayer.CurHp / GuestPlayer.MaxHp;
-            EnemyMpBar.value = GuestPlayer.CurMp / GuestPlayer.MaxMp;
         }
         else
         {
             myHpBar.value = GuestPlayer.CurHp / GuestPlayer.MaxHp;
             myMpBar.value = GuestPlayer.CurMp / GuestPlayer.MaxMp;
             EnemyHpBar.value = HostPlayer.CurHp / HostPlayer.MaxHp;
-            EnemyMpBar.value = HostPlayer.CurMp / HostPlayer.MaxMp;
         }
     }
 
@@ -231,6 +228,14 @@ public class GameManager : MonoBehaviourPunCallbacks
         
         HostPlayer.IsPlayerTurn = false;
         GuestPlayer.IsPlayerTurn = false;
+
+        HostPlayer.DefElectricity = false;
+        HostPlayer.DefExplosion = false;
+        HostPlayer.DefMagic = false;
+        
+        GuestPlayer.DefElectricity = false;
+        GuestPlayer.DefExplosion = false;
+        GuestPlayer.DefMagic = false;
 
         gameState = GameState.StartTurn;
     }

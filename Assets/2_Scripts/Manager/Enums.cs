@@ -12,7 +12,8 @@ namespace Enums
     {
         NONE,
         ME,
-        ENEMY
+        ENEMY,
+        ALL
     }
 
     public enum ActType

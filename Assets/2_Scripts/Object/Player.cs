@@ -117,7 +117,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         return 0;
     }
-    
+
     GameObject CastRayRange()
     {
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -189,7 +189,7 @@ public class Player : MonoBehaviourPunCallbacks
         {
             player = CastRay("Player");
 
-            if (!player.GetPhotonView().IsMine || player == null) return;
+            if (player == null || !player.GetPhotonView().IsMine) return;
         }
 
         if (Input.GetMouseButton(0))
@@ -208,19 +208,20 @@ public class Player : MonoBehaviourPunCallbacks
             if (range == 0)
             {
                 player.transform.position = new Vector3(
-                    (PhotonNetwork.IsMasterClient
+                    PhotonNetwork.IsMasterClient
                         ? (float) (CurState switch {1 => 3.5, 2 => 0, 3 => -3.5, _ => 0})
-                        : (float) (CurState switch {1 => -3.5, 2 => 0, 3 => 3.5, _ => 0})),
-                    (PhotonNetwork.IsMasterClient ? player.GetPhotonView().IsMine ? 2.5f : -5f :
-                        player.GetPhotonView().IsMine ? -2.5f : 5f), 0);
+                        : (float) (CurState switch {1 => -3.5, 2 => 0, 3 => 3.5, _ => 0}),
+                    PhotonNetwork.IsMasterClient ? player.GetPhotonView().IsMine ? 2.5f : -5f :
+                        player.GetPhotonView().IsMine ? -2.5f : 5f, 0);
                 return;
             }
             
-            player.transform.position = new Vector3(PhotonNetwork.IsMasterClient ? 
-                    (float)(range switch{1 => 3.5, 2 => 0, 3 => -3.5, _ => 0}) : 
-                    (float)(range switch{1 => -3.5, 2 => 0, 3 => 3.5, _ => 0}), 
-                (PhotonNetwork.IsMasterClient ? player.GetPhotonView().IsMine ? 2.5f : -5f :
-                    player.GetPhotonView().IsMine ? -2.5f : 5f), 0);
+            player.transform.position = new Vector3(
+                PhotonNetwork.IsMasterClient
+                    ? (float)(range switch{1 => 3.5, 2 => 0, 3 => -3.5, _ => 0}) 
+                    : (float)(range switch{1 => -3.5, 2 => 0, 3 => 3.5, _ => 0}), 
+                PhotonNetwork.IsMasterClient ? player.GetPhotonView().IsMine ? 2.5f : -5f :
+                    player.GetPhotonView().IsMine ? -2.5f : 5f, 0);
             GameManager.Instance.AddBattleList(range, 10, PhotonNetwork.IsMasterClient);
             CurMoveCount--;
         }
@@ -239,11 +240,8 @@ public class Player : MonoBehaviourPunCallbacks
 
     void MouseInput()
     {
-        print("MouseInput");
-
         if (Input.GetMouseButtonDown(0))
         {
-            print("MouseInputDown");
             raycastTarget = CastRay("Card");
 
             if (raycastTarget == null)
@@ -257,8 +255,6 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (Input.GetMouseButton(0))
         {
-            print("MouseInputButton");
-
             if (raycastTarget == null) return;
 
             if (CheckCastRay("EffectRange"))
@@ -275,31 +271,19 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (Input.GetMouseButtonUp(0))
         {
-            print("MouseInputUp");
-
             CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
-
-            rangeTarget = CastRayRange();
-
             if (raycastTarget == null) return;
-            
             raycastTarget.GetComponent<ThisCard>().ChangetoEffect(false);
+            if (CastRayRange() == null || CurMp < raycastTarget.GetComponent<ThisCard>().cost) return;
 
-            if (rangeTarget == null) return;
-            
-            {
-                if (CurMp < raycastTarget.GetComponent<ThisCard>().cost) return;
+            CurMp -= raycastTarget.GetComponent<ThisCard>().cost;
 
-                CurMp -= raycastTarget.GetComponent<ThisCard>().cost;
+            GameManager.Instance.AddBattleList(SelectRange,
+                raycastTarget is Move ? 10 : raycastTarget.GetComponent<ThisCard>().id,
+                PhotonNetwork.IsMasterClient);
 
-                GameManager.Instance.AddBattleList(SelectRange,
-                    raycastTarget is Move ? 10 : raycastTarget.GetComponent<ThisCard>().id,
-                    PhotonNetwork.IsMasterClient);
+            CardManager.Instance.DestroyCard(raycastTarget, PhotonNetwork.IsMasterClient);
 
-                CardManager.Instance.DestroyCard(raycastTarget, PhotonNetwork.IsMasterClient);
-            }
-
-            //ī�� ����
             CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
 
             raycastTarget = null;
