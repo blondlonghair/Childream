@@ -28,7 +28,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     public int CurState;
     public bool IsLocked = false;
-    public int SelectRange;
+    // public int SelectRange;
     public bool IsPlayerTurn = false;
 
     GameObject raycastTarget = null;
@@ -98,48 +98,29 @@ public class Player : MonoBehaviourPunCallbacks
         return false;
     }
 
-    int CastRayRangeInt()
+    (GameObject, int) CastRayRange()
     {
+        Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(pos, Vector2.zero, 0f);
         int range = 0;
-        Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        RaycastHit2D[] hits = Physics2D.RaycastAll(pos, Vector2.zero, 0f);
-
-        foreach (var hit in hits)
-        {
-            if (hit.collider != null && hit.collider.gameObject.tag.Contains("Range") &&
-                !hit.collider.gameObject.CompareTag("EffectRange") && hit.collider.gameObject.GetPhotonView().IsMine)
-            {
-                range = int.Parse(hit.collider.gameObject.tag.Replace("Range", ""));
-
-                return range;
-            }
-        }
-
-        return 0;
-    }
-
-    GameObject CastRayRange()
-    {
-        Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        RaycastHit2D[] hits = Physics2D.RaycastAll(pos, Vector2.zero, 0f);
 
         foreach (var hit in hits)
         {
             if (hit.collider != null && hit.collider.gameObject.tag.Contains("Range") &&
                 !hit.collider.gameObject.CompareTag("EffectRange"))
             {
-                SelectRange = int.Parse(hit.collider.gameObject.tag.Replace("Range", ""));
+                range = int.Parse(hit.collider.gameObject.tag.Replace("Range", ""));
                 
                 if (hit.collider.gameObject.GetPhotonView().IsMine)
                 {
-                    SelectRange += 3;
+                    range += 3;
                 }
 
-                return hit.collider.gameObject;
+                return (hit.collider.gameObject, range);
             }
         }
 
-        return null;
+        return (null, range);
     }
 
     void PlayerSetup()
@@ -203,7 +184,7 @@ public class Player : MonoBehaviourPunCallbacks
         {
             if (player is null) return;
 
-            int range = CastRayRangeInt();
+            int range = CastRayRange().Item2;
 
             if (range == 0)
             {
@@ -227,16 +208,16 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
-    async Task LerpPlayer(Vector3 range)
-    {
-        await Task.Run(() =>
-        {
-            while (true)
-            {
-                transform.position = Vector3.Lerp(transform.position, range, 0.2f);
-            }
-        });
-    }
+    // async Task LerpPlayer(Vector3 range)
+    // {
+    //     await Task.Run(() =>
+    //     {
+    //         while (true)
+    //         {
+    //             transform.position = Vector3.Lerp(transform.position, range, 0.2f);
+    //         }
+    //     });
+    // }
 
     void MouseInput()
     {
@@ -244,8 +225,7 @@ public class Player : MonoBehaviourPunCallbacks
         {
             raycastTarget = CastRay("Card");
 
-            if (raycastTarget == null)
-                return;
+            if (raycastTarget == null) return;
 
             if (raycastTarget.GetComponent<PhotonView>().IsMine)
             {
@@ -264,8 +244,16 @@ public class Player : MonoBehaviourPunCallbacks
             
             if (raycastTarget.GetComponent<PhotonView>().IsMine)
             {
-                raycastTarget.transform.position = worldMousePos;
-                raycastTarget.transform.localScale = Vector3.one;
+                if (CastRayRange().Item1 == null)
+                {
+                    raycastTarget.transform.position = worldMousePos;
+                    raycastTarget.transform.localScale = Vector3.one;
+                }
+
+                else
+                {
+                    raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position, CastRayRange().Item1.transform.position, 0.2f);
+                }
             }
         }
 
@@ -274,11 +262,11 @@ public class Player : MonoBehaviourPunCallbacks
             CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
             if (raycastTarget == null) return;
             raycastTarget.GetComponent<ThisCard>().ChangetoEffect(false);
-            if (CastRayRange() == null || CurMp < raycastTarget.GetComponent<ThisCard>().cost) return;
+            if (CastRayRange().Item1 == null || CurMp < raycastTarget.GetComponent<ThisCard>().cost) return;
 
             CurMp -= raycastTarget.GetComponent<ThisCard>().cost;
 
-            GameManager.Instance.AddBattleList(SelectRange,
+            GameManager.Instance.AddBattleList(CastRayRange().Item2,
                 raycastTarget is Move ? 10 : raycastTarget.GetComponent<ThisCard>().id,
                 PhotonNetwork.IsMasterClient);
 

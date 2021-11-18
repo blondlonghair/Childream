@@ -41,7 +41,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] private Slider EnemyHpBar;
     [SerializeField] private GameObject GameWinPanel;
     [SerializeField] private GameObject GameLosePanel;
+    [SerializeField] private GameObject GameStatePanel;
     [SerializeField] private MatchingDoor matchingDoor;
+    [SerializeField] private TurnEndButton turnEndButton;
 
     public static GameManager Instance;
     private PhotonView PV;
@@ -205,6 +207,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         HostPlayer.IsPlayerTurn = true;
         GuestPlayer.IsPlayerTurn = true;
 
+        turnEndButton.TurnStart();
+
         gameState = GameState.PlayerTurn;
     }
 
@@ -236,7 +240,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         GuestPlayer.DefElectricity = false;
         GuestPlayer.DefExplosion = false;
         GuestPlayer.DefMagic = false;
-
+        
         gameState = GameState.StartTurn;
     }
 
@@ -254,11 +258,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
+            if (!isHostReady) turnEndButton.TurnEnd();
             PV.RPC(nameof(_HostReady), RpcTarget.AllBuffered);
         }
 
         else
         {
+            if (!isGuestReady) turnEndButton.TurnEnd();
             PV.RPC(nameof(_GuestReady), RpcTarget.AllBuffered);
         }
     }
@@ -368,5 +374,10 @@ public class GameManager : MonoBehaviourPunCallbacks
             
             yield return null;
         }
+    }
+
+    void TurnGameStatePanel(string s)
+    {
+        GameStatePanel.SetActive(true);
     }
 }
