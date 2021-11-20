@@ -76,7 +76,6 @@ public class EffectManager : MonoBehaviourPunCallbacks
 
         while (effectObj.transform.position != _targetPos)
         {
-            print(effectObj);
             effectObj.transform.position = Vector3.Lerp(effectObj.transform.position, _targetPos, 0.1f);
             yield return null;
         }

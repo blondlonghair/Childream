@@ -10,38 +10,28 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Utils;
 
+
+
 public class GameManager : MonoBehaviourPunCallbacks
 {
-    public enum GameState
-    {
-        None,
-        GameSetup,
-        GameStart,
-        StartTurn, //턴이 시작될때
-        LastTurn, //마지막 턴의 카드들의 효과 발동
-        PlayerTurn, //플레이어 행동 (이동, 카드 사용)
-        TurnEnd, //턴이 끝날때
-        GameEnd
-    }
-
     [Header("Manager")] 
     public GameState gameState = GameState.None;
-    public Player HostPlayer, GuestPlayer;
+    public Player hostPlayer, guestPlayer;
     public bool isHostReady, isGuestReady;
-    public List<Tuple<int, int>> HostBattleList = new List<Tuple<int, int>>(); //first : 카드 ID, second : range 번호
-    public List<Tuple<int, int>> GuestBattleList = new List<Tuple<int, int>>();
+    public List<Tuple<int, int>> hostBattleList = new List<Tuple<int, int>>(); //first : 카드 ID, second : range 번호
+    public List<Tuple<int, int>> guestBattleList = new List<Tuple<int, int>>();
 
     [Header("Timer")] 
-    [SerializeField] private float CardInvokeTimer;
-    [SerializeField] private float CardInovkeInvaldTime;
+    [SerializeField] private float cardInvokeTimer;
+    [SerializeField] private float cardInovkeInvaldTime;
 
     [Header("UI")] 
     [SerializeField] private Slider myHpBar;
     [SerializeField] private Slider myMpBar;
     [SerializeField] private Slider EnemyHpBar;
-    [SerializeField] private GameObject GameWinPanel;
-    [SerializeField] private GameObject GameLosePanel;
-    [SerializeField] private GameObject GameStatePanel;
+    [SerializeField] private GameObject gameWinPanel;
+    [SerializeField] private GameObject gameLosePanel;
+    [SerializeField] private GameStatePanel gameStatePanel;
     [SerializeField] private MatchingDoor matchingDoor;
     [SerializeField] private TurnEndButton turnEndButton;
 
@@ -100,15 +90,15 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient)
         {
-            myHpBar.value = HostPlayer.CurHp / HostPlayer.MaxHp;
-            myMpBar.value = HostPlayer.CurMp / HostPlayer.MaxMp;
-            EnemyHpBar.value = GuestPlayer.CurHp / GuestPlayer.MaxHp;
+            myHpBar.value = hostPlayer.CurHp / hostPlayer.MaxHp;
+            myMpBar.value = hostPlayer.CurMp / hostPlayer.MaxMp;
+            EnemyHpBar.value = guestPlayer.CurHp / guestPlayer.MaxHp;
         }
         else
         {
-            myHpBar.value = GuestPlayer.CurHp / GuestPlayer.MaxHp;
-            myMpBar.value = GuestPlayer.CurMp / GuestPlayer.MaxMp;
-            EnemyHpBar.value = HostPlayer.CurHp / HostPlayer.MaxHp;
+            myHpBar.value = guestPlayer.CurHp / guestPlayer.MaxHp;
+            myMpBar.value = guestPlayer.CurMp / guestPlayer.MaxMp;
+            EnemyHpBar.value = hostPlayer.CurHp / hostPlayer.MaxHp;
         }
     }
 
@@ -132,80 +122,83 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnStartTurn()
     {
-        CardInvokeTimer += Time.deltaTime;
+        cardInvokeTimer += Time.deltaTime;
 
         //게임 끝인지 확인
-        if (HostPlayer.CurHp <= 0 || GuestPlayer.CurHp <= 0)
+        if (hostPlayer.CurHp <= 0 || guestPlayer.CurHp <= 0)
         {
             gameState = GameState.GameEnd;
         }
 
         //3초마다 리스트 인보크
-        if (CardInvokeTimer >= CardInovkeInvaldTime)
+        if (cardInvokeTimer >= cardInovkeInvaldTime)
         {
             //플레이어 이동 잠금은 첫번째로 발동되게  
-            if (HostBattleList.Any(x => CardData.CardList[x.Item2]?.id == 7))
+            if (hostBattleList.Any(x => CardData.CardList[x.Item2]?.id == 7))
             {
-                var hostSupCard = HostBattleList.Find(x => CardData.CardList[x.Item2]?.id == 7);
-                HostBattleList.Remove(hostSupCard);
-                HostBattleList.Insert(0, hostSupCard);
+                var hostSupCard = hostBattleList.Find(x => CardData.CardList[x.Item2]?.id == 7);
+                hostBattleList.Remove(hostSupCard);
+                hostBattleList.Insert(0, hostSupCard);
             }
 
-            if (GuestBattleList.Any(x => CardData.CardList[x.Item2]?.id == 7))
+            if (guestBattleList.Any(x => CardData.CardList[x.Item2]?.id == 7))
             {
-                var guestSupCard = GuestBattleList.Find(x => CardData.CardList[x.Item2]?.id == 7);
-                GuestBattleList.Remove(guestSupCard);
-                GuestBattleList.Insert(0, guestSupCard);
+                var guestSupCard = guestBattleList.Find(x => CardData.CardList[x.Item2]?.id == 7);
+                guestBattleList.Remove(guestSupCard);
+                guestBattleList.Insert(0, guestSupCard);
             }
 
-            if (HostBattleList.Count > 0)
+            if (hostBattleList.Count > 0)
             {
-                var firstHostCard = CardData.CardList[HostBattleList[0].Item2];
+                var firstHostCard = CardData.CardList[hostBattleList[0].Item2];
 
                 print(firstHostCard);
 
-                firstHostCard?.CardSecondAbility(HostPlayer, GuestPlayer, HostBattleList[0].Item1);
+                firstHostCard?.CardSecondAbility(hostPlayer, guestPlayer, hostBattleList[0].Item1);
 
-                HostBattleList.RemoveAt(0);
+                hostBattleList.RemoveAt(0);
             }
 
-            if (GuestBattleList.Count > 0)
+            if (guestBattleList.Count > 0)
             {
-                var firstGuestCard = CardData.CardList[GuestBattleList[0].Item2];
+                var firstGuestCard = CardData.CardList[guestBattleList[0].Item2];
 
                 print(firstGuestCard);
 
-                firstGuestCard?.CardSecondAbility(GuestPlayer, HostPlayer, GuestBattleList[0].Item1);
+                firstGuestCard?.CardSecondAbility(guestPlayer, hostPlayer, guestBattleList[0].Item1);
 
-                GuestBattleList.RemoveAt(0);
+                guestBattleList.RemoveAt(0);
             }
 
-            if (HostBattleList.Count <= 0 && GuestBattleList.Count <= 0)
+            if (hostBattleList.Count <= 0 && guestBattleList.Count <= 0)
             {
                 gameState = GameState.LastTurn;
             }
 
-            CardInvokeTimer = 0;
+            cardInvokeTimer = 0;
         }
     }
 
     void OnLastTurn()
     {
-        CardManager.Instance.AddCard(HostPlayer.PV().IsMine);
-        CardManager.Instance.AddCard(HostPlayer.PV().IsMine);
-        CardManager.Instance.AddCard(HostPlayer.PV().IsMine);
-        CardManager.Instance.AddCard(GuestPlayer.PV().IsMine);
-        CardManager.Instance.AddCard(GuestPlayer.PV().IsMine);
-        CardManager.Instance.AddCard(GuestPlayer.PV().IsMine);
+        gameStatePanel.ShowPanel("턴 시작");
+        print("턴 시작");
+        
+        CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(guestPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(guestPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(guestPlayer.PV().IsMine);
 
-        HostPlayer.CurMp = HostPlayer.MaxMp;
-        GuestPlayer.CurMp = GuestPlayer.MaxMp;
+        hostPlayer.CurMp = hostPlayer.MaxMp;
+        guestPlayer.CurMp = guestPlayer.MaxMp;
 
-        HostPlayer.CurMoveCount = HostPlayer.MaxMoveCount;
-        GuestPlayer.CurMoveCount = GuestPlayer.MaxMoveCount;
+        hostPlayer.CurMoveCount = hostPlayer.MaxMoveCount;
+        guestPlayer.CurMoveCount = guestPlayer.MaxMoveCount;
 
-        HostPlayer.IsPlayerTurn = true;
-        GuestPlayer.IsPlayerTurn = true;
+        hostPlayer.IsPlayerTurn = true;
+        guestPlayer.IsPlayerTurn = true;
 
         turnEndButton.TurnStart();
 
@@ -226,20 +219,23 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnTurnEnd()
     {
-        //플레이어 잠금효과 헤제
-        HostPlayer.IsLocked = false;
-        GuestPlayer.IsLocked = false;
-        
-        HostPlayer.IsPlayerTurn = false;
-        GuestPlayer.IsPlayerTurn = false;
+        gameStatePanel.ShowPanel("결과 발표");
+        print("결과 발표");
 
-        HostPlayer.DefElectricity = false;
-        HostPlayer.DefExplosion = false;
-        HostPlayer.DefMagic = false;
+        //플레이어 잠금효과 헤제
+        hostPlayer.IsLocked = false;
+        guestPlayer.IsLocked = false;
         
-        GuestPlayer.DefElectricity = false;
-        GuestPlayer.DefExplosion = false;
-        GuestPlayer.DefMagic = false;
+        hostPlayer.IsPlayerTurn = false;
+        guestPlayer.IsPlayerTurn = false;
+
+        hostPlayer.DefElectricity = false;
+        hostPlayer.DefExplosion = false;
+        hostPlayer.DefMagic = false;
+        
+        guestPlayer.DefElectricity = false;
+        guestPlayer.DefExplosion = false;
+        guestPlayer.DefMagic = false;
         
         gameState = GameState.StartTurn;
     }
@@ -247,11 +243,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     void OnGameEnd()
     {
         GameObject panel = PhotonNetwork.IsMasterClient
-            ? (HostPlayer.CurHp <= 0 ? GameLosePanel : GameWinPanel)
-            : (GuestPlayer.CurHp <= 0 ? GameLosePanel : GameWinPanel);
+            ? (hostPlayer.CurHp <= 0 ? gameLosePanel : gameWinPanel)
+            : (guestPlayer.CurHp <= 0 ? gameLosePanel : gameWinPanel);
 
         StartCoroutine(PanelAnimation(panel));
-
     }
 
     public void TurnEndButton()
@@ -274,17 +269,17 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (isHost)
         {
-            var t = CardManager.Instance.hostCards[HostBattleList[0].Item1];
+            var t = CardManager.Instance.hostCards[hostBattleList[0].Item1];
             CardManager.Instance.hostCards.Remove(t);
             PhotonNetwork.Destroy(t.gameObject);
-            HostBattleList.RemoveAt(0);
+            hostBattleList.RemoveAt(0);
         }
         else
         {
-            var t = CardManager.Instance.guestCards[GuestBattleList[0].Item1];
+            var t = CardManager.Instance.guestCards[guestBattleList[0].Item1];
             CardManager.Instance.guestCards.Remove(t);
             PhotonNetwork.Destroy(t.gameObject);
-            GuestBattleList.RemoveAt(0);
+            guestBattleList.RemoveAt(0);
         }
     }
 
@@ -315,22 +310,22 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     private void _AddHostBattleList(int SelectRange, int cardId)
     {
-        CardData.CardList[cardId].CardFirstAbility(HostPlayer, GuestPlayer, SelectRange);
-        HostBattleList.Add(new Tuple<int, int>(SelectRange, cardId));
+        CardData.CardList[cardId].CardFirstAbility(hostPlayer, guestPlayer, SelectRange);
+        hostBattleList.Add(new Tuple<int, int>(SelectRange, cardId));
     }
 
     [PunRPC]
     private void _AddGuestBattleList(int SelectRange, int cardId)
     {
-        CardData.CardList[cardId].CardFirstAbility(GuestPlayer, HostPlayer, SelectRange);
-        GuestBattleList.Add(new Tuple<int, int>(SelectRange, cardId));
+        CardData.CardList[cardId].CardFirstAbility(guestPlayer, hostPlayer, SelectRange);
+        guestBattleList.Add(new Tuple<int, int>(SelectRange, cardId));
     }
 
     [PunRPC]
     void InitPlayers()
     {
-        HostPlayer = GameObject.Find("HostPlayer").GetComponent<Player>();
-        GuestPlayer = GameObject.Find("GuestPlayer").GetComponent<Player>();
+        hostPlayer = GameObject.Find("HostPlayer").GetComponent<Player>();
+        guestPlayer = GameObject.Find("GuestPlayer").GetComponent<Player>();
     }
 
     bool Checkplayers() => GameObject.FindGameObjectsWithTag("Player").Length == 2;
@@ -347,14 +342,14 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.LeaveRoom();
     
-        StartCoroutine(PanelAnimation(GameLosePanel));
+        StartCoroutine(PanelAnimation(gameLosePanel));
     }
 
     private void EnemyLeftRoom()
     {
         PhotonNetwork.LeaveRoom();
 
-        StartCoroutine(PanelAnimation(GameWinPanel));
+        StartCoroutine(PanelAnimation(gameWinPanel));
     }
     
     IEnumerator PanelAnimation(GameObject panel)
@@ -374,10 +369,5 @@ public class GameManager : MonoBehaviourPunCallbacks
             
             yield return null;
         }
-    }
-
-    void TurnGameStatePanel(string s)
-    {
-        GameStatePanel.SetActive(true);
     }
 }

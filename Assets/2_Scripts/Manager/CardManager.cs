@@ -28,7 +28,7 @@ public class CardManager : MonoBehaviourPunCallbacks
     public static CardManager Instance;
     private PhotonView PV;
 
-    List<Card> cardBuffer = new List<Card>();
+    private List<Card> cardBuffer = new List<Card>();
 
     private void Awake() => Instance = this;
 
@@ -114,13 +114,11 @@ public class CardManager : MonoBehaviourPunCallbacks
     {
         if (isMaster)
         {
-            print("_DestroyCard host");
             hostCards.RemoveAt(index);
         }
 
         else
         {
-            print("_DestroyCard host");
             guestCards.RemoveAt(index);
         }
 

@@ -388,16 +388,17 @@ public class CardTable
 
 public class CardData : MonoBehaviour
 {
-    public static List<Card> CardList = new List<Card>();
-
-    public static List<CardTable> CardTable = new List<CardTable>();
+    public static List<Card> CardList;
+    public static List<CardTable> CardTable;
 
     [SerializeField] private TextAsset cardTable;
-
     [SerializeField] private GameObject testEffect;
 
     private void Awake()
     {
+        CardList = new List<Card>();
+        CardTable = new List<CardTable>();
+        
         ExcelParsing();
 
         CardList.Add(new EmptyCard());
