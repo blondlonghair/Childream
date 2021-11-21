@@ -243,8 +243,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     void OnGameEnd()
     {
         GameObject panel = PhotonNetwork.IsMasterClient
-            ? (hostPlayer.CurHp <= 0 ? gameLosePanel : gameWinPanel)
-            : (guestPlayer.CurHp <= 0 ? gameLosePanel : gameWinPanel);
+            ? hostPlayer.CurHp <= 0 ? gameLosePanel : gameWinPanel
+            : guestPlayer.CurHp <= 0 ? gameLosePanel : gameWinPanel;
 
         StartCoroutine(PanelAnimation(panel));
     }
@@ -334,8 +334,12 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void ChangeScene(string scene)
     {
-        PhotonNetwork.LeaveRoom();
         SceneManager.LoadScene(scene);
+    }
+
+    public void RematchButton()
+    {
+        
     }
 
     public void SurrenderButton()
