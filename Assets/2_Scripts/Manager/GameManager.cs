@@ -10,7 +10,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Utils;
 
-
 public class GameManager : MonoBehaviourPunCallbacks
 {
     [Header("Manager")] public GameState gameState = GameState.None;

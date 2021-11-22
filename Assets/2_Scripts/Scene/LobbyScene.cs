@@ -11,12 +11,14 @@ public class LobbyScene : MonoBehaviourPunCallbacks
 {
     [SerializeField] private MatchingDoor matchingDoor;
     [SerializeField] private GameObject cancelButton;
+    
+    private bool loadOnce = true;
 
     private void Start()
     {
         matchingDoor.OpenDoor();
     }
-
+    
     public void Update()
     {
         if (matchingDoor.isAnimationOver)
@@ -26,10 +28,11 @@ public class LobbyScene : MonoBehaviourPunCallbacks
             matchingDoor.isAnimationOver = false;
         }
 
-        if (AllPlayerIn())
+        if (AllPlayerIn() && loadOnce)
         {
             // SceneManager.LoadScene("IngameScene");
             PhotonNetwork.LoadLevel("IngameScene");
+            loadOnce = false;
         }
     }
 
