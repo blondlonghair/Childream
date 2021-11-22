@@ -360,8 +360,8 @@ public class Move : Card
         }
 
         _caster.transform.position = new Vector3(PhotonNetwork.IsMasterClient ? 
-                (float)(_index switch{1 => 3.5, 2 => 0, 3 => -3.5, _ => 0}) : 
-                (float)(_index switch{1 => -3.5, 2 => 0, 3 => 3.5, _ => 0}), 
+                (float)(_index switch{4 => 3.5, 5 => 0, 6 => -3.5, _ => 0}) : 
+                (float)(_index switch{4 => -3.5, 5 => 0, 6 => 3.5, _ => 0}), 
             _caster.transform.position.y, 0);
 
         _caster.CurState = _index;

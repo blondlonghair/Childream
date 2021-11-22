@@ -20,13 +20,11 @@ public class MatchingDoor : MonoBehaviour
 
     public void OpenDoor()
     {
-        gameObject.SetActive(true);
         animator.SetTrigger("DoorOpen");
     }
 
     public void CloseDoor()
     {
-        gameObject.SetActive(true);
         animator.SetTrigger("DoorClose");
     }
 }

@@ -23,6 +23,7 @@ public class LobbyScene : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.JoinRandomOrCreateRoom(roomOptions : new RoomOptions {MaxPlayers = 2});
             cancelButton.SetActive(true);
+            matchingDoor.isAnimationOver = false;
         }
 
         if (AllPlayerIn())
@@ -42,6 +43,7 @@ public class LobbyScene : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.LeaveRoom();
             cancelButton.SetActive(false);
+            matchingDoor.OpenDoor();
         }
     }
 

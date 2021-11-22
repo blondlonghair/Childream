@@ -11,24 +11,21 @@ using UnityEngine.UI;
 using Utils;
 
 
-
 public class GameManager : MonoBehaviourPunCallbacks
 {
-    [Header("Manager")] 
-    public GameState gameState = GameState.None;
+    [Header("Manager")] public GameState gameState = GameState.None;
     public Player hostPlayer, guestPlayer;
     public bool isHostReady, isGuestReady;
     public List<Tuple<int, int>> hostBattleList = new List<Tuple<int, int>>(); //first : 카드 ID, second : range 번호
     public List<Tuple<int, int>> guestBattleList = new List<Tuple<int, int>>();
+    public bool? isPlayerWin = null;
 
-    [Header("Timer")] 
-    [SerializeField] private float cardInvokeTimer;
+    [Header("Timer")] [SerializeField] private float cardInvokeTimer;
     [SerializeField] private float cardInovkeInvaldTime;
 
-    [Header("UI")] 
-    [SerializeField] private Slider myHpBar;
+    [Header("UI")] [SerializeField] private LerpSlider myHpBar;
     [SerializeField] private Slider myMpBar;
-    [SerializeField] private Slider EnemyHpBar;
+    [SerializeField] private LerpSlider EnemyHpBar;
     [SerializeField] private GameObject gameWinPanel;
     [SerializeField] private GameObject gameLosePanel;
     [SerializeField] private GameStatePanel gameStatePanel;
@@ -47,7 +44,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         PV = this.PV();
         matchingDoor.gameObject.SetActive(true);
-        
+
         gameState = GameState.GameSetup;
     }
 
@@ -90,15 +87,15 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (PhotonNetwork.IsMasterClient)
         {
-            myHpBar.value = hostPlayer.CurHp / hostPlayer.MaxHp;
-            myMpBar.value = hostPlayer.CurMp / hostPlayer.MaxMp;
-            EnemyHpBar.value = guestPlayer.CurHp / guestPlayer.MaxHp;
+            myHpBar.SliderValue(hostPlayer.CurHp / hostPlayer.MaxHp);
+            EnemyHpBar.SliderValue(guestPlayer.CurHp / guestPlayer.MaxHp);
+            myMpBar.value =hostPlayer.CurMp / hostPlayer.MaxMp;
         }
         else
         {
-            myHpBar.value = guestPlayer.CurHp / guestPlayer.MaxHp;
+            myHpBar.SliderValue(guestPlayer.CurHp / guestPlayer.MaxHp);
+            EnemyHpBar.SliderValue(hostPlayer.CurHp / hostPlayer.MaxHp);
             myMpBar.value = guestPlayer.CurMp / guestPlayer.MaxMp;
-            EnemyHpBar.value = hostPlayer.CurHp / hostPlayer.MaxHp;
         }
     }
 
@@ -127,12 +124,19 @@ public class GameManager : MonoBehaviourPunCallbacks
         //게임 끝인지 확인
         if (hostPlayer.CurHp <= 0 || guestPlayer.CurHp <= 0)
         {
+            cardInvokeTimer = 0;
             gameState = GameState.GameEnd;
         }
 
         //3초마다 리스트 인보크
         if (cardInvokeTimer >= cardInovkeInvaldTime)
         {
+            if (hostBattleList.Count <= 0 && guestBattleList.Count <= 0)
+            {
+                cardInvokeTimer = 0;
+                gameState = GameState.LastTurn;
+            }
+
             //플레이어 이동 잠금은 첫번째로 발동되게  
             if (hostBattleList.Any(x => CardData.CardList[x.Item2]?.id == 7))
             {
@@ -148,34 +152,32 @@ public class GameManager : MonoBehaviourPunCallbacks
                 guestBattleList.Insert(0, guestSupCard);
             }
 
-            if (hostBattleList.Count > 0)
+            if (hostBattleList.Count > 0 || guestBattleList.Count > 0)
             {
-                var firstHostCard = CardData.CardList[hostBattleList[0].Item2];
+                if (hostBattleList.Count > 0)
+                {
+                    var firstHostCard = CardData.CardList[hostBattleList[0].Item2];
 
-                print(firstHostCard);
+                    print(firstHostCard);
 
-                firstHostCard?.CardSecondAbility(hostPlayer, guestPlayer, hostBattleList[0].Item1);
+                    firstHostCard?.CardSecondAbility(hostPlayer, guestPlayer, hostBattleList[0].Item1);
 
-                hostBattleList.RemoveAt(0);
+                    hostBattleList.RemoveAt(0);
+                }
+
+                if (guestBattleList.Count > 0)
+                {
+                    var firstGuestCard = CardData.CardList[guestBattleList[0].Item2];
+
+                    print(firstGuestCard);
+
+                    firstGuestCard?.CardSecondAbility(guestPlayer, hostPlayer, guestBattleList[0].Item1);
+
+                    guestBattleList.RemoveAt(0);
+                }
+
+                cardInvokeTimer = 0;
             }
-
-            if (guestBattleList.Count > 0)
-            {
-                var firstGuestCard = CardData.CardList[guestBattleList[0].Item2];
-
-                print(firstGuestCard);
-
-                firstGuestCard?.CardSecondAbility(guestPlayer, hostPlayer, guestBattleList[0].Item1);
-
-                guestBattleList.RemoveAt(0);
-            }
-
-            if (hostBattleList.Count <= 0 && guestBattleList.Count <= 0)
-            {
-                gameState = GameState.LastTurn;
-            }
-
-            cardInvokeTimer = 0;
         }
     }
 
@@ -183,7 +185,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         gameStatePanel.ShowPanel("턴 시작");
         print("턴 시작");
-        
+
         CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
         CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
         CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
@@ -220,33 +222,45 @@ public class GameManager : MonoBehaviourPunCallbacks
     void OnTurnEnd()
     {
         gameStatePanel.ShowPanel("결과 발표");
-        print("결과 발표");
 
         //플레이어 잠금효과 헤제
         hostPlayer.IsLocked = false;
         guestPlayer.IsLocked = false;
-        
+
         hostPlayer.IsPlayerTurn = false;
         guestPlayer.IsPlayerTurn = false;
 
         hostPlayer.DefElectricity = false;
         hostPlayer.DefExplosion = false;
         hostPlayer.DefMagic = false;
-        
+
         guestPlayer.DefElectricity = false;
         guestPlayer.DefExplosion = false;
         guestPlayer.DefMagic = false;
-        
+
         gameState = GameState.StartTurn;
     }
 
     void OnGameEnd()
     {
-        GameObject panel = PhotonNetwork.IsMasterClient
-            ? hostPlayer.CurHp <= 0 ? gameLosePanel : gameWinPanel
-            : guestPlayer.CurHp <= 0 ? gameLosePanel : gameWinPanel;
+        isPlayerWin = PhotonNetwork.IsMasterClient
+            ? !(hostPlayer.CurHp <= 0)
+            : !(guestPlayer.CurHp <= 0);
 
-        StartCoroutine(PanelAnimation(panel));
+        if (isPlayerWin == true)
+        {
+            StartCoroutine(PanelAnimation(gameWinPanel));
+        }
+        else if (isPlayerWin == false)
+        {
+            StartCoroutine(PanelAnimation(gameLosePanel));
+        }
+
+        // GameObject panel = PhotonNetwork.IsMasterClient
+        //     ? hostPlayer.CurHp <= 0 ? gameLosePanel : gameWinPanel
+        //     : guestPlayer.CurHp <= 0 ? gameLosePanel : gameWinPanel;
+        //
+        // StartCoroutine(PanelAnimation(panel));
     }
 
     public void TurnEndButton()
@@ -335,34 +349,36 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void ChangeScene(string scene)
     {
         SceneManager.LoadScene(scene);
+        PhotonNetwork.LeaveRoom();
     }
 
     public void RematchButton()
     {
-        
     }
 
     public void SurrenderButton()
     {
         PhotonNetwork.LeaveRoom();
-    
+
         StartCoroutine(PanelAnimation(gameLosePanel));
     }
 
     private void EnemyLeftRoom()
     {
-        PhotonNetwork.LeaveRoom();
-
-        StartCoroutine(PanelAnimation(gameWinPanel));
+        if (isPlayerWin == null)
+        {
+            PhotonNetwork.LeaveRoom();
+            StartCoroutine(PanelAnimation(gameWinPanel));
+        }
     }
-    
+
     IEnumerator PanelAnimation(GameObject panel)
     {
         panel.SetActive(true);
         yield return null;
 
         IsAnimationOver anim = panel.GetComponent<IsAnimationOver>();
-        
+
         while (true)
         {
             if (anim.isAnimationOver)
@@ -370,7 +386,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 panel.transform.GetChild(0).gameObject.SetActive(true);
                 yield break;
             }
-            
+
             yield return null;
         }
     }

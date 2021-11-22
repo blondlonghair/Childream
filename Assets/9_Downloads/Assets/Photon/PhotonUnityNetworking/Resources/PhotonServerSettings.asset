@@ -68,6 +68,7 @@ MonoBehaviour:
   - DestoryCard
   - sync_CardAlignment
   - _DestroyCard
+  - DieInput
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

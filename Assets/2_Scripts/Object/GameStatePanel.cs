@@ -31,7 +31,6 @@ public class GameStatePanel : MonoBehaviour
 
         while (statePanel.color.a < 0.99f && statePanel.color.a < 0.99f)
         {
-            print("turning On");
             panel += 0.05f;
             text += 0.05f;
             panelColor.a = panel;
@@ -41,11 +40,10 @@ public class GameStatePanel : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(1f);
 
         while (statePanel.color.a > 0 && stateText.color.a > 0)
         {
-            print("turning Off");
             panel -= 0.05f;
             text -= 0.05f;
             panelColor.a = panel;

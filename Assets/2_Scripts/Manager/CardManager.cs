@@ -85,15 +85,8 @@ public class CardManager : MonoBehaviourPunCallbacks
         print("DestroyCard");
         int index;
 
-        if (isMaster)
-        {
-            index = hostCards.FindIndex(x => x == card.GetComponent<ThisCard>());
-        }
-
-        else
-        {
-            index = guestCards.FindIndex(x => x == card.GetComponent<ThisCard>());
-        }
+        index = isMaster ? hostCards.FindIndex(x => x == card.GetComponent<ThisCard>())
+            : guestCards.FindIndex(x => x == card.GetComponent<ThisCard>());
 
         PV.RPC(nameof(_DestroyCard), RpcTarget.AllBuffered, index, isMaster);
 

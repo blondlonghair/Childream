@@ -27,7 +27,9 @@ public class Player : MonoBehaviourPunCallbacks
     public bool DefExplosion;
 
     public int CurState;
+
     public bool IsLocked = false;
+
     // public int SelectRange;
     public bool IsPlayerTurn = false;
 
@@ -47,9 +49,12 @@ public class Player : MonoBehaviourPunCallbacks
 
     void Update()
     {
-        Vector3 mousePos = Input.mousePosition;
-        worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
-        worldMousePos.z = 0;
+        if (PV.IsMine && Input.GetKeyDown(KeyCode.F1))
+        {
+            PV.RPC(nameof(DieInput), RpcTarget.AllBuffered);
+        }
+
+        GetMousePos();
 
         if (!PV.IsMine) return;
 
@@ -60,11 +65,24 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
+    [PunRPC]
+    private void DieInput()
+    {
+        CurHp = 0;
+    }
+
+    void GetMousePos()
+    {
+        Vector3 mousePos = Input.mousePosition;
+        worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
+        worldMousePos.z = 0;
+    }
+
     GameObject CastRay(string tag)
     {
         if (EventSystem.current.IsPointerOverGameObject())
             return null;
-        
+
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D[] hits = Physics2D.RaycastAll(pos, Vector2.zero, 0f);
 
@@ -83,7 +101,7 @@ public class Player : MonoBehaviourPunCallbacks
     {
         if (EventSystem.current.IsPointerOverGameObject())
             return false;
-        
+
         Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         RaycastHit2D[] hits = Physics2D.RaycastAll(pos, Vector2.zero, 0f);
 
@@ -110,12 +128,13 @@ public class Player : MonoBehaviourPunCallbacks
                 !hit.collider.gameObject.CompareTag("EffectRange"))
             {
                 range = int.Parse(hit.collider.gameObject.tag.Replace("Range", ""));
-                
+
                 if (hit.collider.gameObject.GetPhotonView().IsMine)
                 {
                     range += 3;
                 }
 
+                print(range);
                 return (hit.collider.gameObject, range);
             }
         }
@@ -165,7 +184,7 @@ public class Player : MonoBehaviourPunCallbacks
     void PlayerMove()
     {
         if (CurMoveCount <= 0) return;
-        
+
         if (Input.GetMouseButtonDown(0))
         {
             player = CastRay("Player");
@@ -176,7 +195,7 @@ public class Player : MonoBehaviourPunCallbacks
         if (Input.GetMouseButton(0))
         {
             if (player is null) return;
-            
+
             player.transform.position = worldMousePos;
         }
 
@@ -190,21 +209,23 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 player.transform.position = new Vector3(
                     PhotonNetwork.IsMasterClient
-                        ? (float) (CurState switch {1 => 3.5, 2 => 0, 3 => -3.5, _ => 0})
-                        : (float) (CurState switch {1 => -3.5, 2 => 0, 3 => 3.5, _ => 0}),
-                    PhotonNetwork.IsMasterClient ? player.GetPhotonView().IsMine ? 2.5f : -5f :
-                        player.GetPhotonView().IsMine ? -2.5f : 5f, 0);
-                return;
+                        ? (float) (CurState switch {4 => 3.5, 5 => 0, 6 => -3.5, _ => 0})
+                        : (float) (CurState switch {4 => -3.5, 5 => 0, 6 => 3.5, _ => 0}),
+                    PhotonNetwork.IsMasterClient ? player.GetPhotonView().IsMine ? 1f : -5f :
+                    player.GetPhotonView().IsMine ? -1f : 5f, 0);
             }
-            
-            player.transform.position = new Vector3(
-                PhotonNetwork.IsMasterClient
-                    ? (float)(range switch{1 => 3.5, 2 => 0, 3 => -3.5, _ => 0}) 
-                    : (float)(range switch{1 => -3.5, 2 => 0, 3 => 3.5, _ => 0}), 
-                PhotonNetwork.IsMasterClient ? player.GetPhotonView().IsMine ? 2.5f : -5f :
-                    player.GetPhotonView().IsMine ? -2.5f : 5f, 0);
-            GameManager.Instance.AddBattleList(range, 10, PhotonNetwork.IsMasterClient);
-            CurMoveCount--;
+
+            else
+            {
+                player.transform.position = new Vector3(
+                    PhotonNetwork.IsMasterClient
+                        ? (float) (range switch {4 => 3.5, 5 => 0, 6 => -3.5, _ => 0})
+                        : (float) (range switch {4 => -3.5, 5 => 0, 6 => 3.5, _ => 0}),
+                    PhotonNetwork.IsMasterClient ? player.GetPhotonView().IsMine ? 1f : -5f :
+                    player.GetPhotonView().IsMine ? -1f : 5f, 0);
+                GameManager.Instance.AddBattleList(range, 10, PhotonNetwork.IsMasterClient);
+                CurMoveCount--;
+            }
         }
     }
 
@@ -241,7 +262,7 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 raycastTarget.GetComponent<ThisCard>().ChangetoEffect(true);
             }
-            
+
             if (raycastTarget.GetComponent<PhotonView>().IsMine)
             {
                 if (CastRayRange().Item1 == null)
@@ -252,7 +273,8 @@ public class Player : MonoBehaviourPunCallbacks
 
                 else
                 {
-                    raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position, CastRayRange().Item1.transform.position, 0.2f);
+                    raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position,
+                        CastRayRange().Item1.transform.position, 0.2f);
                 }
             }
         }
@@ -277,29 +299,31 @@ public class Player : MonoBehaviourPunCallbacks
             raycastTarget = null;
         }
     }
-    
+
     void CardZoom()
     {
         GameObject card = CastRay("Card");
 
         if (card == null) return;
-        
+
         Canvas canvas = card.GetComponentInChildren<Canvas>();
         PRS originRPS = card.GetComponent<ThisCard>().originRPS;
-    
+
         if (!Input.GetMouseButton(0))
         {
             card.transform.localScale = Vector3.Lerp(card.transform.localScale, new Vector3(2, 2, 2), 0.5f);
             canvas.sortingOrder = 100;
-    
+
             if (PhotonNetwork.IsMasterClient)
             {
-                card.transform.position = Vector3.Lerp(card.transform.position, new Vector3(card.transform.position.x, 7, -9), 0.5f);
+                card.transform.position = Vector3.Lerp(card.transform.position,
+                    new Vector3(card.transform.position.x, 7, -9), 0.5f);
                 card.transform.rotation = Quaternion.Lerp(card.transform.rotation, Quaternion.Euler(0, 0, 180), 0.5f);
             }
             else
             {
-                card.transform.position = Vector3.Lerp(card.transform.position, new Vector3(card.transform.position.x, -7, -9), 0.5f);
+                card.transform.position = Vector3.Lerp(card.transform.position,
+                    new Vector3(card.transform.position.x, -7, -9), 0.5f);
                 card.transform.rotation = Quaternion.Lerp(card.transform.rotation, Quaternion.Euler(0, 0, 0), 0.5f);
             }
         }
