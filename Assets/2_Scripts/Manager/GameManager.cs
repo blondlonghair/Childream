@@ -348,7 +348,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void ChangeScene(string scene)
     {
-        SceneManager.LoadScene(scene);
+        // SceneManager.LoadScene(scene);
+        PhotonNetwork.LoadLevel(scene);
         PhotonNetwork.LeaveRoom();
     }
 

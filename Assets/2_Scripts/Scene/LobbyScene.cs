@@ -28,7 +28,8 @@ public class LobbyScene : MonoBehaviourPunCallbacks
 
         if (AllPlayerIn())
         {
-            SceneManager.LoadScene("IngameScene");
+            // SceneManager.LoadScene("IngameScene");
+            PhotonNetwork.LoadLevel("IngameScene");
         }
     }
 
