@@ -35,7 +35,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
     public PhotonView PV;
     public Canvas canvas;
     public PRS originRPS;
-    
+
     GameObject target = null;
     private bool isLerp = false;
     private float time = 0;
@@ -44,7 +44,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
     {
         PV = this.PV();
         canvas = gameObject.GetComponentInChildren<Canvas>();
-        
+
         if (PV.IsMine)
         {
             if (PhotonNetwork.IsMasterClient)
@@ -102,13 +102,20 @@ public class ThisCard : MonoBehaviourPunCallbacks
                 isLerp = false;
             }
         }
-        
+
         CardZoom();
     }
 
     void CardZoom()
     {
-        if (!PV.IsMine || EventSystem.current.IsPointerOverGameObject() || (target != gameObject && !Input.GetMouseButton(0)))
+#if UNITY_EDITOR
+        int touch = -1;
+#elif UNITY_ANDROID
+        int touch = 0;
+#endif
+        
+        if (!PV.IsMine || EventSystem.current.IsPointerOverGameObject(touch) ||
+            target != gameObject && !Input.GetMouseButton(0))
         {
             canvas.sortingOrder = originRPS.index;
             transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, 0.5f);
