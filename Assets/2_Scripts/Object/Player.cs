@@ -229,26 +229,20 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
-    // async Task LerpPlayer(Vector3 range)
-    // {
-    //     await Task.Run(() =>
-    //     {
-    //         while (true)
-    //         {
-    //             transform.position = Vector3.Lerp(transform.position, range, 0.2f);
-    //         }
-    //     });
-    // }
-
     void MouseInput()
     {
+        ThisCard cardInfo = null;
+        
+        CardZoom();
+        
         if (Input.GetMouseButtonDown(0))
         {
             raycastTarget = CastRay("Card");
 
             if (raycastTarget == null) return;
+            cardInfo = raycastTarget.GetComponent<ThisCard>();
 
-            if (raycastTarget.GetComponent<PhotonView>().IsMine)
+            if (raycastTarget.GetPhotonView().IsMine)
             {
                 raycastTarget.transform.rotation = Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0);
             }
@@ -260,10 +254,10 @@ public class Player : MonoBehaviourPunCallbacks
 
             if (CheckCastRay("EffectRange"))
             {
-                raycastTarget.GetComponent<ThisCard>().ChangetoEffect(true);
+                cardInfo.ChangetoEffect(true);
             }
 
-            if (raycastTarget.GetComponent<PhotonView>().IsMine)
+            if (raycastTarget.GetPhotonView().IsMine)
             {
                 if (CastRayRange().Item1 == null)
                 {
@@ -284,13 +278,12 @@ public class Player : MonoBehaviourPunCallbacks
             CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
             if (raycastTarget == null) return;
             raycastTarget.GetComponent<ThisCard>().ChangetoEffect(false);
-            if (CastRayRange().Item1 == null || CurMp < raycastTarget.GetComponent<ThisCard>().cost) return;
+            if (CastRayRange().Item1 == null || CurMp < cardInfo.cost) return;
 
-            CurMp -= raycastTarget.GetComponent<ThisCard>().cost;
+            CurMp -= cardInfo.cost;
 
             GameManager.Instance.AddBattleList(CastRayRange().Item2,
-                raycastTarget is Move ? 10 : raycastTarget.GetComponent<ThisCard>().id,
-                PhotonNetwork.IsMasterClient);
+                raycastTarget is Move ? 10 : cardInfo.id, PhotonNetwork.IsMasterClient);
 
             CardManager.Instance.DestroyCard(raycastTarget, PhotonNetwork.IsMasterClient);
 
@@ -300,32 +293,33 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
+    private GameObject card = null;
+    private GameObject card2 = null;
+    private ThisCard thisCard;
+    
     void CardZoom()
     {
-        GameObject card = CastRay("Card");
-
-        if (card == null) return;
-
-        Canvas canvas = card.GetComponentInChildren<Canvas>();
-        PRS originRPS = card.GetComponent<ThisCard>().originRPS;
-
-        if (!Input.GetMouseButton(0))
+        if (card != null)
         {
-            card.transform.localScale = Vector3.Lerp(card.transform.localScale, new Vector3(2, 2, 2), 0.5f);
-            canvas.sortingOrder = 100;
+            thisCard = card.GetComponent<ThisCard>();
+        }
 
-            if (PhotonNetwork.IsMasterClient)
+        card = CastRay("Card");
+        
+        if (card2 != card)
+        {
+            if (thisCard != null)
             {
-                card.transform.position = Vector3.Lerp(card.transform.position,
-                    new Vector3(card.transform.position.x, 7, -9), 0.5f);
-                card.transform.rotation = Quaternion.Lerp(card.transform.rotation, Quaternion.Euler(0, 0, 180), 0.5f);
+                thisCard.CardZoomOut();
             }
-            else
-            {
-                card.transform.position = Vector3.Lerp(card.transform.position,
-                    new Vector3(card.transform.position.x, -7, -9), 0.5f);
-                card.transform.rotation = Quaternion.Lerp(card.transform.rotation, Quaternion.Euler(0, 0, 0), 0.5f);
-            }
+            
+            card2 = card;
+        }
+        
+        if (card != null)
+        {
+            thisCard = card.GetComponent<ThisCard>();
+            thisCard.CardZoomIn();
         }
     }
 }

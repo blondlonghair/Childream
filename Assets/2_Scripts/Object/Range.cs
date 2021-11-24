@@ -10,14 +10,12 @@ public class Range : MonoBehaviourPunCallbacks
     PhotonView PV;
     [SerializeField] private GameObject[] childs;
 
-    private SpriteRenderer SR;
-    [SerializeField] private Sprite frontRange;
-    [SerializeField] private Sprite backRange;
+    [SerializeField] private Sprite[] frontRange;
+    [SerializeField] private Sprite[] backRange;
 
     void Start()
     {
         PV = this.PV();
-        SR = GetComponent<SpriteRenderer>();
         
         if (PhotonNetwork.IsMasterClient)
         {
@@ -27,14 +25,23 @@ public class Range : MonoBehaviourPunCallbacks
             {
                 transform.position = new Vector3(0, 3.5f, 0);
                 gameObject.name = "MasterRange";
-                SR.sprite = frontRange;
+                childs[0].transform.localPosition = new Vector3(-3.5f, 0, 0);
+                childs[2].transform.localPosition = new Vector3(3.5f, 0, 0);for (int i = 0; i < 3; i++)
+                {
+                    childs[i].GetComponent<SpriteRenderer>().sprite = frontRange[i];
+                }
             }
 
             else
             {
                 transform.position = new Vector3(0, -3.5f, 0);
-                SR.sprite = backRange;
                 gameObject.name = "GuestRange";
+                childs[0].transform.localPosition = new Vector3(-2.7f, 0, 0);
+                childs[2].transform.localPosition = new Vector3(2.7f, 0, 0);
+                for (int i = 0; i < 3; i++)
+                {
+                    childs[i].GetComponent<SpriteRenderer>().sprite = backRange[i];
+                }
             }
         }
         else
@@ -42,15 +49,25 @@ public class Range : MonoBehaviourPunCallbacks
             if (PV.IsMine)
             {
                 transform.position = new Vector3(0, -3.5f, 0);
-                SR.sprite = frontRange;
                 gameObject.name = "GuestRange";
+                childs[0].transform.localPosition = new Vector3(-3.5f, 0, 0);
+                childs[2].transform.localPosition = new Vector3(3.5f, 0, 0);
+                for (int i = 0; i < 3; i++)
+                {
+                    childs[i].GetComponent<SpriteRenderer>().sprite = frontRange[i];
+                }
             }
 
             else
             {
                 transform.position = new Vector3(0, 3.5f, 0);
-                SR.sprite = backRange;
                 gameObject.name = "MasterRange";
+                childs[0].transform.localPosition = new Vector3(-2.7f, 0, 0);
+                childs[2].transform.localPosition = new Vector3(2.7f, 0, 0);
+                for (int i = 0; i < 3; i++)
+                {
+                    childs[i].GetComponent<SpriteRenderer>().sprite = backRange[i];
+                }
             }
         }
     }

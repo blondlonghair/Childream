@@ -192,6 +192,21 @@ public class GameManager : MonoBehaviourPunCallbacks
         CardManager.Instance.AddCard(guestPlayer.PV().IsMine);
         CardManager.Instance.AddCard(guestPlayer.PV().IsMine);
 
+        //플레이어 잠금효과 헤제
+        hostPlayer.IsLocked = false;
+        guestPlayer.IsLocked = false;
+
+        hostPlayer.IsPlayerTurn = false;
+        guestPlayer.IsPlayerTurn = false;
+
+        hostPlayer.DefElectricity = false;
+        hostPlayer.DefExplosion = false;
+        hostPlayer.DefMagic = false;
+
+        guestPlayer.DefElectricity = false;
+        guestPlayer.DefExplosion = false;
+        guestPlayer.DefMagic = false;
+        
         hostPlayer.CurMp = hostPlayer.MaxMp;
         guestPlayer.CurMp = guestPlayer.MaxMp;
 
@@ -221,21 +236,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     void OnTurnEnd()
     {
         gameStatePanel.ShowPanel("결과 발표");
-
-        //플레이어 잠금효과 헤제
-        hostPlayer.IsLocked = false;
-        guestPlayer.IsLocked = false;
-
-        hostPlayer.IsPlayerTurn = false;
-        guestPlayer.IsPlayerTurn = false;
-
-        hostPlayer.DefElectricity = false;
-        hostPlayer.DefExplosion = false;
-        hostPlayer.DefMagic = false;
-
-        guestPlayer.DefElectricity = false;
-        guestPlayer.DefExplosion = false;
-        guestPlayer.DefMagic = false;
 
         gameState = GameState.StartTurn;
     }

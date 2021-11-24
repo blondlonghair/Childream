@@ -25,6 +25,8 @@ public class EffectManager : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject Sup2;
     [SerializeField] private GameObject Sup3;
 
+    private float rangePos = 2.7f;
+
     private void Awake()
     {
         Instance = this;
@@ -33,8 +35,8 @@ public class EffectManager : MonoBehaviourPunCallbacks
     public void InitEffect(Player _caster, Player _target, int _index, int _effectId)
     {
         Vector3 targetPos = new Vector3(PhotonNetwork.IsMasterClient ? 
-            (float)(_index switch{1 => 3.5, 2 => 0, 3 => -3.5, _ => 0}) : 
-            (float)(_index switch{1 => -3.5, 2 => 0, 3 => 3.5, _ => 0}), 
+            (float)(_index switch{1 => rangePos, 2 => 0, 3 => -rangePos, _ => 0}) : 
+            (float)(_index switch{1 => -rangePos, 2 => 0, 3 => rangePos, _ => 0}), 
             _target.transform.position.y, 0);
         
         switch (_effectId)
@@ -92,9 +94,9 @@ public class EffectManager : MonoBehaviourPunCallbacks
     IEnumerator EffectAtk2Update(Player _caster, Player _target, Vector3 _targetPos, params GameObject[] _effect)
     {
         GameObject[] effectObj = new GameObject[3];
-        effectObj[0] = Instantiate(_effect[0], new Vector3(3.5f, _targetPos.y, 0), quaternion.identity);
+        effectObj[0] = Instantiate(_effect[0], new Vector3(rangePos, _targetPos.y, 0), quaternion.identity);
         effectObj[1] = Instantiate(_effect[0], new Vector3(0, _targetPos.y, 0), quaternion.identity);
-        effectObj[2] = Instantiate(_effect[0], new Vector3(-3.5f, _targetPos.y, 0), quaternion.identity);
+        effectObj[2] = Instantiate(_effect[0], new Vector3(-rangePos, _targetPos.y, 0), quaternion.identity);
 
         yield return new WaitForSeconds(2);
         for (int i = 0; i < 3; i++)
@@ -127,9 +129,9 @@ public class EffectManager : MonoBehaviourPunCallbacks
     {
         GameObject[] effectObj = new GameObject[] {};
         
-        effectObj[0] = Instantiate(_effect[0], new Vector3(3.5f, _caster.transform.position.y, 0), quaternion.identity);
+        effectObj[0] = Instantiate(_effect[0], new Vector3(rangePos, _caster.transform.position.y, 0), quaternion.identity);
         effectObj[1] = Instantiate(_effect[0], new Vector3(0, _caster.transform.position.y, 0), quaternion.identity);
-        effectObj[2] = Instantiate(_effect[0], new Vector3(-3.5f, _caster.transform.position.y, 0), quaternion.identity);
+        effectObj[2] = Instantiate(_effect[0], new Vector3(-rangePos, _caster.transform.position.y, 0), quaternion.identity);
         yield return null;
 
         while (effectObj[0].transform.position != _targetPos)
