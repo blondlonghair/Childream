@@ -301,6 +301,8 @@ public class Player : MonoBehaviourPunCallbacks
     
     void CardZoom()
     {
+        card = CastRay("Card");
+
         if (card != null && !Input.GetMouseButton(0) && card2 == card)
         {
             card.TryGetComponent(out thisCard);
@@ -313,8 +315,6 @@ public class Player : MonoBehaviourPunCallbacks
                 }
             }
         }
-
-        card = CastRay("Card");
         
         if (card2 != card && !isLerping)
         {

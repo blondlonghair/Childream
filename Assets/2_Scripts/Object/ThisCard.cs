@@ -67,27 +67,12 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        if (PV.IsMine)
-            CardFront(true);
-        else
-            CardFront(false);
+        if (PV.IsMine) CardFront(true);
+        else CardFront(false);
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-            if (PV.IsMine)
-            {
-                if (PhotonNetwork.IsMasterClient)
-                    CardManager.Instance.hostCards.Remove(this);
-                else
-                    CardManager.Instance.guestCards.Remove(this);
-
-                PhotonNetwork.Destroy(gameObject);
-            }
-        }
-
         if (isLerp)
         {
             canvas.sortingOrder = originRPS.index;
@@ -100,12 +85,8 @@ public class ThisCard : MonoBehaviourPunCallbacks
                 isLerp = false;
             }
         }
-
-        // CardZoom();
     }
 
-    private Coroutine coroutine;
-    
     public void CardZoomIn()
     {
         StopCoroutine(nameof(_CardZoomOut));
@@ -149,58 +130,6 @@ public class ThisCard : MonoBehaviourPunCallbacks
             yield return new WaitForSeconds(0.01f);
         }
     }
-
-    // void CardZoom()
-    // {
-    //     if (!PV.IsMine) return;
-    //
-    //     int touch = -1;
-    //
-    //     if (EventSystem.current.IsPointerOverGameObject(touch) || target != gameObject && !Input.GetMouseButton(0))
-    //     {
-    //         canvas.sortingOrder = originRPS.index;
-    //         transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, 0.5f);
-    //         transform.position = Vector3.Lerp(transform.position, originRPS.pos, 0.5f);
-    //         if (!Input.GetMouseButton(0))
-    //         {
-    //             transform.rotation = Quaternion.Lerp(transform.rotation, originRPS.rot, 0.5f);
-    //         }
-    //     }
-    //
-    //     else if (target == gameObject && !Input.GetMouseButton(0))
-    //     {
-    //         transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(2, 2, 2), 0.5f);
-    //         canvas.sortingOrder = 100;
-    //
-    //         if (PhotonNetwork.IsMasterClient)
-    //         {
-    //             transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, 5, -9), 0.5f);
-    //             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 180), 0.5f);
-    //         }
-    //         else
-    //         {
-    //             transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, -5, -9), 0.5f);
-    //             transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, 0), 0.5f);
-    //         }
-    //     }
-    // }
-
-    // void CastRay()
-    // {
-    //     target = null;
-    //
-    //     Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-    //     RaycastHit2D[] hit = Physics2D.RaycastAll(pos, Vector2.zero, 0f);
-    //
-    //     foreach (var hit2D in hit)
-    //     {
-    //         if (hit2D.collider != null && hit2D.collider.gameObject.CompareTag("Card"))
-    //         {
-    //             target = hit2D.collider.gameObject;
-    //             return;
-    //         }
-    //     }
-    // }
 
     public void Setup(int _id, bool isFront)
     {
