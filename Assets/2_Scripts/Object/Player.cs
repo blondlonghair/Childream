@@ -30,15 +30,14 @@ public class Player : MonoBehaviourPunCallbacks
 
     public bool IsLocked = false;
 
-    // public int SelectRange;
-    public bool IsPlayerTurn = false;
+    public bool isPlayerTurn = false;
 
     GameObject raycastTarget = null;
     GameObject rangeTarget = null;
     GameObject player = null;
     PhotonView PV;
 
-    public static Vector3 worldMousePos;
+    private Vector3 worldMousePos;
 
     void Start()
     {
@@ -58,7 +57,9 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (!PV.IsMine) return;
 
-        if (IsPlayerTurn)
+        CardZoom();
+
+        if (isPlayerTurn)
         {
             MouseInput();
             PlayerMove();
@@ -124,8 +125,7 @@ public class Player : MonoBehaviourPunCallbacks
 
         foreach (var hit in hits)
         {
-            if (hit.collider != null && hit.collider.gameObject.tag.Contains("Range") &&
-                !hit.collider.gameObject.CompareTag("EffectRange"))
+            if (hit.collider.gameObject.tag.Contains("Range") && !hit.collider.gameObject.CompareTag("EffectRange"))
             {
                 range = int.Parse(hit.collider.gameObject.tag.Replace("Range", ""));
 
@@ -134,7 +134,6 @@ public class Player : MonoBehaviourPunCallbacks
                     range += 3;
                 }
 
-                print(range);
                 return (hit.collider.gameObject, range);
             }
         }
@@ -229,12 +228,10 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
+    ThisCard cardInfo = null;
+
     void MouseInput()
     {
-        ThisCard cardInfo = null;
-        
-        CardZoom();
-        
         if (Input.GetMouseButtonDown(0))
         {
             raycastTarget = CastRay("Card");
@@ -263,12 +260,14 @@ public class Player : MonoBehaviourPunCallbacks
                 {
                     raycastTarget.transform.position = worldMousePos;
                     raycastTarget.transform.localScale = Vector3.one;
+                    isLerping = false;
                 }
 
                 else
                 {
                     raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position,
                         CastRayRange().Item1.transform.position, 0.2f);
+                    isLerping = true;
                 }
             }
         }
@@ -276,6 +275,7 @@ public class Player : MonoBehaviourPunCallbacks
         if (Input.GetMouseButtonUp(0))
         {
             CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
+            
             if (raycastTarget == null) return;
             raycastTarget.GetComponent<ThisCard>().ChangetoEffect(false);
             if (CastRayRange().Item1 == null || CurMp < cardInfo.cost) return;
@@ -289,6 +289,7 @@ public class Player : MonoBehaviourPunCallbacks
 
             CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
 
+            isLerping = false;
             raycastTarget = null;
         }
     }
@@ -296,19 +297,28 @@ public class Player : MonoBehaviourPunCallbacks
     private GameObject card = null;
     private GameObject card2 = null;
     private ThisCard thisCard;
+    private bool isLerping;
     
     void CardZoom()
     {
-        if (card != null)
+        if (card != null && !Input.GetMouseButton(0) && card2 == card)
         {
-            thisCard = card.GetComponent<ThisCard>();
+            card.TryGetComponent(out thisCard);
+
+            if (thisCard.TryGetComponent(out PhotonView c))
+            {
+                if (c.IsMine)
+                {
+                    thisCard.CardZoomIn();       
+                }
+            }
         }
 
         card = CastRay("Card");
         
-        if (card2 != card)
+        if (card2 != card && !isLerping)
         {
-            if (thisCard != null)
+            if (thisCard != null && thisCard.gameObject.GetPhotonView().IsMine)
             {
                 thisCard.CardZoomOut();
             }
@@ -316,10 +326,10 @@ public class Player : MonoBehaviourPunCallbacks
             card2 = card;
         }
         
-        if (card != null)
-        {
-            thisCard = card.GetComponent<ThisCard>();
-            thisCard.CardZoomIn();
-        }
+        // if (card != null)
+        // {
+        //     thisCard = card.GetComponent<ThisCard>();
+        //     thisCard.CardZoomIn();
+        // }
     }
 }

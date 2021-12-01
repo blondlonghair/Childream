@@ -113,6 +113,14 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         PV.RPC(nameof(InitPlayers), RpcTarget.AllBuffered);
         matchingDoor.OpenDoor();
+        
+        CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(guestPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(guestPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(guestPlayer.PV().IsMine);
+        
         gameState = GameState.StartTurn;
     }
 
@@ -183,21 +191,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     void OnLastTurn()
     {
         gameStatePanel.ShowPanel("턴 시작");
-        print("턴 시작");
 
         CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
-        CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
-        CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
-        CardManager.Instance.AddCard(guestPlayer.PV().IsMine);
-        CardManager.Instance.AddCard(guestPlayer.PV().IsMine);
         CardManager.Instance.AddCard(guestPlayer.PV().IsMine);
 
         //플레이어 잠금효과 헤제
         hostPlayer.IsLocked = false;
         guestPlayer.IsLocked = false;
-
-        hostPlayer.IsPlayerTurn = false;
-        guestPlayer.IsPlayerTurn = false;
 
         hostPlayer.DefElectricity = false;
         hostPlayer.DefExplosion = false;
@@ -213,8 +213,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         hostPlayer.CurMoveCount = hostPlayer.MaxMoveCount;
         guestPlayer.CurMoveCount = guestPlayer.MaxMoveCount;
 
-        hostPlayer.IsPlayerTurn = true;
-        guestPlayer.IsPlayerTurn = true;
+        hostPlayer.isPlayerTurn = true;
+        guestPlayer.isPlayerTurn = true;
 
         turnEndButton.TurnStart();
 
@@ -237,6 +237,9 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         gameStatePanel.ShowPanel("결과 발표");
 
+        hostPlayer.isPlayerTurn = false;
+        guestPlayer.isPlayerTurn = false;
+        
         gameState = GameState.StartTurn;
     }
 
@@ -264,6 +267,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void TurnEndButton()
     {
+        if (gameState != GameState.PlayerTurn) return;
+        
         if (PhotonNetwork.IsMasterClient)
         {
             if (!isHostReady) turnEndButton.TurnEnd();
