@@ -12,6 +12,7 @@ using Unity.Mathematics;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using TMPro;
 
 public class ThisCard : MonoBehaviourPunCallbacks
 {
@@ -26,16 +27,16 @@ public class ThisCard : MonoBehaviourPunCallbacks
     public Sprite cardImage;
     public Sprite cardImageBG;
 
-    [Header("카드 요소")] [SerializeField] Text nameText;
-    [SerializeField] Text costText;
-    [SerializeField] Text powerText;
-    [SerializeField] Text DescText;
-    [SerializeField] Image CardImage;
-    [SerializeField] Image CardImageBG;
+    [Header("카드 요소")] [SerializeField] TextMeshPro nameText;
+    [SerializeField] TextMeshPro costText;
+    [SerializeField] TextMeshPro powerText;
+    [SerializeField] TextMeshPro descText;
+    [SerializeField] SpriteRenderer CardImage;
+    [SerializeField] SpriteRenderer CardImageBG;
 
-    public PhotonView PV;
-    public Canvas canvas;
-    public PRS originRPS;
+    [HideInInspector] public PhotonView PV;
+    [HideInInspector] public PRS originRPS;
+    // public Canvas canvas;
 
     private bool isLerp = false;
     private float time = 0;
@@ -43,7 +44,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
     private void Awake()
     {
         PV = this.PV();
-        canvas = gameObject.GetComponentInChildren<Canvas>();
+        // canvas = gameObject.GetComponentInChildren<Canvas>();
 
         if (PV.IsMine)
         {
@@ -75,7 +76,8 @@ public class ThisCard : MonoBehaviourPunCallbacks
     {
         if (isLerp)
         {
-            canvas.sortingOrder = originRPS.index;
+            // canvas.sortingOrder = originRPS.index;
+            OrderInLayer(originRPS.index);
             transform.position = Vector3.Lerp(transform.position, originRPS.pos, 0.2f);
             transform.rotation = Quaternion.Lerp(transform.rotation, originRPS.rot, 0.2f);
             transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, 0.2f);
@@ -91,7 +93,8 @@ public class ThisCard : MonoBehaviourPunCallbacks
     {
         StopCoroutine(nameof(_CardZoomOut));
         
-        canvas.sortingOrder = 100;
+        // canvas.sortingOrder = 100;
+        OrderInLayer(100);
         transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(2, 2, 2), 0.5f);
         transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, PhotonNetwork.IsMasterClient ? 5 : -5, 0), 0.5f);
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0), 0.5f);
@@ -104,7 +107,8 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
     IEnumerator _CardZoomIn()
     {
-        canvas.sortingOrder = 100;
+        // canvas.sortingOrder = 100;
+        OrderInLayer(100);
 
         while (transform.localScale != new Vector3(2, 2, 2) ||
                transform.position != new Vector3(transform.position.x, PhotonNetwork.IsMasterClient ? 5 : -5, 9) ||
@@ -119,7 +123,8 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
     IEnumerator _CardZoomOut()
     {
-        canvas.sortingOrder = originRPS.index;
+        // canvas.sortingOrder = originRPS.index;
+        OrderInLayer(originRPS.index);
 
         while (transform.localScale != Vector3.one || transform.position != originRPS.pos ||
                transform.rotation != originRPS.rot)
@@ -147,7 +152,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
         nameText.text = cardName;
         costText.text = cost.ToString();
         powerText.text = power.ToString();
-        DescText.text = cardDesc;
+        descText.text = cardDesc;
         CardImage.sprite = cardImage;
         CardImageBG.sprite = cardImageBG;
 
@@ -158,14 +163,18 @@ public class ThisCard : MonoBehaviourPunCallbacks
     {
         if (isFront)
         {
-            gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
-            gameObject.transform.GetChild(0).GetChild(1).gameObject.SetActive(false);
+            gameObject.transform.Find("Front").gameObject.SetActive(true);
+            gameObject.transform.Find("Back").gameObject.SetActive(false);
+            // gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+            // gameObject.transform.GetChild(0).GetChild(1).gameObject.SetActive(false);
         }
 
         else
         {
-            gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
-            gameObject.transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
+            gameObject.transform.Find("Front").gameObject.SetActive(false);
+            gameObject.transform.Find("Back").gameObject.SetActive(true);
+            // gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
+            // gameObject.transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
         }
     }
 
@@ -180,14 +189,30 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
         if (isChange)
         {
-            transform.GetChild(0).gameObject.SetActive(false);
-            transform.GetChild(1).gameObject.SetActive(true);
+            gameObject.transform.Find("Front").gameObject.SetActive(false);
+            gameObject.transform.Find("Back").gameObject.SetActive(false);
+            gameObject.transform.Find("Effect").gameObject.SetActive(true);
+            // transform.GetChild(0).gameObject.SetActive(false);
+            // transform.GetChild(1).gameObject.SetActive(true);
         }
 
         else
         {
-            transform.GetChild(0).gameObject.SetActive(true);
-            transform.GetChild(1).gameObject.SetActive(false);
+            gameObject.transform.Find("Front").gameObject.SetActive(true);
+            gameObject.transform.Find("Back").gameObject.SetActive(true);
+            gameObject.transform.Find("Effect").gameObject.SetActive(false);
+            // transform.GetChild(0).gameObject.SetActive(true);
+            // transform.GetChild(1).gameObject.SetActive(false);
         }
+    }
+
+    private void OrderInLayer(int index)
+    {
+        nameText.sortingOrder = index;
+        costText.sortingOrder = index;
+        powerText.sortingOrder = index;
+        descText.sortingOrder = index;
+        CardImage.sortingOrder = index;
+        CardImageBG.sortingOrder = index;
     }
 }
