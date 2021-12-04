@@ -95,13 +95,14 @@ public class ThisCard : MonoBehaviourPunCallbacks
         
         OrderInLayer(100);
         transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(2, 2, 2), 0.5f);
-        transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, PhotonNetwork.IsMasterClient ? 5 : -5, 1), 0.5f);
+        transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, PhotonNetwork.IsMasterClient ? 5 : -5, -1), 0.5f);
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0), 0.5f);
     }
 
     public void CardZoomOut()
     {
         print($"ZoomIn {id}");
+        transform.position = new Vector3(transform.position.x, transform.position.y, 0);
         StartCoroutine(_CardZoomOut());
     }
 
@@ -204,5 +205,10 @@ public class ThisCard : MonoBehaviourPunCallbacks
         descText.sortingOrder = index;
         CardImage.sortingOrder = index;
         CardImageBG.sortingOrder = index;
+    }
+
+    public void EffectScale(float scale)
+    {
+        transform.localScale = new Vector3(scale, scale, scale);
     }
 }

@@ -375,7 +375,7 @@ public class Move : Card
     public Move()
     {
         id = 10;
-        targetType = TargetType.ME;
+        targetType = TargetType.MeSellect;
     }
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)

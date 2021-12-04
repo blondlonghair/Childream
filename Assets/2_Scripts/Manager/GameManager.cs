@@ -116,8 +116,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         
         CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
         CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
-        CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
-        CardManager.Instance.AddCard(guestPlayer.PV().IsMine);
         CardManager.Instance.AddCard(guestPlayer.PV().IsMine);
         CardManager.Instance.AddCard(guestPlayer.PV().IsMine);
         
@@ -190,7 +188,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnLastTurn()
     {
-        gameStatePanel.ShowPanel("턴 시작");
+        gameStatePanel.ShowPanel(PanelState.TurnStart);
 
         CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
         CardManager.Instance.AddCard(guestPlayer.PV().IsMine);
@@ -202,10 +200,6 @@ public class GameManager : MonoBehaviourPunCallbacks
         hostPlayer.DefElectricity = false;
         hostPlayer.DefExplosion = false;
         hostPlayer.DefMagic = false;
-
-        guestPlayer.DefElectricity = false;
-        guestPlayer.DefExplosion = false;
-        guestPlayer.DefMagic = false;
         
         hostPlayer.CurMp = hostPlayer.MaxMp;
         guestPlayer.CurMp = guestPlayer.MaxMp;
@@ -235,7 +229,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     void OnTurnEnd()
     {
-        gameStatePanel.ShowPanel("결과 발표");
+        gameStatePanel.ShowPanel(PanelState.Result);
 
         hostPlayer.isPlayerTurn = false;
         guestPlayer.isPlayerTurn = false;

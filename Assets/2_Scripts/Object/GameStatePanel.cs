@@ -7,49 +7,50 @@ using Enums;
 
 public class GameStatePanel : MonoBehaviour
 {
-    private Text stateText;
+    [SerializeField] private Sprite resultPanel;
+    [SerializeField] private Sprite turnPanel;
+    
     private Image statePanel;
     
     void Start()
     {
-        stateText = transform.GetChild(0).GetComponent<Text>();
         statePanel = gameObject.GetComponent<Image>();
     }
 
-    public void ShowPanel(string s)
+    public void ShowPanel(PanelState panelState)
     {
-         StartCoroutine(WaitTime(s));
+         StartCoroutine(WaitTime(panelState));
     }
 
-    IEnumerator WaitTime(string s)
+    IEnumerator WaitTime(PanelState panelState)
     {
-        stateText.text = s;
-        float panel = statePanel.color.a;
-        float text = stateText.color.a;
-        Color panelColor = statePanel.color;
-        Color textColor = stateText.color;
-
-        while (statePanel.color.a < 0.99f && statePanel.color.a < 0.99f)
+        if (panelState == PanelState.Result)
         {
-            panel += 0.05f;
-            text += 0.05f;
+            statePanel.sprite = resultPanel;
+        }
+        else
+        {
+            statePanel.sprite = turnPanel;
+        }
+        
+        float panel = statePanel.color.a;
+        Color panelColor = statePanel.color;
+
+        while (statePanel.color.a < 0.99f)
+        {
+            panel += Time.deltaTime * 5;
             panelColor.a = panel;
-            textColor.a = text;
             statePanel.color = panelColor;
-            stateText.color = textColor;
             yield return null;
         }
 
         yield return new WaitForSeconds(1f);
 
-        while (statePanel.color.a > 0 && stateText.color.a > 0)
+        while (statePanel.color.a > 0)
         {
-            panel -= 0.05f;
-            text -= 0.05f;
+            panel -= Time.deltaTime * 5;
             panelColor.a = panel;
-            textColor.a = text;
             statePanel.color = panelColor;
-            stateText.color = textColor;
             yield return null;
         }
     }

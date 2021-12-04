@@ -2,26 +2,20 @@ namespace Enums
 {
     public enum CardType
     {
-        NONE,
-        ATK,
-        DEF,
-        SUP
+        None,
+        Atk,
+        Def,
+        Sup
     }
 
     public enum TargetType
     {
-        NONE,
-        ME,
-        ENEMY,
-        ALL
-    }
-
-    public enum ActType
-    {
-        NONE,
-        CHANGECARD,
-        HEAL,
-        LOCKGRID
+        None,
+        MeSellect,
+        MeAll,
+        EnemySellect,
+        EnemyAll,
+        All
     }
     
     public enum GameState
@@ -34,5 +28,11 @@ namespace Enums
         PlayerTurn, //플레이어 행동 (이동, 카드 사용)
         TurnEnd, //턴이 끝날때
         GameEnd
+    }
+
+    public enum PanelState
+    {
+        TurnStart,
+        Result
     }
 }

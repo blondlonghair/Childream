@@ -21,4 +21,4 @@ MonoBehaviour:
   cardImage: {fileID: 21300000, guid: 583546b59292c80489e48ae7066001a9, type: 3}
   cardImageBG: {fileID: 21300000, guid: ead4f04a113c6cb44a5e3cf6aa8d5b04, type: 3}
   cardType: 1
-  targetType: 2
+  targetType: 3

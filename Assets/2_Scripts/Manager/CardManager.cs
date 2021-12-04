@@ -165,23 +165,23 @@ public class CardManager : MonoBehaviourPunCallbacks
         }
     }
 
-    [PunRPC]
-    public void sync_CardAlignment(bool isMine)
-    {
-        var originCardRPS = new List<PRS>();
-        originCardRPS = isMine
-            ? RondAlignment(hostCardLeft, hostCardRight, hostCards.Count, 0.5f, Vector3.one, isMine)
-            : RondAlignment(guestCardLeft, guestCardRight, guestCards.Count, -0.5f, Vector3.one, isMine);
-
-        var targetCards = isMine ? hostCards : guestCards;
-        for (var i = 0; i < targetCards.Count; i++)
-        {
-            var targetCard = targetCards[i];
-
-            targetCard.originRPS = originCardRPS[i];
-            targetCard.MoveTransform();
-        }
-    }
+    // [PunRPC]
+    // public void sync_CardAlignment(bool isMine)
+    // {
+    //     var originCardRPS = new List<PRS>();
+    //     originCardRPS = isMine
+    //         ? RondAlignment(hostCardLeft, hostCardRight, hostCards.Count, 0.5f, Vector3.one, isMine)
+    //         : RondAlignment(guestCardLeft, guestCardRight, guestCards.Count, -0.5f, Vector3.one, isMine);
+    //
+    //     var targetCards = isMine ? hostCards : guestCards;
+    //     for (var i = 0; i < targetCards.Count; i++)
+    //     {
+    //         var targetCard = targetCards[i];
+    //
+    //         targetCard.originRPS = originCardRPS[i];
+    //         targetCard.MoveTransform();
+    //     }
+    // }
 
     //카드 정렬하는 함수
     List<PRS> RondAlignment(Transform leftTr, Transform rightTr, int objCount, float height, Vector3 scale, bool isMine)

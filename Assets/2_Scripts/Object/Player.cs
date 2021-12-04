@@ -265,6 +265,55 @@ public class Player : MonoBehaviourPunCallbacks
 
                 else
                 {
+                    // switch (cardInfo.targetType)
+                    // {
+                    //     case TargetType.All:
+                    //         cardInfo.EffectScale(3);
+                    //         raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position, new Vector3(0, 0, 0), 0.2f);
+                    //         isLerping = true;
+                    //         break;
+                    //     case TargetType.EnemyAll:
+                    //         if (CastRayRange().Item2 < 4)
+                    //         {
+                    //             cardInfo.EffectScale(2);
+                    //             raycastTarget.transform.position =
+                    //                 new Vector3(0, CastRayRange().Item1.transform.position.y, 0);
+                    //             isLerping = true;
+                    //         }
+                    //
+                    //         break;
+                    //     case TargetType.EnemySellect:
+                    //         if (CastRayRange().Item2 < 4)
+                    //         {
+                    //             raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position,
+                    //                 CastRayRange().Item1.transform.position, 0.2f);
+                    //             isLerping = true;
+                    //         }
+                    //
+                    //         break;
+                    //     case TargetType.MeAll:
+                    //         if (CastRayRange().Item2 > 3)
+                    //         {
+                    //             cardInfo.EffectScale(2);
+                    //             raycastTarget.transform.position =
+                    //                 new Vector3(0, CastRayRange().Item1.transform.position.y, 0);
+                    //             isLerping = true;
+                    //         }
+                    //
+                    //         break;
+                    //     case TargetType.MeSellect:
+                    //         if (CastRayRange().Item2 > 3)
+                    //         {
+                    //             raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position,
+                    //                 CastRayRange().Item1.transform.position, 0.2f);
+                    //             isLerping = true;
+                    //         }
+                    //
+                    //         break;
+                    //     case TargetType.None:
+                    //         break;
+                    // }
+                    
                     raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position,
                         CastRayRange().Item1.transform.position, 0.2f);
                     isLerping = true;
@@ -278,6 +327,8 @@ public class Player : MonoBehaviourPunCallbacks
             
             if (raycastTarget == null) return;
             raycastTarget.GetComponent<ThisCard>().ChangetoEffect(false);
+            cardInfo.EffectScale(1);
+
             if (CastRayRange().Item1 == null || CurMp < cardInfo.cost) return;
 
             CurMp -= cardInfo.cost;
