@@ -425,8 +425,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59c13e75a06eb1c4ba86bcb8f5e13be6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardTable: {fileID: 4900000, guid: 03f77e2c93418a1449a62a395b76add0, type: 3}
-  testEffect: {fileID: 1795506282810059084, guid: 865dc75d06916964da13a405505492b5, type: 3}
+  cardTable:
+  - {fileID: 11400000, guid: dd24297e4850cbb4ea552fd408bb02f0, type: 2}
+  - {fileID: 11400000, guid: 6112ea36bcaf30a46811a93a4770a192, type: 2}
+  - {fileID: 11400000, guid: 72180082820ee9d43af003772496e8b5, type: 2}
+  - {fileID: 11400000, guid: 69eb31ff561d7734a82d4334203fab2b, type: 2}
+  - {fileID: 11400000, guid: e793075eca8d18c45b3b3bc8d220c440, type: 2}
+  - {fileID: 11400000, guid: 68db923c54e64364f9116295d2159b7b, type: 2}
+  - {fileID: 11400000, guid: 139cf98cf7e5f39418f1e717e89c6388, type: 2}
+  - {fileID: 11400000, guid: 67ab6a17e09225e4bad6c975df67b9fb, type: 2}
+  - {fileID: 11400000, guid: 599ad6650d1aa684eaa84b3a5f3b57aa, type: 2}
+  - {fileID: 11400000, guid: 347b936a0ced408428c3019d0daf4633, type: 2}
 --- !u!4 &140673505
 Transform:
   m_ObjectHideFlags: 0

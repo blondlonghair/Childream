@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -20,7 +21,6 @@ public class Card
     public Sprite cardImageBG;
     public CardType cardType;
     public TargetType targetType;
-    public GameObject Effect;
 
     //카드 효과들 First는 시전시 발동, Second는 카드 인보크시 발동
     public virtual void CardFirstAbility(Player _caster, Player _target, int _index) {}
@@ -36,9 +36,9 @@ public abstract class AtkCard : Card
 
     public AtkCard()
     {
-        cardImageBG = Resources.Load<Sprite>("Card/카드-공격");
-        cardType = CardType.ATK;
-        targetType = TargetType.ENEMY;
+        // cardImageBG = Resources.Load<Sprite>("Card/카드-공격");
+        // cardType = CardType.ATK;
+        // targetType = TargetType.ENEMY;
     }
 
     public abstract override void CardFirstAbility(Player _caster, Player _target, int _index);
@@ -52,9 +52,9 @@ public abstract class DefCard : Card
 
     public DefCard()
     {
-        cardImageBG = Resources.Load<Sprite>("Card/카드-수비");
-        cardType = CardType.DEF;
-        targetType = TargetType.ME;
+        // cardImageBG = Resources.Load<Sprite>("Card/카드-수비");
+        // cardType = CardType.DEF;
+        // targetType = TargetType.ME;
     }
 
     public abstract override void CardFirstAbility(Player _caster, Player _target, int _index);
@@ -65,8 +65,8 @@ public abstract class SupCard : Card
 {
     public SupCard()
     {
-        cardImageBG = Resources.Load<Sprite>("Card/카드-지원");
-        cardType = CardType.SUP;
+        // cardImageBG = Resources.Load<Sprite>("Card/카드-지원");
+        // cardType = CardType.SUP;
     }
 
     public abstract override void CardFirstAbility(Player _caster, Player _target, int _index);
@@ -77,14 +77,14 @@ public class EmptyCard : Card
 {
     public EmptyCard()
     {
-        cardType = CardType.NONE;
-        targetType = TargetType.NONE;
-
         id = CardData.CardTable[0].id;
         cardName = CardData.CardTable[0].name;
         cost = CardData.CardTable[0].cost;
         cardDesc = CardData.CardTable[0].desc;
-        cardImage = Resources.Load<Sprite>("Card/Cards/None");
+        cardImage = CardData.CardTable[0].cardImage;
+        cardImageBG = CardData.CardTable[0].cardImageBG;
+        cardType = CardData.CardTable[0].cardType;
+        targetType = CardData.CardTable[0].targetType;
     }
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
@@ -100,7 +100,10 @@ public class AtkCard1 : AtkCard
         cardName = CardData.CardTable[1].name;
         cost = CardData.CardTable[1].cost;
         cardDesc = CardData.CardTable[1].desc;
-        cardImage = Resources.Load<Sprite>("Card/Cards/Atk_1");
+        cardImage = CardData.CardTable[1].cardImage;
+        cardImageBG = CardData.CardTable[1].cardImageBG;
+        cardType = CardData.CardTable[1].cardType;
+        targetType = CardData.CardTable[1].targetType;
         damage = 5;
     }
 
@@ -136,7 +139,10 @@ public class AtkCard2 : AtkCard
         cardName = CardData.CardTable[2].name;
         cost = CardData.CardTable[2].cost;
         cardDesc = CardData.CardTable[2].desc;
-        cardImage = Resources.Load<Sprite>("Card/Cards/Atk_2");
+        cardImage = CardData.CardTable[2].cardImage;
+        cardImageBG = CardData.CardTable[2].cardImageBG;
+        cardType = CardData.CardTable[2].cardType;
+        targetType = CardData.CardTable[2].targetType;
         damage = 2;
     }
 
@@ -170,7 +176,10 @@ public class AtkCard3 : AtkCard
         cardName = CardData.CardTable[3].name;
         cost = CardData.CardTable[3].cost;
         cardDesc = CardData.CardTable[3].desc;
-        cardImage = Resources.Load<Sprite>("Card/Cards/Atk_3");
+        cardImage = CardData.CardTable[3].cardImage;
+        cardImageBG = CardData.CardTable[3].cardImageBG;
+        cardType = CardData.CardTable[3].cardType;
+        targetType = CardData.CardTable[3].targetType;
         damage = 10;
     }
     
@@ -207,6 +216,10 @@ public class DefCard1 : DefCard
         cardName = CardData.CardTable[4].name;
         cost = CardData.CardTable[4].cost;
         cardDesc = CardData.CardTable[4].desc;
+        cardImage = CardData.CardTable[4].cardImage;
+        cardImageBG = CardData.CardTable[4].cardImageBG;
+        cardType = CardData.CardTable[4].cardType;
+        targetType = CardData.CardTable[4].targetType;
         cardImage = Resources.Load<Sprite>("Card/Cards/Def_1");
     }
 
@@ -228,6 +241,10 @@ public class DefCard2 : DefCard
         cardName = CardData.CardTable[5].name;
         cost = CardData.CardTable[5].cost;
         cardDesc = CardData.CardTable[5].desc;
+        cardImage = CardData.CardTable[5].cardImage;
+        cardImageBG = CardData.CardTable[5].cardImageBG;
+        cardType = CardData.CardTable[5].cardType;
+        targetType = CardData.CardTable[5].targetType;
         cardImage = Resources.Load<Sprite>("Card/Cards/Def_2");
     }
 
@@ -249,7 +266,10 @@ public class DefCard3 : DefCard
         cardName = CardData.CardTable[6].name;
         cost = CardData.CardTable[6].cost;
         cardDesc = CardData.CardTable[6].desc;
-        cardImage = Resources.Load<Sprite>("Card/Cards/Def_3");
+        cardImage = CardData.CardTable[6].cardImage;
+        cardImageBG = CardData.CardTable[6].cardImageBG;
+        cardType = CardData.CardTable[6].cardType;
+        targetType = CardData.CardTable[6].targetType;
     }
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
@@ -270,8 +290,10 @@ public class SupCard1 : SupCard
         cardName = CardData.CardTable[7].name;
         cost = CardData.CardTable[7].cost;
         cardDesc = CardData.CardTable[7].desc;
-        cardImage = Resources.Load<Sprite>("Card/Cards/Sup_1");
-        targetType = TargetType.ENEMY;
+        cardImage = CardData.CardTable[7].cardImage;
+        cardImageBG = CardData.CardTable[7].cardImageBG;
+        cardType = CardData.CardTable[7].cardType;
+        targetType = CardData.CardTable[7].targetType;
     }
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
@@ -295,8 +317,10 @@ public class SupCard2 : SupCard
         cardName = CardData.CardTable[8].name;
         cost = CardData.CardTable[8].cost;
         cardDesc = CardData.CardTable[8].desc;
-        cardImage = Resources.Load<Sprite>("Card/Cards/Sup_2");
-        targetType = TargetType.ME;
+        cardImage = CardData.CardTable[8].cardImage;
+        cardImageBG = CardData.CardTable[8].cardImageBG;
+        cardType = CardData.CardTable[8].cardType;
+        targetType = CardData.CardTable[8].targetType;
     }
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
@@ -327,8 +351,10 @@ public class SupCard3 : SupCard
         cardName = CardData.CardTable[9].name;
         cost = CardData.CardTable[9].cost;
         cardDesc = CardData.CardTable[9].desc;
-        cardImage = Resources.Load<Sprite>("Card/Cards/Sup_3");
-        targetType = TargetType.ME;
+        cardImage = CardData.CardTable[9].cardImage;
+        cardImageBG = CardData.CardTable[9].cardImageBG;
+        cardType = CardData.CardTable[9].cardType;
+        targetType = CardData.CardTable[9].targetType;
     }
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
@@ -369,38 +395,20 @@ public class Move : Card
     }
 }
 
-//아이디	이름	마나	설명	종류
-public class CardTable
-{
-    public int id;
-    public string name;
-    public int cost;
-    public string desc;
-
-    public CardTable(int id, string name, int cost, string desc)
-    {
-        this.id = id;
-        this.name = name;
-        this.cost = cost;
-        this.desc = desc;
-    }
-}
-
 public class CardData : MonoBehaviour
 {
     public static List<Card> CardList;
-    public static List<CardTable> CardTable;
+    public static List<CardInfo> CardTable;
 
-    [SerializeField] private TextAsset cardTable;
-    [SerializeField] private GameObject testEffect;
+    [SerializeField] private CardInfo[] cardTable;
 
     private void Awake()
     {
         CardList = new List<Card>();
-        CardTable = new List<CardTable>();
+        CardTable = new List<CardInfo>();
         
-        ExcelParsing();
-
+        CardTable.AddRange(cardTable);
+        
         CardList.Add(new EmptyCard());
         CardList.Add(new AtkCard1());
         CardList.Add(new AtkCard2());
@@ -412,17 +420,5 @@ public class CardData : MonoBehaviour
         CardList.Add(new SupCard2());
         CardList.Add(new SupCard3());
         CardList.Add(new Move());
-    }
-
-    private void ExcelParsing()
-    {
-        string currentText = cardTable.text.Substring(0, cardTable.text.Length - 1);
-        string[] lines = currentText.Split('\n');
-
-        for (int i = 0; i < lines.Length; i++)
-        {
-            string[] words = lines[i].Split('\t');
-            CardTable.Add(new CardTable(int.Parse(words[0]), words[1], int.Parse(words[2]), words[3]));
-        }
     }
 }

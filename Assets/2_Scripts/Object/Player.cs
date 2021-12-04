@@ -311,7 +311,7 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 if (c.IsMine)
                 {
-                    thisCard.CardZoomIn();       
+                    thisCard.CardZoomIn();
                 }
             }
         }
@@ -325,11 +325,5 @@ public class Player : MonoBehaviourPunCallbacks
             
             card2 = card;
         }
-        
-        // if (card != null)
-        // {
-        //     thisCard = card.GetComponent<ThisCard>();
-        //     thisCard.CardZoomIn();
-        // }
     }
 }

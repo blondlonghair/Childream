@@ -38,7 +38,7 @@ public class ThisCard : MonoBehaviourPunCallbacks
     [HideInInspector] public PRS originRPS;
     // public Canvas canvas;
 
-    private bool isLerp = false;
+    private bool isLerp;
     private float time = 0;
 
     private void Awake()
@@ -76,7 +76,6 @@ public class ThisCard : MonoBehaviourPunCallbacks
     {
         if (isLerp)
         {
-            // canvas.sortingOrder = originRPS.index;
             OrderInLayer(originRPS.index);
             transform.position = Vector3.Lerp(transform.position, originRPS.pos, 0.2f);
             transform.rotation = Quaternion.Lerp(transform.rotation, originRPS.rot, 0.2f);
@@ -91,39 +90,38 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
     public void CardZoomIn()
     {
+        print($"ZoomIn {id}");
         StopCoroutine(nameof(_CardZoomOut));
         
-        // canvas.sortingOrder = 100;
         OrderInLayer(100);
         transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(2, 2, 2), 0.5f);
-        transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, PhotonNetwork.IsMasterClient ? 5 : -5, 0), 0.5f);
+        transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, PhotonNetwork.IsMasterClient ? 5 : -5, 1), 0.5f);
         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0), 0.5f);
     }
 
     public void CardZoomOut()
     {
+        print($"ZoomIn {id}");
         StartCoroutine(_CardZoomOut());
     }
 
-    IEnumerator _CardZoomIn()
-    {
-        // canvas.sortingOrder = 100;
-        OrderInLayer(100);
-
-        while (transform.localScale != new Vector3(2, 2, 2) ||
-               transform.position != new Vector3(transform.position.x, PhotonNetwork.IsMasterClient ? 5 : -5, 9) ||
-               transform.rotation != Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0))
-        {
-            transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(2, 2, 2), 0.5f);
-            transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, PhotonNetwork.IsMasterClient ? 5 : -5, 9), 0.5f);
-            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0), 0.5f);
-            yield return new WaitForSeconds(0.01f);
-        }
-    }
+    // IEnumerator _CardZoomIn()
+    // {
+    //     OrderInLayer(100);
+    //
+    //     while (transform.localScale != new Vector3(2, 2, 2) ||
+    //            transform.position != new Vector3(transform.position.x, PhotonNetwork.IsMasterClient ? 5 : -5, 9) ||
+    //            transform.rotation != Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0))
+    //     {
+    //         transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(2, 2, 2), 0.5f);
+    //         transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, PhotonNetwork.IsMasterClient ? 5 : -5, 9), 0.5f);
+    //         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0), 0.5f);
+    //         yield return new WaitForSeconds(0.01f);
+    //     }
+    // }
 
     IEnumerator _CardZoomOut()
     {
-        // canvas.sortingOrder = originRPS.index;
         OrderInLayer(originRPS.index);
 
         while (transform.localScale != Vector3.one || transform.position != originRPS.pos ||
@@ -165,16 +163,12 @@ public class ThisCard : MonoBehaviourPunCallbacks
         {
             gameObject.transform.Find("Front").gameObject.SetActive(true);
             gameObject.transform.Find("Back").gameObject.SetActive(false);
-            // gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
-            // gameObject.transform.GetChild(0).GetChild(1).gameObject.SetActive(false);
         }
 
         else
         {
             gameObject.transform.Find("Front").gameObject.SetActive(false);
             gameObject.transform.Find("Back").gameObject.SetActive(true);
-            // gameObject.transform.GetChild(0).GetChild(0).gameObject.SetActive(false);
-            // gameObject.transform.GetChild(0).GetChild(1).gameObject.SetActive(true);
         }
     }
 
@@ -192,17 +186,13 @@ public class ThisCard : MonoBehaviourPunCallbacks
             gameObject.transform.Find("Front").gameObject.SetActive(false);
             gameObject.transform.Find("Back").gameObject.SetActive(false);
             gameObject.transform.Find("Effect").gameObject.SetActive(true);
-            // transform.GetChild(0).gameObject.SetActive(false);
-            // transform.GetChild(1).gameObject.SetActive(true);
         }
 
         else
         {
             gameObject.transform.Find("Front").gameObject.SetActive(true);
-            gameObject.transform.Find("Back").gameObject.SetActive(true);
+            gameObject.transform.Find("Back").gameObject.SetActive(false);
             gameObject.transform.Find("Effect").gameObject.SetActive(false);
-            // transform.GetChild(0).gameObject.SetActive(true);
-            // transform.GetChild(1).gameObject.SetActive(false);
         }
     }
 
