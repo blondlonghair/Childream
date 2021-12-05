@@ -88,46 +88,58 @@ public class ThisCard : MonoBehaviourPunCallbacks
         }
     }
 
+    private Coroutine coroutine;
+
     public void CardZoomIn()
     {
         print($"ZoomIn {id}");
-        StopCoroutine(nameof(_CardZoomOut));
-        
-        OrderInLayer(100);
-        transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(2, 2, 2), 0.5f);
-        transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, PhotonNetwork.IsMasterClient ? 5 : -5, -1), 0.5f);
-        transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0), 0.5f);
+        if (coroutine != null) StopCoroutine(coroutine);
+        coroutine = StartCoroutine(Co_CardZoomIn());
+
+        // OrderInLayer(100);
+        // transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(2, 2, 2), 0.5f);
+        // transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, PhotonNetwork.IsMasterClient ? 5 : -5, -1), 0.5f);
+        // transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0), 0.5f);
     }
 
     public void CardZoomOut()
     {
-        print($"ZoomIn {id}");
-        transform.position = new Vector3(transform.position.x, transform.position.y, 0);
-        StartCoroutine(_CardZoomOut());
+        print($"ZoomOut {id}");
+        if (coroutine != null) StopCoroutine(coroutine);
+        coroutine = StartCoroutine(Co_CardZoomOut());
     }
 
-    // IEnumerator _CardZoomIn()
-    // {
-    //     OrderInLayer(100);
-    //
-    //     while (transform.localScale != new Vector3(2, 2, 2) ||
-    //            transform.position != new Vector3(transform.position.x, PhotonNetwork.IsMasterClient ? 5 : -5, 9) ||
-    //            transform.rotation != Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0))
-    //     {
-    //         transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(2, 2, 2), 0.5f);
-    //         transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, PhotonNetwork.IsMasterClient ? 5 : -5, 9), 0.5f);
-    //         transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0), 0.5f);
-    //         yield return new WaitForSeconds(0.01f);
-    //     }
-    // }
+    IEnumerator Co_CardZoomIn()
+    {
+        OrderInLayer(100);
+        transform.position = new Vector3(transform.position.x, transform.position.y, -1);
 
-    IEnumerator _CardZoomOut()
+        while (true)
+        {
+            print($"In {transform.position} {originRPS.pos} {transform.rotation} {originRPS.rot} {transform.localScale} {originRPS.scale}");
+            
+            if (Mathf.Approximately(transform.position.y, PhotonNetwork.IsMasterClient ? 5 : -5) && Mathf.Approximately(transform.rotation.z, PhotonNetwork.IsMasterClient ? 180 : 0) && Mathf.Approximately(transform.localScale.x, 2))
+                break;
+            
+            transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(2, 2, 2), 0.5f);
+            transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, PhotonNetwork.IsMasterClient ? 5 : -5, 9), 0.5f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0), 0.5f);
+            yield return new WaitForSeconds(0.01f);
+        }
+    }
+
+    IEnumerator Co_CardZoomOut()
     {
         OrderInLayer(originRPS.index);
+        transform.position = new Vector3(transform.position.x, transform.position.y, 0);
 
-        while (transform.localScale != Vector3.one || transform.position != originRPS.pos ||
-               transform.rotation != originRPS.rot)
+        while (true)
         {
+            print($"Out {transform.position} {originRPS.pos} {transform.rotation} {originRPS.rot} {transform.localScale} {originRPS.scale}");
+            
+            if (Mathf.Approximately(transform.position.y, originRPS.pos.y) && Mathf.Approximately(transform.rotation.z, originRPS.rot.z) && Mathf.Approximately(transform.localScale.x, 1))
+                break;
+            
             transform.localScale = Vector3.Lerp(transform.localScale, Vector3.one, 0.5f);
             transform.position = Vector3.Lerp(transform.position, originRPS.pos, 0.5f);
             transform.rotation = Quaternion.Lerp(transform.rotation, originRPS.rot, 0.5f);

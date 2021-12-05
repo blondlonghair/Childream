@@ -26,7 +26,8 @@ public class Range : MonoBehaviourPunCallbacks
                 transform.position = new Vector3(0, 3.5f, 0);
                 gameObject.name = "MasterRange";
                 childs[0].transform.localPosition = new Vector3(-3.5f, 0, 0);
-                childs[2].transform.localPosition = new Vector3(3.5f, 0, 0);for (int i = 0; i < 3; i++)
+                childs[2].transform.localPosition = new Vector3(3.5f, 0, 0);
+                for (int i = 0; i < 3; i++)
                 {
                     childs[i].GetComponent<SpriteRenderer>().sprite = frontRange[i];
                 }
@@ -40,6 +41,8 @@ public class Range : MonoBehaviourPunCallbacks
                 childs[2].transform.localPosition = new Vector3(2.7f, 0, 0);
                 for (int i = 0; i < 3; i++)
                 {
+                    BoxCollider2D collider2D = childs[i].GetComponent<BoxCollider2D>();
+                    collider2D.size = new Vector2(2.7f, collider2D.size.y);
                     childs[i].GetComponent<SpriteRenderer>().sprite = backRange[i];
                 }
             }
@@ -66,9 +69,12 @@ public class Range : MonoBehaviourPunCallbacks
                 childs[2].transform.localPosition = new Vector3(2.7f, 0, 0);
                 for (int i = 0; i < 3; i++)
                 {
+                    BoxCollider2D collider2D = childs[i].GetComponent<BoxCollider2D>();
+                    collider2D.size = new Vector2(2.7f, collider2D.size.y);
                     childs[i].GetComponent<SpriteRenderer>().sprite = backRange[i];
                 }
             }
+            //collider x size 2.7
         }
     }
 }

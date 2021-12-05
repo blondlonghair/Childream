@@ -193,14 +193,14 @@ public class Player : MonoBehaviourPunCallbacks
 
         if (Input.GetMouseButton(0))
         {
-            if (player is null) return;
+            if (player is null || !player.GetPhotonView().IsMine) return;
 
             player.transform.position = worldMousePos;
         }
 
         if (Input.GetMouseButtonUp(0))
         {
-            if (player is null) return;
+            if (player is null || !player.GetPhotonView().IsMine) return;
 
             int range = CastRayRange().Item2;
 
@@ -349,6 +349,9 @@ public class Player : MonoBehaviourPunCallbacks
     private GameObject card2 = null;
     private ThisCard thisCard;
     private bool isLerping;
+    private enum CardIn {Enter, Exit, On}
+
+    private CardIn cardIn = CardIn.Exit;
     
     void CardZoom()
     {
@@ -357,21 +360,19 @@ public class Player : MonoBehaviourPunCallbacks
         if (card != null && !Input.GetMouseButton(0) && card2 == card)
         {
             card.TryGetComponent(out thisCard);
-
-            if (thisCard.TryGetComponent(out PhotonView c))
+            if (thisCard.gameObject.GetPhotonView().IsMine && cardIn == CardIn.Exit)
             {
-                if (c.IsMine)
-                {
-                    thisCard.CardZoomIn();
-                }
+                thisCard.CardZoomIn();
+                cardIn = CardIn.On;
             }
         }
         
         if (card2 != card && !isLerping)
         {
-            if (thisCard != null && thisCard.gameObject.GetPhotonView().IsMine)
+            if (thisCard != null && thisCard.gameObject.GetPhotonView().IsMine && cardIn == CardIn.On)
             {
                 thisCard.CardZoomOut();
+                cardIn = CardIn.Exit;
             }
             
             card2 = card;

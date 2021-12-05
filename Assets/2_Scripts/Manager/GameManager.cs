@@ -200,6 +200,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         hostPlayer.DefElectricity = false;
         hostPlayer.DefExplosion = false;
         hostPlayer.DefMagic = false;
+        guestPlayer.DefElectricity = false;
+        guestPlayer.DefExplosion = false;
+        guestPlayer.DefMagic = false;
         
         hostPlayer.CurMp = hostPlayer.MaxMp;
         guestPlayer.CurMp = guestPlayer.MaxMp;

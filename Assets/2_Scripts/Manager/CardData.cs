@@ -365,8 +365,8 @@ public class SupCard3 : SupCard
     {
         EffectManager.Instance.InitEffect(_caster, _target, _index, id);
 
-        CardManager.Instance.AddCard(_target.PV().IsMine);
-        CardManager.Instance.AddCard(_target.PV().IsMine);
+        CardManager.Instance.AddCard(_caster.PV().IsMine);
+        CardManager.Instance.AddCard(_caster.PV().IsMine);
     }
 }
 
