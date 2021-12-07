@@ -23,54 +23,31 @@ public class Card
     public TargetType targetType;
 
     //카드 효과들 First는 시전시 발동, Second는 카드 인보크시 발동
-    public virtual void CardFirstAbility(Player _caster, Player _target, int _index) {}
+    public virtual void CardFirstAbility(Player _caster, Player _target, int _index)
+    {
+        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
+    }
 
     public virtual void CardSecondAbility(Player _caster, Player _target, int _index)
     {
+        CardManager.Instance.ShowWatIUsed(_caster, _target, id);
+        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
     }
 }
 
 public abstract class AtkCard : Card
 {
     public int damage;
-
-    public AtkCard()
-    {
-        // cardImageBG = Resources.Load<Sprite>("Card/카드-공격");
-        // cardType = CardType.ATK;
-        // targetType = TargetType.ENEMY;
-    }
-
-    public abstract override void CardFirstAbility(Player _caster, Player _target, int _index);
-    public abstract override void CardSecondAbility(Player _caster, Player _target, int _index);
 }
 
 public abstract class DefCard : Card
 {
     public int counter;
     public int defence;
-
-    public DefCard()
-    {
-        // cardImageBG = Resources.Load<Sprite>("Card/카드-수비");
-        // cardType = CardType.DEF;
-        // targetType = TargetType.ME;
-    }
-
-    public abstract override void CardFirstAbility(Player _caster, Player _target, int _index);
-    public abstract override void CardSecondAbility(Player _caster, Player _target, int _index);
 }
 
 public abstract class SupCard : Card
 {
-    public SupCard()
-    {
-        // cardImageBG = Resources.Load<Sprite>("Card/카드-지원");
-        // cardType = CardType.SUP;
-    }
-
-    public abstract override void CardFirstAbility(Player _caster, Player _target, int _index);
-    public abstract override void CardSecondAbility(Player _caster, Player _target, int _index);
 }
 
 public class EmptyCard : Card
@@ -85,10 +62,6 @@ public class EmptyCard : Card
         cardImageBG = CardData.CardTable[0].cardImageBG;
         cardType = CardData.CardTable[0].cardType;
         targetType = CardData.CardTable[0].targetType;
-    }
-
-    public override void CardSecondAbility(Player _caster, Player _target, int _index)
-    {
     }
 }
 
@@ -109,12 +82,11 @@ public class AtkCard1 : AtkCard
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
     {
-        
     }
-    
+
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
-        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
+        base.CardSecondAbility(_caster, _target, _index);
 
         if (_target.CurState == _index)
         {
@@ -148,13 +120,12 @@ public class AtkCard2 : AtkCard
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
     {
-        
     }
-    
+
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
-        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
-        
+        base.CardSecondAbility(_caster, _target, _index);
+
         if (_target.DefElectricity)
         {
             EffectManager.Instance.InitEffect(_caster, _target, _index, 5);
@@ -182,16 +153,15 @@ public class AtkCard3 : AtkCard
         targetType = CardData.CardTable[3].targetType;
         damage = 10;
     }
-    
+
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
     {
-        
     }
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
-        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
-
+        base.CardSecondAbility(_caster, _target, _index);
+        
         if (_target.CurState == _index)
         {
             if (_target.DefExplosion)
@@ -298,14 +268,11 @@ public class SupCard1 : SupCard
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
     {
-        
+        _target.IsLocked = true;   
     }
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
-        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
-
-        _target.IsLocked = true;
     }
 }
 
@@ -329,7 +296,7 @@ public class SupCard2 : SupCard
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
-        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
+        base.CardSecondAbility(_caster, _target, _index);
 
         for (int i = 0; i < 3; i++)
         {
@@ -363,7 +330,7 @@ public class SupCard3 : SupCard
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
-        EffectManager.Instance.InitEffect(_caster, _target, _index, id);
+        base.CardSecondAbility(_caster, _target, _index);
 
         CardManager.Instance.AddCard(_caster.PV().IsMine);
         CardManager.Instance.AddCard(_caster.PV().IsMine);
@@ -378,17 +345,46 @@ public class Move : Card
         targetType = TargetType.MeSellect;
     }
 
+    public override void CardFirstAbility(Player _caster, Player _target, int _index)
+    {
+    }
+
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
+        base.CardSecondAbility(_caster, _target, _index);
+
         if (_caster.IsLocked)
         {
             return;
         }
 
-        _caster.transform.position = new Vector3(PhotonNetwork.IsMasterClient ? 
-                (float)(_index switch{4 => 3.5, 5 => 0, 6 => -3.5, _ => 0}) : 
-                (float)(_index switch{4 => -3.5, 5 => 0, 6 => 3.5, _ => 0}), 
-            _caster.transform.position.y, 0);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (_caster.gameObject.GetPhotonView().IsMine)
+            {
+                _caster.transform.position = new Vector3((float)(_index switch{4 => 3.5f, 5 => 0, 6 => -3.5, _ => 0}), _caster.transform.position.y, 0);
+            }
+            else
+            {
+                _caster.transform.position = new Vector3((float)(_index switch{4 => 2.7f, 5 => 0, 6 => -2.7, _ => 0}), _caster.transform.position.y, 0);
+            }
+        }
+        else
+        {
+            if (_caster.gameObject.GetPhotonView().IsMine)
+            {
+                _caster.transform.position = new Vector3((float)(_index switch{4 => 3.5f, 5 => 0, 6 => -3.5, _ => 0}), _caster.transform.position.y, 0);
+            }
+            else
+            {
+                _caster.transform.position = new Vector3((float)(_index switch{4 => 2.7f, 5 => 0, 6 => -2.7, _ => 0}), _caster.transform.position.y, 0);
+            }
+        }
+        
+        // _caster.transform.position = new Vector3(PhotonNetwork.IsMasterClient ? 
+        //     (float)(_index switch{4 => 2.7, 5 => 0, 6 => -2.7, _ => 0}) : 
+        //     (float)(_index switch{4 => -3.5, 5 => 0, 6 => 3.5, _ => 0}),
+        //     _caster.transform.position.y, 0);
 
         _caster.CurState = _index;
         _caster.CurMoveCount--;

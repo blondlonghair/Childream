@@ -1154,6 +1154,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 395357726}
   m_CullTransparentMesh: 1
+--- !u!1 &461287002
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 461287003}
+  m_Layer: 0
+  m_Name: HostCardEffectPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &461287003
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 461287002}
+  m_LocalRotation: {x: 0, y: 0, z: 1, w: 0}
+  m_LocalPosition: {x: 0, y: 13, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 783276430}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
 --- !u!1 &463456871
 GameObject:
   m_ObjectHideFlags: 0
@@ -1392,6 +1422,7 @@ Transform:
   - {fileID: 1490661262}
   - {fileID: 709215313}
   - {fileID: 898508409}
+  - {fileID: 1662600486}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2050,6 +2081,7 @@ Transform:
   - {fileID: 1633379522}
   - {fileID: 1017131180}
   - {fileID: 1231598258}
+  - {fileID: 461287003}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4062,6 +4094,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1634528701}
   m_CullTransparentMesh: 1
+--- !u!1 &1662600485
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1662600486}
+  m_Layer: 0
+  m_Name: GuestCardEffectPos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1662600486
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1662600485}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: -13, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 571512280}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1665111192
 GameObject:
   m_ObjectHideFlags: 0
@@ -5294,6 +5356,9 @@ MonoBehaviour:
   guestCardRight: {fileID: 709215313}
   hostCardDraw: {fileID: 1231598258}
   guestCardDraw: {fileID: 898508409}
+  hostCardActive: {fileID: 461287003}
+  guestCardActive: {fileID: 1662600486}
+  resultCard: {fileID: 7732100949398585855, guid: c59a64147b404d949b04c856ed4a3f9a, type: 3}
   maxCard: 4
 --- !u!1 &2133416751
 GameObject:

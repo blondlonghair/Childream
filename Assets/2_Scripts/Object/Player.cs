@@ -182,7 +182,7 @@ public class Player : MonoBehaviourPunCallbacks
 
     void PlayerMove()
     {
-        if (CurMoveCount <= 0) return;
+        if (CurMoveCount <= 0 || !isPlayerTurn) return;
 
         if (Input.GetMouseButtonDown(0))
         {

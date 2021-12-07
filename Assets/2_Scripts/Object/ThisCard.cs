@@ -92,19 +92,14 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
     public void CardZoomIn()
     {
-        print($"ZoomIn {id}");
+        // print($"ZoomIn {id}");
         if (coroutine != null) StopCoroutine(coroutine);
         coroutine = StartCoroutine(Co_CardZoomIn());
-
-        // OrderInLayer(100);
-        // transform.localScale = Vector3.Lerp(transform.localScale, new Vector3(2, 2, 2), 0.5f);
-        // transform.position = Vector3.Lerp(transform.position, new Vector3(transform.position.x, PhotonNetwork.IsMasterClient ? 5 : -5, -1), 0.5f);
-        // transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0), 0.5f);
     }
 
     public void CardZoomOut()
     {
-        print($"ZoomOut {id}");
+        // print($"ZoomOut {id}");
         if (coroutine != null) StopCoroutine(coroutine);
         coroutine = StartCoroutine(Co_CardZoomOut());
     }
@@ -116,8 +111,6 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
         while (true)
         {
-            print($"In {transform.position} {originRPS.pos} {transform.rotation} {originRPS.rot} {transform.localScale} {originRPS.scale}");
-            
             if (Mathf.Approximately(transform.position.y, PhotonNetwork.IsMasterClient ? 5 : -5) && Mathf.Approximately(transform.rotation.z, PhotonNetwork.IsMasterClient ? 180 : 0) && Mathf.Approximately(transform.localScale.x, 2))
                 break;
             
@@ -135,8 +128,6 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
         while (true)
         {
-            print($"Out {transform.position} {originRPS.pos} {transform.rotation} {originRPS.rot} {transform.localScale} {originRPS.scale}");
-            
             if (Mathf.Approximately(transform.position.y, originRPS.pos.y) && Mathf.Approximately(transform.rotation.z, originRPS.rot.z) && Mathf.Approximately(transform.localScale.x, 1))
                 break;
             

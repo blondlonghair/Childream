@@ -6,6 +6,7 @@ using Enums;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using Unity.Mathematics;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Utils;
@@ -302,12 +303,14 @@ public class GameManager : MonoBehaviourPunCallbacks
     void _HostReady()
     {
         isHostReady = true;
+        hostPlayer.isPlayerTurn = false;
     }
 
     [PunRPC]
     void _GuestReady()
     {
         isGuestReady = true;
+        guestPlayer.isPlayerTurn = false;
     }
 
     public void AddBattleList(int SelectRange, int id, bool isHost)

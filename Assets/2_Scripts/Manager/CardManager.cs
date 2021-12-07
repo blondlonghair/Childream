@@ -3,25 +3,33 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using ExitGames.Client.Photon.StructWrapping;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using Unity.Mathematics;
 using Utils;
+using Random = UnityEngine.Random;
 
 public class CardManager : MonoBehaviourPunCallbacks
 {
     public List<ThisCard> hostCards;
     public List<ThisCard> guestCards;
 
-    [Header("카드 덱 위치")]
-    [SerializeField] Transform hostCardLeft;
+    [Header("카드 덱 위치")] [SerializeField] Transform hostCardLeft;
     [SerializeField] Transform hostCardRight;
     [SerializeField] Transform guestCardLeft;
     [SerializeField] Transform guestCardRight;
 
-    [Header("카드 드로우 위치")] 
-    [SerializeField] private Transform hostCardDraw;
+    [Header("카드 드로우 위치")] [SerializeField] private Transform hostCardDraw;
     [SerializeField] private Transform guestCardDraw;
+
+    [Header("카드 효과발동 위치")] [SerializeField]
+    private Transform hostCardActive;
+
+    [SerializeField] private Transform guestCardActive;
+
+    [SerializeField] private GameObject resultCard;
 
     [Header("max카드 수"), SerializeField] private int maxCard = 4;
 
@@ -64,12 +72,12 @@ public class CardManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             initPos = hostCardDraw.position;
-            initRot = Quaternion.Euler(0,0,180);
+            initRot = Quaternion.Euler(0, 0, 180);
         }
         else
         {
             initPos = guestCardDraw.position;
-            initRot = Quaternion.Euler(0,0,0);
+            initRot = Quaternion.Euler(0, 0, 0);
         }
 
         var cardObject = PhotonNetwork.Instantiate("Prefab/Card", initPos, initRot);
@@ -85,7 +93,8 @@ public class CardManager : MonoBehaviourPunCallbacks
         print("DestroyCard");
         int index;
 
-        index = isMaster ? hostCards.FindIndex(x => x == card.GetComponent<ThisCard>())
+        index = isMaster
+            ? hostCards.FindIndex(x => x == card.GetComponent<ThisCard>())
             : guestCards.FindIndex(x => x == card.GetComponent<ThisCard>());
 
         PV.RPC(nameof(_DestroyCard), RpcTarget.AllBuffered, index, isMaster);
@@ -234,5 +243,27 @@ public class CardManager : MonoBehaviourPunCallbacks
         }
 
         return results;
+    }
+
+    public void ShowWatIUsed(Player _caster, Player _target, int cardId)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            if (_caster.GetComponent<PhotonView>().IsMine)
+            {
+                
+            }
+        }
+        
+        print(_caster.GetComponent<PhotonView>().IsMine);
+        
+        GameObject card = Instantiate(resultCard, new Vector3(0,0,0),
+            PhotonNetwork.IsMasterClient ? Quaternion.Euler(0, 0, 180) : Quaternion.Euler(0, 0, 0),
+        PhotonNetwork.IsMasterClient ? _caster.GetComponent<PhotonView>().IsMine ? hostCardActive : guestCardActive :_caster.GetComponent<PhotonView>().IsMine ? guestCardActive : hostCardActive);
+
+        if (card.TryGetComponent(out ShowResultCard result))
+        {
+            result.cardId = cardId;
+        }
     }
 }
