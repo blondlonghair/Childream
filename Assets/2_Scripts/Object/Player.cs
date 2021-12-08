@@ -241,6 +241,7 @@ public class Player : MonoBehaviourPunCallbacks
 
             if (raycastTarget.GetPhotonView().IsMine)
             {
+                cardInfo.CardStopCoroutine();
                 raycastTarget.transform.rotation = Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0);
             }
         }

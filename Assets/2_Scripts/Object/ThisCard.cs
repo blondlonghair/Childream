@@ -104,6 +104,11 @@ public class ThisCard : MonoBehaviourPunCallbacks
         coroutine = StartCoroutine(Co_CardZoomOut());
     }
 
+    public void CardStopCoroutine()
+    {
+        if (coroutine != null) StopCoroutine(coroutine);
+    }
+
     IEnumerator Co_CardZoomIn()
     {
         OrderInLayer(100);

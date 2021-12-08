@@ -351,8 +351,6 @@ public class Move : Card
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
-        base.CardSecondAbility(_caster, _target, _index);
-
         if (_caster.IsLocked)
         {
             return;

@@ -16,22 +16,23 @@ public class CardManager : MonoBehaviourPunCallbacks
     public List<ThisCard> hostCards;
     public List<ThisCard> guestCards;
 
-    [Header("카드 덱 위치")] [SerializeField] Transform hostCardLeft;
+    [Header("카드 덱 위치")] 
+    [SerializeField] Transform hostCardLeft;
     [SerializeField] Transform hostCardRight;
     [SerializeField] Transform guestCardLeft;
     [SerializeField] Transform guestCardRight;
 
-    [Header("카드 드로우 위치")] [SerializeField] private Transform hostCardDraw;
+    [Header("카드 드로우 위치")] 
+    [SerializeField] private Transform hostCardDraw;
     [SerializeField] private Transform guestCardDraw;
 
-    [Header("카드 효과발동 위치")] [SerializeField]
-    private Transform hostCardActive;
-
+    [Header("카드 효과발동 위치")] 
+    [SerializeField] private Transform hostCardActive;
     [SerializeField] private Transform guestCardActive;
-
     [SerializeField] private GameObject resultCard;
 
-    [Header("max카드 수"), SerializeField] private int maxCard = 4;
+    [Header("max카드 수")] 
+    [SerializeField] private int maxCard = 4;
 
     public static CardManager Instance;
     private PhotonView PV;
