@@ -266,58 +266,77 @@ public class Player : MonoBehaviourPunCallbacks
 
                 else
                 {
-                    // switch (cardInfo.targetType)
-                    // {
-                    //     case TargetType.All:
-                    //         cardInfo.EffectScale(3);
-                    //         raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position, new Vector3(0, 0, 0), 0.2f);
-                    //         isLerping = true;
-                    //         break;
-                    //     case TargetType.EnemyAll:
-                    //         if (CastRayRange().Item2 < 4)
-                    //         {
-                    //             cardInfo.EffectScale(2);
-                    //             raycastTarget.transform.position =
-                    //                 new Vector3(0, CastRayRange().Item1.transform.position.y, 0);
-                    //             isLerping = true;
-                    //         }
-                    //
-                    //         break;
-                    //     case TargetType.EnemySellect:
-                    //         if (CastRayRange().Item2 < 4)
-                    //         {
-                    //             raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position,
-                    //                 CastRayRange().Item1.transform.position, 0.2f);
-                    //             isLerping = true;
-                    //         }
-                    //
-                    //         break;
-                    //     case TargetType.MeAll:
-                    //         if (CastRayRange().Item2 > 3)
-                    //         {
-                    //             cardInfo.EffectScale(2);
-                    //             raycastTarget.transform.position =
-                    //                 new Vector3(0, CastRayRange().Item1.transform.position.y, 0);
-                    //             isLerping = true;
-                    //         }
-                    //
-                    //         break;
-                    //     case TargetType.MeSellect:
-                    //         if (CastRayRange().Item2 > 3)
-                    //         {
-                    //             raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position,
-                    //                 CastRayRange().Item1.transform.position, 0.2f);
-                    //             isLerping = true;
-                    //         }
-                    //
-                    //         break;
-                    //     case TargetType.None:
-                    //         break;
-                    // }
+                    print(CastRayRange().Item2);
                     
-                    raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position,
-                        CastRayRange().Item1.transform.position, 0.2f);
-                    isLerping = true;
+                    switch (cardInfo.targetType)
+                    {
+                        case TargetType.All:
+                            cardInfo.EffectScale(3);
+                            raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position, new Vector3(0, 0, 0), 0.2f);
+                            isLerping = true;
+                            break;
+                        
+                        case TargetType.EnemyAll:
+                            if (CastRayRange().Item2 < 4)
+                            {
+                                cardInfo.EffectScale(2);
+                                raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position, 
+                                    new Vector3(0, CastRayRange().Item1.transform.position.y, 0), 0.2f);
+                                isLerping = true;
+                            }
+                            else
+                            {
+                                raycastTarget.transform.position = worldMousePos;
+                                isLerping = false;
+                            }
+                            break;
+                        
+                        case TargetType.EnemySellect:
+                            if (CastRayRange().Item2 < 4)
+                            {
+                                raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position,
+                                    CastRayRange().Item1.transform.position, 0.2f);
+                                isLerping = true;
+                            }
+                            else
+                            {
+                                raycastTarget.transform.position = worldMousePos;
+                                isLerping = false;
+                            }
+                            break;
+                        
+                        case TargetType.MeAll:
+                            if (CastRayRange().Item2 > 3)
+                            {
+                                cardInfo.EffectScale(2);
+                                raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position, 
+                                    new Vector3(0, CastRayRange().Item1.transform.position.y, 0), 0.2f);
+                                isLerping = true;
+                            }
+                            else
+                            {
+                                raycastTarget.transform.position = worldMousePos;
+                                isLerping = false;
+                            }
+                            break;
+                        
+                        case TargetType.MeSellect:
+                            if (CastRayRange().Item2 > 3)
+                            {
+                                raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position,
+                                    CastRayRange().Item1.transform.position, 0.2f);
+                                isLerping = true;
+                            }
+                            else
+                            {
+                                raycastTarget.transform.position = worldMousePos;
+                                isLerping = false;
+                            }
+                            break;
+                        
+                        case TargetType.None:
+                            break;
+                    }
                 }
             }
         }
@@ -332,15 +351,23 @@ public class Player : MonoBehaviourPunCallbacks
 
             if (CastRayRange().Item1 == null || CurMp < cardInfo.cost) return;
 
-            CurMp -= cardInfo.cost;
-
-            GameManager.Instance.AddBattleList(CastRayRange().Item2,
-                raycastTarget is Move ? 10 : cardInfo.id, PhotonNetwork.IsMasterClient);
-
-            CardManager.Instance.DestroyCard(raycastTarget, PhotonNetwork.IsMasterClient);
-
-            CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
-
+            switch (cardInfo.targetType)
+            {
+                case TargetType.All:
+                    GameManager.Instance.AddBattleList(CastRayRange().Item2,
+                        raycastTarget is Move ? 10 : cardInfo.id, PhotonNetwork.IsMasterClient);
+                    CardManager.Instance.DestroyCard(raycastTarget, PhotonNetwork.IsMasterClient);
+                    CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
+                    CurMp -= cardInfo.cost;
+                    break;
+                
+                case TargetType.EnemyAll: if (CastRayRange().Item2 < 4) goto case TargetType.All; break;
+                case TargetType.EnemySellect: if (CastRayRange().Item2 < 4) goto case TargetType.All; break;
+                case TargetType.MeAll: if (CastRayRange().Item2 > 3) goto case TargetType.All; break;
+                case TargetType.MeSellect: if (CastRayRange().Item2 > 3) goto case TargetType.All; break;
+                case TargetType.None: break;
+            }
+            
             isLerping = false;
             raycastTarget = null;
         }

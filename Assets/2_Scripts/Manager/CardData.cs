@@ -190,7 +190,6 @@ public class DefCard1 : DefCard
         cardImageBG = CardData.CardTable[4].cardImageBG;
         cardType = CardData.CardTable[4].cardType;
         targetType = CardData.CardTable[4].targetType;
-        cardImage = Resources.Load<Sprite>("Card/Cards/Def_1");
     }
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
@@ -215,7 +214,6 @@ public class DefCard2 : DefCard
         cardImageBG = CardData.CardTable[5].cardImageBG;
         cardType = CardData.CardTable[5].cardType;
         targetType = CardData.CardTable[5].targetType;
-        cardImage = Resources.Load<Sprite>("Card/Cards/Def_2");
     }
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)

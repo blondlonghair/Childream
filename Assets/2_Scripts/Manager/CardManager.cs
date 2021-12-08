@@ -248,16 +248,6 @@ public class CardManager : MonoBehaviourPunCallbacks
 
     public void ShowWatIUsed(Player _caster, Player _target, int cardId)
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            if (_caster.GetComponent<PhotonView>().IsMine)
-            {
-                
-            }
-        }
-        
-        print(_caster.GetComponent<PhotonView>().IsMine);
-        
         GameObject card = Instantiate(resultCard, new Vector3(0,0,0),
             PhotonNetwork.IsMasterClient ? Quaternion.Euler(0, 0, 180) : Quaternion.Euler(0, 0, 0),
         PhotonNetwork.IsMasterClient ? _caster.GetComponent<PhotonView>().IsMine ? hostCardActive : guestCardActive :_caster.GetComponent<PhotonView>().IsMine ? guestCardActive : hostCardActive);
