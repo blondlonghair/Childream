@@ -5224,7 +5224,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1096a5a7e761cca4286242d983dbd343, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isAnimationOver: 0
+  animator: {fileID: 2116862988}
 --- !u!95 &2116862988
 Animator:
   serializedVersion: 3
@@ -5258,7 +5258,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
+  m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

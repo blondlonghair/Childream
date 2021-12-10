@@ -16,21 +16,20 @@ public class LobbyScene : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-        matchingDoor.OpenDoor();
+        // matchingDoor.OpenDoor();
     }
     
     public void Update()
     {
-        if (matchingDoor.isAnimationOver)
+        if (matchingDoor.isCloseOver)
         {
             PhotonNetwork.JoinRandomOrCreateRoom(roomOptions : new RoomOptions {MaxPlayers = 2});
             cancelButton.SetActive(true);
-            matchingDoor.isAnimationOver = false;
+            matchingDoor.isCloseOver = false;
         }
 
         if (AllPlayerIn() && loadOnce)
         {
-            // SceneManager.LoadScene("IngameScene");
             PhotonNetwork.LoadLevel("IngameScene");
             loadOnce = false;
         }
@@ -38,6 +37,7 @@ public class LobbyScene : MonoBehaviourPunCallbacks
 
     public void MatchStartButton()
     {
+        matchingDoor.gameObject.SetActive(true);
         matchingDoor.CloseDoor();
     }
 

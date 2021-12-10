@@ -16,7 +16,8 @@ using Vector3 = UnityEngine.Vector3;
 
 public class Player : MonoBehaviourPunCallbacks
 {
-    [Header("플레이어 스탯")] public float MaxHp;
+    [Header("플레이어 스탯")] 
+    public float MaxHp;
     public float CurHp;
     public float MaxMp;
     public float CurMp;
@@ -26,16 +27,16 @@ public class Player : MonoBehaviourPunCallbacks
     public bool DefElectricity;
     public bool DefExplosion;
 
+    [Header("플레이어 부가 스탯")]
     public int CurState;
+    public bool IsLocked;
+    public bool isPlayerTurn;
 
-    public bool IsLocked = false;
-
-    public bool isPlayerTurn = false;
-
-    GameObject raycastTarget = null;
-    GameObject rangeTarget = null;
-    GameObject player = null;
-    PhotonView PV;
+    private GameObject raycastTarget = null;
+    private GameObject rangeTarget = null;
+    private GameObject player = null;
+    private PhotonView PV;
+    private Animator animator;
 
     private Vector3 worldMousePos;
 
@@ -43,6 +44,7 @@ public class Player : MonoBehaviourPunCallbacks
     {
         PV = this.PV();
 
+        TryGetComponent(out animator);
         PlayerSetup();
     }
 
@@ -266,77 +268,7 @@ public class Player : MonoBehaviourPunCallbacks
 
                 else
                 {
-                    print(CastRayRange().Item2);
-                    
-                    switch (cardInfo.targetType)
-                    {
-                        case TargetType.All:
-                            cardInfo.EffectScale(3);
-                            raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position, new Vector3(0, 0, 0), 0.2f);
-                            isLerping = true;
-                            break;
-                        
-                        case TargetType.EnemyAll:
-                            if (CastRayRange().Item2 < 4)
-                            {
-                                cardInfo.EffectScale(2);
-                                raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position, 
-                                    new Vector3(0, CastRayRange().Item1.transform.position.y, 0), 0.2f);
-                                isLerping = true;
-                            }
-                            else
-                            {
-                                raycastTarget.transform.position = worldMousePos;
-                                isLerping = false;
-                            }
-                            break;
-                        
-                        case TargetType.EnemySellect:
-                            if (CastRayRange().Item2 < 4)
-                            {
-                                raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position,
-                                    CastRayRange().Item1.transform.position, 0.2f);
-                                isLerping = true;
-                            }
-                            else
-                            {
-                                raycastTarget.transform.position = worldMousePos;
-                                isLerping = false;
-                            }
-                            break;
-                        
-                        case TargetType.MeAll:
-                            if (CastRayRange().Item2 > 3)
-                            {
-                                cardInfo.EffectScale(2);
-                                raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position, 
-                                    new Vector3(0, CastRayRange().Item1.transform.position.y, 0), 0.2f);
-                                isLerping = true;
-                            }
-                            else
-                            {
-                                raycastTarget.transform.position = worldMousePos;
-                                isLerping = false;
-                            }
-                            break;
-                        
-                        case TargetType.MeSellect:
-                            if (CastRayRange().Item2 > 3)
-                            {
-                                raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position,
-                                    CastRayRange().Item1.transform.position, 0.2f);
-                                isLerping = true;
-                            }
-                            else
-                            {
-                                raycastTarget.transform.position = worldMousePos;
-                                isLerping = false;
-                            }
-                            break;
-                        
-                        case TargetType.None:
-                            break;
-                    }
+                    CardLerp();
                 }
             }
         }
@@ -344,7 +276,7 @@ public class Player : MonoBehaviourPunCallbacks
         if (Input.GetMouseButtonUp(0))
         {
             CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
-            
+
             if (raycastTarget == null) return;
             raycastTarget.GetComponent<ThisCard>().ChangetoEffect(false);
             cardInfo.EffectScale(1);
@@ -360,14 +292,14 @@ public class Player : MonoBehaviourPunCallbacks
                     CardManager.Instance.CardAlignment(PhotonNetwork.IsMasterClient);
                     CurMp -= cardInfo.cost;
                     break;
-                
+
                 case TargetType.EnemyAll: if (CastRayRange().Item2 < 4) goto case TargetType.All; break;
                 case TargetType.EnemySellect: if (CastRayRange().Item2 < 4) goto case TargetType.All; break;
                 case TargetType.MeAll: if (CastRayRange().Item2 > 3) goto case TargetType.All; break;
                 case TargetType.MeSellect: if (CastRayRange().Item2 > 3) goto case TargetType.All; break;
                 case TargetType.None: break;
             }
-            
+
             isLerping = false;
             raycastTarget = null;
         }
@@ -377,10 +309,16 @@ public class Player : MonoBehaviourPunCallbacks
     private GameObject card2 = null;
     private ThisCard thisCard;
     private bool isLerping;
-    private enum CardIn {Enter, Exit, On}
+
+    private enum CardIn
+    {
+        Enter,
+        Exit,
+        On
+    }
 
     private CardIn cardIn = CardIn.Exit;
-    
+
     void CardZoom()
     {
         card = CastRay("Card");
@@ -394,7 +332,7 @@ public class Player : MonoBehaviourPunCallbacks
                 cardIn = CardIn.On;
             }
         }
-        
+
         if (card2 != card && !isLerping)
         {
             if (thisCard != null && thisCard.gameObject.GetPhotonView().IsMine && cardIn == CardIn.On)
@@ -402,8 +340,77 @@ public class Player : MonoBehaviourPunCallbacks
                 thisCard.CardZoomOut();
                 cardIn = CardIn.Exit;
             }
-            
+
             card2 = card;
         }
+    }
+
+    void CardLerp()
+    {
+        switch (cardInfo.targetType)
+        {
+            case TargetType.All:
+                cardInfo.EffectScale(3);
+                raycastTarget.transform.position =
+                    Vector3.Lerp(raycastTarget.transform.position, new Vector3(0, 0, 0), 0.2f);
+                isLerping = true;
+                break;
+
+            case TargetType.EnemyAll:
+                if (CastRayRange().Item2 < 4)
+                {
+                    cardInfo.EffectScale(2);
+                    raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position,
+                        new Vector3(0, CastRayRange().Item1.transform.position.y, 0), 0.2f);
+                    isLerping = true;
+                }
+                else goto case TargetType.None;
+
+                break;
+
+            case TargetType.EnemySellect:
+                if (CastRayRange().Item2 < 4)
+                {
+                    raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position,
+                        CastRayRange().Item1.transform.position, 0.2f);
+                    isLerping = true;
+                }
+                else goto case TargetType.None;
+
+                break;
+
+            case TargetType.MeAll:
+                if (CastRayRange().Item2 > 3)
+                {
+                    cardInfo.EffectScale(2);
+                    raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position,
+                        new Vector3(0, CastRayRange().Item1.transform.position.y, 0), 0.2f);
+                    isLerping = true;
+                }
+                else goto case TargetType.None;
+
+                break;
+
+            case TargetType.MeSellect:
+                if (CastRayRange().Item2 > 3)
+                {
+                    raycastTarget.transform.position = Vector3.Lerp(raycastTarget.transform.position,
+                        CastRayRange().Item1.transform.position, 0.2f);
+                    isLerping = true;
+                }
+                else goto case TargetType.None;
+
+                break;
+
+            case TargetType.None:
+                raycastTarget.transform.position = worldMousePos;
+                isLerping = false;
+                break;
+        }
+    }
+
+    public void SetAnimation(string animation)
+    {
+        animator.SetTrigger(animation);
     }
 }

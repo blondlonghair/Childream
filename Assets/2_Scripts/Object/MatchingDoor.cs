@@ -5,26 +5,29 @@ using UnityEngine;
 
 public class MatchingDoor : MonoBehaviour
 {
-    public bool isAnimationOver = false;
-    private Animator animator;
+    public bool isCloseOver { get; set; }
+    public bool isOpenOver { get; set; }
+    [SerializeField] private Animator animator;
 
-    private void Start()
+    public void IsCloseOver()
     {
-        animator = GetComponent<Animator>();
+        isCloseOver = true;
     }
 
-    public void IsAnimationOver()
+    public void IsOpenOver()
     {
-        isAnimationOver = true;
+        isOpenOver = true;
     }
 
     public void OpenDoor()
     {
+        animator = GetComponent<Animator>();
         animator.SetTrigger("DoorOpen");
     }
 
     public void CloseDoor()
     {
+        animator = GetComponent<Animator>();
         animator.SetTrigger("DoorClose");
     }
 }

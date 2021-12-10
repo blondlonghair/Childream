@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         PV = this.PV();
-        matchingDoor.gameObject.SetActive(true);
+        StartCoroutine(DoorOpenOver());
 
         gameState = GameState.GameSetup;
     }
@@ -394,5 +394,19 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             yield return null;
         }
+    }
+
+    IEnumerator DoorOpenOver()
+    {
+        matchingDoor.gameObject.SetActive(true);
+        yield return null;
+
+        while (!matchingDoor.isOpenOver)
+        {
+            yield return null;
+        }
+        
+        matchingDoor.gameObject.SetActive(false);
+        yield return null;
     }
 }
