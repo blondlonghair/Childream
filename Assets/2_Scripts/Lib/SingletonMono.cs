@@ -1,12 +1,13 @@
+using Photon.Pun;
 using UnityEngine;
 
 /// <summary>
 /// 싱글톤 객채 수동 생성 (씬에 생성시켜둘것) / 씬전환시 삭제안됨
 /// </summary>
-public abstract class SingletonMono<T> : MonoBehaviour where T : SingletonMono<T>
+public abstract class SingletonMono<T> : MonoBehaviourPunCallbacks where T : SingletonMono<T>
 {
 	protected static T _instance;
-	public static T In { get { return _instance; } }
+	public static T Instance { get { return _instance; } }
 	void Awake()
 	{
 		if ( _instance == null ) {
@@ -26,10 +27,10 @@ public abstract class SingletonMono<T> : MonoBehaviour where T : SingletonMono<T
 /// <summary>
 /// 싱글톤객채 수동 생성 (씬에 생성시켜둘것) / 씬전환시 삭제
 /// </summary>
-public abstract class SingletonMonoDestroy<T> : MonoBehaviour where T : SingletonMonoDestroy<T>
+public abstract class SingletonMonoDestroy<T> : MonoBehaviourPunCallbacks where T : SingletonMonoDestroy<T>
 {
 	protected static T _instance;
-	public static T In { get { return _instance; } }
+	public static T Instance { get { return _instance; } }
 
 	void Awake()
 	{
@@ -49,7 +50,7 @@ public abstract class SingletonMonoDestroy<T> : MonoBehaviour where T : Singleto
 	}
 
 	public static bool HasInstance {
-		get { return In != null; }
+		get { return Instance != null; }
 	}
 }
 
@@ -57,10 +58,10 @@ public abstract class SingletonMonoDestroy<T> : MonoBehaviour where T : Singleto
 /// <summary>
 /// 싱글톤객채가 없으면 자동생성 / 씬전환시 삭제안됨
 /// </summary>
-public abstract class SingletonMonoCreate<T> : MonoBehaviour where T : SingletonMonoCreate<T>
+public abstract class SingletonMonoCreate<T> : MonoBehaviourPunCallbacks where T : SingletonMonoCreate<T>
 {
 	private static T instance;
-	public static T In {
+	public static T Instance {
 		get {
 			if ( instance == null ) {
 				if ( applicationIsQuitting ) {
@@ -111,10 +112,10 @@ public abstract class SingletonMonoCreate<T> : MonoBehaviour where T : Singleton
 /// <summary>
 /// 싱글톤객채 자동 생성  / 씬전환시 삭제
 /// </summary>
-public abstract class SingletonMonoCreateDestroy<T> : MonoBehaviour where T : SingletonMonoCreateDestroy<T>
+public abstract class SingletonMonoCreateDestroy<T> : MonoBehaviourPunCallbacks where T : SingletonMonoCreateDestroy<T>
 {
 	protected static T _instance = null;
-	public static T In
+	public static T Instance
 	{
 		get
 		{

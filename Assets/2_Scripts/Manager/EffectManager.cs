@@ -6,10 +6,8 @@ using Photon.Realtime;
 using Unity.Mathematics;
 using UnityEngine;
 
-public class EffectManager : MonoBehaviourPunCallbacks
+public class EffectManager : SingletonMonoDestroy<EffectManager>
 {
-    public static EffectManager Instance;
-
     [SerializeField] private GameObject Atk1_1;
     [SerializeField] private GameObject Atk1_2;
     [SerializeField] private GameObject Atk2;
@@ -27,11 +25,6 @@ public class EffectManager : MonoBehaviourPunCallbacks
 
     private float rangePos = 2.7f;
 
-    private void Awake()
-    {
-        Instance = this;
-    }
-    
     public void InitEffect(Player _caster, Player _target, int _index, int _effectId)
     {
         Vector3 targetPos = new Vector3(PhotonNetwork.IsMasterClient ? 

@@ -94,6 +94,7 @@ public class AtkCard1 : AtkCard
             if (_target.DefMagic)
             {
                 EffectManager.Instance.InitEffect(_caster, _target, _index, 4);
+                CardManager.Instance.ShowWatIUsed(_target, _caster, 4);
                 _target.DefMagic = false;
             }
             else
@@ -131,6 +132,7 @@ public class AtkCard2 : AtkCard
         if (_target.DefElectricity)
         {
             EffectManager.Instance.InitEffect(_caster, _target, _index, 5);
+            CardManager.Instance.ShowWatIUsed(_target, _caster, 5);
             _caster.CurHp -= 1;
             _target.DefElectricity = false;   
         }
@@ -170,6 +172,7 @@ public class AtkCard3 : AtkCard
             if (_target.DefExplosion)
             {
                 EffectManager.Instance.InitEffect(_caster, _target, _index, 6);
+                CardManager.Instance.ShowWatIUsed(_target, _caster, 6);
                 _caster.CurHp -= damage / 2;
                 _target.DefExplosion = false;
             }

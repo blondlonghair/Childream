@@ -11,7 +11,7 @@ using Unity.Mathematics;
 using Utils;
 using Random = UnityEngine.Random;
 
-public class CardManager : MonoBehaviourPunCallbacks
+public class CardManager : SingletonMonoDestroy<CardManager>
 {
     public List<ThisCard> hostCards;
     public List<ThisCard> guestCards;
@@ -34,12 +34,9 @@ public class CardManager : MonoBehaviourPunCallbacks
     [Header("max카드 수")] 
     [SerializeField] private int maxCard = 4;
 
-    public static CardManager Instance;
     private PhotonView PV;
 
     private List<Card> cardBuffer = new List<Card>();
-
-    private void Awake() => Instance = this;
 
     private void Start()
     {

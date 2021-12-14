@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Utils;
 
-public class GameManager : MonoBehaviourPunCallbacks
+public class GameManager : SingletonMonoDestroy<GameManager>
 {
     [Header("Manager")] public GameState gameState = GameState.None;
     public Player hostPlayer, guestPlayer;
@@ -32,13 +32,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] private MatchingDoor matchingDoor;
     [SerializeField] private TurnEndButton turnEndButton;
 
-    public static GameManager Instance;
     private PhotonView PV;
-
-    void Awake()
-    {
-        Instance = this;
-    }
 
     private void Start()
     {

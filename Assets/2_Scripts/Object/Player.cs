@@ -263,7 +263,7 @@ public class Player : MonoBehaviourPunCallbacks
                 {
                     raycastTarget.transform.position = worldMousePos;
                     raycastTarget.transform.localScale = Vector3.one;
-                    isLerping = false;
+                    // isLerping = false;
                 }
 
                 else
@@ -404,6 +404,7 @@ public class Player : MonoBehaviourPunCallbacks
 
             case TargetType.None:
                 raycastTarget.transform.position = worldMousePos;
+                raycastTarget.transform.localScale = Vector3.one;
                 isLerping = false;
                 break;
         }
