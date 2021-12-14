@@ -8,43 +8,43 @@ using UnityEditor.SceneManagement;
 
 public class EditorSceneOpen
 {
-    [MenuItem( "Scenes/1.IngameScene" )]
+    [MenuItem("Scenes/1.IngameScene")]
     public static void OpenScene_Title()
     {
-        OpenScene( "Assets/1_Scenes/IntroScene.unity" );
+        OpenScene("Assets/1_Scenes/IntroScene.unity");
     }
 
-    [MenuItem( "Scenes/2.LobbyScene" )]
+    [MenuItem("Scenes/2.LobbyScene")]
     public static void OpenScene_Lobby()
     {
-        OpenScene( "Assets/1_Scenes/LobbyScene.unity" );
+        OpenScene("Assets/1_Scenes/LobbyScene.unity");
     }
     
-    [MenuItem( "Scenes/3.IngameScene" )]
+    [MenuItem("Scenes/3.IngameScene")]
     public static void OpenScene_Ingame()
     {
-        OpenScene( "Assets/1_Scenes/IngameScene.unity" );
+        OpenScene("Assets/1_Scenes/IngameScene.unity");
     }
     
-    [MenuItem( "Scenes/4.TutorialScene" )]
+    [MenuItem("Scenes/4.TutorialScene")]
     public static void OpenScene_Tutorial()
     {
-        OpenScene( "Assets/1_Scenes/TutorialScene.unity" );
+        OpenScene("Assets/1_Scenes/TutorialScene.unity");
     }
     
-    [MenuItem( "Scenes/5.Test" )]
+    [MenuItem("Scenes/5.Test")]
     public static void OpenScene_Test()
     {
-        OpenScene( "Assets/1_Scenes/Test.unity" );
+        OpenScene("Assets/1_Scenes/Test.unity");
     }
     
-    public static void OpenScene( string scenepath )
+    public static void OpenScene(string scenepath)
     {
-        if( EditorSceneManager.GetActiveScene().isDirty == true )
+        if(EditorSceneManager.GetActiveScene().isDirty == true)
         {
             EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
         }
-        EditorSceneManager.OpenScene( scenepath );
+        EditorSceneManager.OpenScene(scenepath);
     }
 }
 #endif

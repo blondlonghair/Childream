@@ -6,7 +6,12 @@ public class TutorialScene : MonoBehaviour
     [SerializeField] private Sprite[] cutScene;
     [SerializeField] private SpriteRenderer cutSceneBG;
     private int curCutScene = 0;
-    
+
+    private void Start()
+    {
+        PlayerPrefs.SetInt("Tutorial", 0);
+    }
+
     private void Update()
     {
         CutScene();

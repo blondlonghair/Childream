@@ -10,6 +10,11 @@ public class IntroScene : MonoBehaviourPunCallbacks
 {
     private void Start()
     {
+        if (PlayerPrefs.GetInt("Tutorial") == 1)
+        {
+            SceneManager.LoadScene("1_Scenes/TutorialScene");
+        }
+
         PhotonNetwork.ConnectUsingSettings();
         PhotonNetwork.SendRate = 60;
         PhotonNetwork.SerializationRate = 30;
@@ -22,7 +27,6 @@ public class IntroScene : MonoBehaviourPunCallbacks
     
     public override void OnJoinedLobby()
     {
-        print("JoinLobby");
         SceneManager.LoadScene("LobbyScene");
     }
 }

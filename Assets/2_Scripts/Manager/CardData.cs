@@ -77,7 +77,8 @@ public class AtkCard1 : AtkCard
         cardImageBG = CardData.CardTable[1].cardImageBG;
         cardType = CardData.CardTable[1].cardType;
         targetType = CardData.CardTable[1].targetType;
-        damage = 5;
+        // damage = 5;
+        damage = 20;
     }
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
@@ -115,7 +116,8 @@ public class AtkCard2 : AtkCard
         cardImageBG = CardData.CardTable[2].cardImageBG;
         cardType = CardData.CardTable[2].cardType;
         targetType = CardData.CardTable[2].targetType;
-        damage = 2;
+        // damage = 2;
+        damage = 20;
     }
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
@@ -151,7 +153,8 @@ public class AtkCard3 : AtkCard
         cardImageBG = CardData.CardTable[3].cardImageBG;
         cardType = CardData.CardTable[3].cardType;
         targetType = CardData.CardTable[3].targetType;
-        damage = 10;
+        // damage = 10;
+        damage = 20;
     }
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
@@ -266,7 +269,7 @@ public class SupCard1 : SupCard
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
     {
-        _target.IsLocked = true;   
+        _target.IsLocked = true;
     }
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)

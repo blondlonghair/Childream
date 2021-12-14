@@ -13,6 +13,7 @@ public class LobbyScene : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject cancelButton;
     
     private bool loadOnce = true;
+    private float matchDelay;
 
     private void Start()
     {
@@ -28,7 +29,12 @@ public class LobbyScene : MonoBehaviourPunCallbacks
             matchingDoor.isCloseOver = false;
         }
 
-        if (AllPlayerIn() && loadOnce)
+        if (AllPlayerIn())
+        {
+            matchDelay += Time.deltaTime;
+        }
+
+        if (loadOnce && matchDelay >= 2f)
         {
             PhotonNetwork.LoadLevel("IngameScene");
             loadOnce = false;
@@ -57,4 +63,13 @@ public class LobbyScene : MonoBehaviourPunCallbacks
     }
 
     public bool AllPlayerIn() => PhotonNetwork.PlayerList.Length == 2;
+
+    IEnumerator AddTime()
+    {
+        while (true)
+        {
+            matchDelay += Time.deltaTime;
+            yield return null;
+        }
+    }
 }

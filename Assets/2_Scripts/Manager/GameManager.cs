@@ -353,8 +353,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     public void ChangeScene(string scene)
     {
         // SceneManager.LoadScene(scene);
-        PhotonNetwork.LoadLevel(scene);
         PhotonNetwork.LeaveRoom();
+        PhotonNetwork.LoadLevel(scene);
     }
 
     public void RematchButton()
@@ -363,7 +363,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void SurrenderButton()
     {
-        PhotonNetwork.LeaveRoom();
+        // PhotonNetwork.LeaveRoom();
 
         StartCoroutine(PanelAnimation(gameLosePanel));
     }
@@ -372,7 +372,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (isPlayerWin == null)
         {
-            PhotonNetwork.LeaveRoom();
+            // PhotonNetwork.LeaveRoom();
             StartCoroutine(PanelAnimation(gameWinPanel));
         }
     }
