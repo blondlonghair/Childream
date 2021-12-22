@@ -378,11 +378,11 @@ public class Move : Card
         {
             if (_caster.gameObject.GetPhotonView().IsMine)
             {
-                _caster.transform.position = new Vector3((float)(_index switch{4 => 3.5f, 5 => 0, 6 => -3.5, _ => 0}), _caster.transform.position.y, 0);
+                _caster.transform.position = new Vector3((float)(_index switch{4 => -3.5f, 5 => 0, 6 => 3.5, _ => 0}), _caster.transform.position.y, 0);
             }
             else
             {
-                _caster.transform.position = new Vector3((float)(_index switch{4 => 2.7f, 5 => 0, 6 => -2.7, _ => 0}), _caster.transform.position.y, 0);
+                _caster.transform.position = new Vector3((float)(_index switch{4 => -2.7f, 5 => 0, 6 => 2.7, _ => 0}), _caster.transform.position.y, 0);
             }
         }
         
@@ -391,8 +391,7 @@ public class Move : Card
         //     (float)(_index switch{4 => -3.5, 5 => 0, 6 => 3.5, _ => 0}),
         //     _caster.transform.position.y, 0);
 
-        _caster.CurState = _index;
-        _caster.CurMoveCount--;
+        _caster.CurState = _index - 3;
     }
 
     // IEnumerator move(int _index)

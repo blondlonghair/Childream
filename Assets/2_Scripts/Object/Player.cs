@@ -23,8 +23,6 @@ public class Player : MonoBehaviourPunCallbacks
     public float CurHp;
     public float MaxMp;
     public float CurMp;
-    public int MaxMoveCount;
-    public int CurMoveCount;
     public bool DefMagic;
     public bool DefElectricity;
     public bool DefExplosion;
@@ -41,6 +39,15 @@ public class Player : MonoBehaviourPunCallbacks
     private Animator animator;
 
     private Vector3 worldMousePos;
+    
+    private GameObject nextPos;
+    public int nextRange = 5;
+    ThisCard cardInfo = null;
+
+    private GameObject card = null;
+    private GameObject card2 = null;
+    private ThisCard thisCard;
+    private bool isLerping;
 
     void Start()
     {
@@ -148,7 +155,6 @@ public class Player : MonoBehaviourPunCallbacks
     void PlayerSetup()
     {
         CurState = 2;
-        CurMoveCount = MaxMoveCount;
         CurHp = MaxHp;
         CurMp = MaxMp;
 
@@ -184,72 +190,69 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
-    private GameObject nextPos;
-    private int nextRange;
-    
     void PlayerMove()
     {
-        if (CurMoveCount <= 0 || !isPlayerTurn) return;
+        if (!isPlayerTurn) return;
 
         if (Input.GetMouseButtonDown(0))
         {
-            player = CastRay("Player");
+            // player = CastRay("Player");
+            //
+            // if (player == null || !player.GetPhotonView().IsMine) return;
 
-            if (player == null || !player.GetPhotonView().IsMine) return;
+            if (CastRayRange().Item1 is null) return;
 
-            // Destroy(nextPos);
-            //
-            // nextRange = CastRayRange().Item2;
-            // if ((nextRange < 4 && nextRange > 6) || CurMoveCount <= 0) return;
-            //
-            // nextPos = Instantiate(nextPosArrow, new Vector3(PhotonNetwork.IsMasterClient 
-            //     ? (float) (nextRange switch {4 => 3.5, 5 => 0, 6 => -3.5, _ => 0}) 
-            //     : (float) (nextRange switch {4 => -3.5, 5 => 0, 6 => 3.5, _ => 0}), 
-            //     PhotonNetwork.IsMasterClient ? gameObject.GetComponent<PhotonView>() ? 1f : -5f : 
-            //     gameObject.GetComponent<PhotonView>() ? -1f : 5f, 0), Quaternion.identity, gameObject.transform);
-            //
+            Destroy(nextPos);
+            
+            nextRange = CastRayRange().Item2;
+            if (nextRange < 4 || nextRange > 6) return;
+            
+            nextPos = Instantiate(nextPosArrow, new Vector3(PhotonNetwork.IsMasterClient 
+                ? (float) (nextRange switch {4 => 3.5, 5 => 0, 6 => -3.5, _ => 0}) 
+                : (float) (nextRange switch {4 => -3.5, 5 => 0, 6 => 3.5, _ => 0}), 
+                PhotonNetwork.IsMasterClient ? gameObject.GetComponent<PhotonView>() ? 1f : -5f : 
+                gameObject.GetComponent<PhotonView>() ? -1f : 5f, 0), 
+                Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0), gameObject.transform);
+            
             // GameManager.Instance.AddBattleList(nextRange, 10, PhotonNetwork.IsMasterClient);
-            // CurMoveCount--;
         }
-
-        if (Input.GetMouseButton(0))
-        {
-            if (player is null || !player.GetPhotonView().IsMine) return;
-        
-            player.transform.position = worldMousePos;
-        }
-        
-        if (Input.GetMouseButtonUp(0))
-        {
-            if (player is null || !player.GetPhotonView().IsMine) return;
-        
-            int range = CastRayRange().Item2;
-        
-            if (range == 0)
-            {
-                player.transform.position = new Vector3(
-                    PhotonNetwork.IsMasterClient
-                        ? (float) (CurState switch {4 => 3.5, 5 => 0, 6 => -3.5, _ => 0})
-                        : (float) (CurState switch {4 => -3.5, 5 => 0, 6 => 3.5, _ => 0}),
-                    PhotonNetwork.IsMasterClient ? player.GetPhotonView().IsMine ? 1f : -5f :
-                    player.GetPhotonView().IsMine ? -1f : 5f, 0);
-            }
-        
-            else
-            {
-                player.transform.position = new Vector3(
-                    PhotonNetwork.IsMasterClient
-                        ? (float) (range switch {4 => 3.5, 5 => 0, 6 => -3.5, _ => 0})
-                        : (float) (range switch {4 => -3.5, 5 => 0, 6 => 3.5, _ => 0}),
-                    PhotonNetwork.IsMasterClient ? player.GetPhotonView().IsMine ? 1f : -5f :
-                    player.GetPhotonView().IsMine ? -1f : 5f, 0);
-                GameManager.Instance.AddBattleList(range, 10, PhotonNetwork.IsMasterClient);
-                CurMoveCount--;
-            }
-        }
+        //
+        // if (Input.GetMouseButton(0))
+        // {
+        //     if (player is null || !player.GetPhotonView().IsMine) return;
+        //
+        //     player.transform.position = worldMousePos;
+        // }
+        //
+        // if (Input.GetMouseButtonUp(0))
+        // {
+        //     if (player is null || !player.GetPhotonView().IsMine) return;
+        //
+        //     int range = CastRayRange().Item2;
+        //
+        //     if (range == 0)
+        //     {
+        //         player.transform.position = new Vector3(
+        //             PhotonNetwork.IsMasterClient
+        //                 ? (float) (CurState switch {4 => 3.5, 5 => 0, 6 => -3.5, _ => 0})
+        //                 : (float) (CurState switch {4 => -3.5, 5 => 0, 6 => 3.5, _ => 0}),
+        //             PhotonNetwork.IsMasterClient ? player.GetPhotonView().IsMine ? 1f : -5f :
+        //             player.GetPhotonView().IsMine ? -1f : 5f, 0);
+        //     }
+        //
+        //     else
+        //     {
+        //         player.transform.position = new Vector3(
+        //             PhotonNetwork.IsMasterClient
+        //                 ? (float) (range switch {4 => 3.5, 5 => 0, 6 => -3.5, _ => 0})
+        //                 : (float) (range switch {4 => -3.5, 5 => 0, 6 => 3.5, _ => 0}),
+        //             PhotonNetwork.IsMasterClient ? player.GetPhotonView().IsMine ? 1f : -5f :
+        //             player.GetPhotonView().IsMine ? -1f : 5f, 0);
+        //         GameManager.Instance.AddBattleList(range, 10, PhotonNetwork.IsMasterClient);
+        //     }
+        // }
     }
 
-    ThisCard cardInfo = null;
 
     void MouseInput()
     {
@@ -323,11 +326,6 @@ public class Player : MonoBehaviourPunCallbacks
             raycastTarget = null;
         }
     }
-
-    private GameObject card = null;
-    private GameObject card2 = null;
-    private ThisCard thisCard;
-    private bool isLerping;
 
     private enum CardIn
     {

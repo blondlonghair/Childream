@@ -143,7 +143,7 @@ public class TutorialPlayer : MonoBehaviourPunCallbacks
 
     void PlayerMove()
     {
-        if (CurMoveCount <= 0 || !isPlayerTurn) return;
+        if (CurMoveCount <= 0) return;
 
         if (Input.GetMouseButtonDown(0))
         {

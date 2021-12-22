@@ -189,11 +189,11 @@ public class GameManager : SingletonMonoDestroy<GameManager>
         hostPlayer.CurMp = hostPlayer.MaxMp;
         guestPlayer.CurMp = guestPlayer.MaxMp;
 
-        hostPlayer.CurMoveCount = hostPlayer.MaxMoveCount;
-        guestPlayer.CurMoveCount = guestPlayer.MaxMoveCount;
-
         hostPlayer.isPlayerTurn = true;
         guestPlayer.isPlayerTurn = true;
+
+        // hostPlayer.CurState = hostPlayer.nextRange;
+        // guestPlayer.CurState = guestPlayer.nextRange;
 
         turnEndButton.TurnStart();
 
@@ -218,7 +218,13 @@ public class GameManager : SingletonMonoDestroy<GameManager>
 
         hostPlayer.isPlayerTurn = false;
         guestPlayer.isPlayerTurn = false;
-        
+
+        if (PhotonNetwork.IsMasterClient ? (hostPlayer.CurState != hostPlayer.nextRange) : (guestPlayer.CurState != guestPlayer.nextRange))
+        {
+            print(PhotonNetwork.IsMasterClient ? hostPlayer.nextRange : guestPlayer.nextRange);
+            AddBattleList(PhotonNetwork.IsMasterClient ? hostPlayer.nextRange : guestPlayer.nextRange, 10, PhotonNetwork.IsMasterClient);
+        }
+
         gameState = GameState.StartTurn;
     }
 
