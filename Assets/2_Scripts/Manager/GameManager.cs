@@ -28,6 +28,7 @@ public class GameManager : SingletonMonoDestroy<GameManager>
     [SerializeField] private LerpSlider EnemyHpBar;
     [SerializeField] private GameObject gameWinPanel;
     [SerializeField] private GameObject gameLosePanel;
+    [SerializeField] private GameObject gameDrawPanel;
     [SerializeField] private GameStatePanel gameStatePanel;
     [SerializeField] private MatchingDoor matchingDoor;
     [SerializeField] private TurnEndButton turnEndButton;
@@ -54,27 +55,13 @@ public class GameManager : SingletonMonoDestroy<GameManager>
         //스위치 분기 나누기
         switch (gameState)
         {
-            case GameState.GameSetup:
-                OnGameSetup();
-                break;
-            case GameState.GameStart:
-                OnGameStart();
-                break;
-            case GameState.StartTurn:
-                OnStartTurn();
-                break;
-            case GameState.LastTurn:
-                OnLastTurn();
-                break;
-            case GameState.PlayerTurn:
-                OnPlayerTurn();
-                break;
-            case GameState.TurnEnd:
-                OnTurnEnd();
-                break;
-            case GameState.GameEnd:
-                OnGameEnd();
-                break;
+            case GameState.GameSetup: OnGameSetup(); break;
+            case GameState.GameStart: OnGameStart(); break;
+            case GameState.StartTurn: OnStartTurn(); break;
+            case GameState.LastTurn: OnLastTurn(); break;
+            case GameState.PlayerTurn: OnPlayerTurn(); break;
+            case GameState.TurnEnd: OnTurnEnd(); break;
+            case GameState.GameEnd: OnGameEnd(); break;
         }
 
         if (!Checkplayers()) return;
@@ -249,12 +236,6 @@ public class GameManager : SingletonMonoDestroy<GameManager>
         {
             StartCoroutine(PanelAnimation(gameLosePanel));
         }
-
-        // GameObject panel = PhotonNetwork.IsMasterClient
-        //     ? hostPlayer.CurHp <= 0 ? gameLosePanel : gameWinPanel
-        //     : guestPlayer.CurHp <= 0 ? gameLosePanel : gameWinPanel;
-        //
-        // StartCoroutine(PanelAnimation(panel));
     }
 
     public void TurnEndButton()
@@ -357,8 +338,6 @@ public class GameManager : SingletonMonoDestroy<GameManager>
 
     public void SurrenderButton()
     {
-        // PhotonNetwork.LeaveRoom();
-
         StartCoroutine(PanelAnimation(gameLosePanel));
     }
 
@@ -366,7 +345,6 @@ public class GameManager : SingletonMonoDestroy<GameManager>
     {
         if (isPlayerWin == null)
         {
-            // PhotonNetwork.LeaveRoom();
             StartCoroutine(PanelAnimation(gameWinPanel));
         }
     }
@@ -376,17 +354,18 @@ public class GameManager : SingletonMonoDestroy<GameManager>
         panel.SetActive(true);
         yield return null;
 
-        IsAnimationOver anim = panel.GetComponent<IsAnimationOver>();
-
-        while (true)
+        if (panel.TryGetComponent(out IsAnimationOver anim))
         {
-            if (anim.isAnimationOver)
+            while (true)
             {
-                panel.transform.GetChild(0).gameObject.SetActive(true);
-                yield break;
-            }
+                if (anim.isAnimationOver)
+                {
+                    panel.transform.GetChild(0).gameObject.SetActive(true);
+                    yield break;
+                }
 
-            yield return null;
+                yield return null;
+            }
         }
     }
 

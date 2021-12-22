@@ -12,12 +12,9 @@ public class EffectManager : SingletonMonoDestroy<EffectManager>
     [SerializeField] private GameObject Atk1_2;
     [SerializeField] private GameObject Atk2;
     [SerializeField] private GameObject Atk3;
-    [SerializeField] private GameObject Def1_1;
-    [SerializeField] private GameObject Def1_2;
-    [SerializeField] private GameObject Def2_1;
-    [SerializeField] private GameObject Def2_2;
-    [SerializeField] private GameObject Def3_1;
-    [SerializeField] private GameObject Def3_2;
+    [SerializeField] private GameObject Def1;
+    [SerializeField] private GameObject Def2;
+    [SerializeField] private GameObject Def3;
     [SerializeField] private GameObject Sup1_1;
     [SerializeField] private GameObject Sup1_2;
     [SerializeField] private GameObject Sup2;
@@ -28,39 +25,21 @@ public class EffectManager : SingletonMonoDestroy<EffectManager>
     public void InitEffect(Player _caster, Player _target, int _index, int _effectId)
     {
         Vector3 targetPos = new Vector3(PhotonNetwork.IsMasterClient ? 
-            (float)(_index switch{1 => rangePos, 2 => 0, 3 => -rangePos, _ => 0}) : 
-            (float)(_index switch{1 => -rangePos, 2 => 0, 3 => rangePos, _ => 0}), 
+            _index switch{1 => rangePos, 2 => 0, 3 => -rangePos, _ => 0} : 
+            _index switch{1 => -rangePos, 2 => 0, 3 => rangePos, _ => 0}, 
             _target.transform.position.y, 0);
         
         switch (_effectId)
         {
-            case 1:
-                StartCoroutine(EffectAtk1Update(_caster, _target, targetPos, Atk1_1, Atk1_2));
-                break;
-            case 2:
-                StartCoroutine(EffectAtk2Update(_caster, _target, targetPos, Atk2));
-                break;
-            case 3:
-                StartCoroutine(EffectAtk3Update(_caster, _target, targetPos, Atk3));
-                break;
-            case 4:
-                StartCoroutine(EffectDefUpdate(_caster, _target, targetPos, Def1_1));
-                break;
-            case 5:
-                StartCoroutine(EffectDefUpdate(_caster, _target, targetPos, Def1_1));
-                break;
-            case 6:
-                StartCoroutine(EffectDefUpdate(_caster, _target, targetPos, Def1_1));
-                break;
-            case 7:
-                StartCoroutine(EffectSup1Update(_caster, _target, targetPos, Sup1_1, Sup1_2));
-                break;
-            case 8:
-                StartCoroutine(EffectSup2Update(_caster, _target, targetPos, Sup2));
-                break;
-            case 9:
-                StartCoroutine(EffectSup3Update(_caster, _target, targetPos, Sup3));
-                break;
+            case 1: StartCoroutine(EffectAtk1Update(_caster, _target, targetPos, Atk1_1, Atk1_2)); break;
+            case 2: StartCoroutine(EffectAtk2Update(_caster, _target, targetPos, Atk2)); break;
+            case 3: StartCoroutine(EffectAtk3Update(_caster, _target, targetPos, Atk3)); break;
+            case 4: StartCoroutine(EffectDefUpdate(_caster, _target, targetPos, Def1)); break;
+            case 5: StartCoroutine(EffectDefUpdate(_caster, _target, targetPos, Def2)); break;
+            case 6: StartCoroutine(EffectDefUpdate(_caster, _target, targetPos, Def3)); break;
+            case 7: StartCoroutine(EffectSup1Update(_caster, _target, targetPos, Sup1_1, Sup1_2)); break;
+            case 8: StartCoroutine(EffectSup2Update(_caster, _target, targetPos, Sup2)); break;
+            case 9: StartCoroutine(EffectSup3Update(_caster, _target, targetPos, Sup3)); break;
         }
     }
 

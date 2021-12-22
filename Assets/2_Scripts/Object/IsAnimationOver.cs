@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class IsAnimationOver : MonoBehaviour
 {
-    public bool isAnimationOver;
+    public bool isAnimationOver { get; set; }
 
     public void CheckAnimationOver() => isAnimationOver = true;
 }

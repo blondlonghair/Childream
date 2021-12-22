@@ -343,6 +343,7 @@ public class SupCard3 : SupCard
 
 public class Move : Card
 {
+    private Player caster;
     public Move()
     {
         id = 10;
@@ -355,6 +356,8 @@ public class Move : Card
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
+        // caster = _caster;
+        
         if (_caster.IsLocked)
         {
             return;
@@ -391,6 +394,17 @@ public class Move : Card
         _caster.CurState = _index;
         _caster.CurMoveCount--;
     }
+
+    // IEnumerator move(int _index)
+    // {
+    //     yield return null;
+    //
+    //     while (true)
+    //     {
+    //         Vector3.Lerp(caster.transform.position,
+    //             new Vector3((float)(_index switch{4 => 2.7f, 5 => 0, 6 => -2.7, _ => 0}), caster.transform.position.y, 0), 0.5f);
+    //     }
+    // }
 }
 
 public class CardData : MonoBehaviour

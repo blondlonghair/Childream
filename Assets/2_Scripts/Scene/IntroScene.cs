@@ -12,7 +12,7 @@ public class IntroScene : MonoBehaviourPunCallbacks
     {
         if (PlayerPrefs.GetInt("Tutorial") == 1)
         {
-            SceneManager.LoadScene("1_Scenes/TutorialScene");
+            SceneManager.LoadScene("CutScene");
         }
 
         PhotonNetwork.ConnectUsingSettings();

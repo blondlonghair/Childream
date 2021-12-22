@@ -17,5 +17,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/1_Scenes/IngameScene.unity
     guid: ba1b3298c05d28f438e393fe04d00b90
+  - enabled: 1
+    path: Assets/1_Scenes/TutorialScene.unity
+    guid: 09862e71b199c6342a3796e9941e9b1a
+  - enabled: 1
+    path: Assets/1_Scenes/CutScene.unity
+    guid: 4891effd3b8f855449624aea9715723c
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: be95fc240f2eb984a97a473520afe86d, type: 2}

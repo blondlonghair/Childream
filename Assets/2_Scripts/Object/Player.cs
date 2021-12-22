@@ -16,6 +16,8 @@ using Vector3 = UnityEngine.Vector3;
 
 public class Player : MonoBehaviourPunCallbacks
 {
+    [SerializeField] private GameObject nextPosArrow;
+    
     [Header("플레이어 스탯")] 
     public float MaxHp;
     public float CurHp;
@@ -182,6 +184,9 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
+    private GameObject nextPos;
+    private int nextRange;
+    
     void PlayerMove()
     {
         if (CurMoveCount <= 0 || !isPlayerTurn) return;
@@ -191,21 +196,35 @@ public class Player : MonoBehaviourPunCallbacks
             player = CastRay("Player");
 
             if (player == null || !player.GetPhotonView().IsMine) return;
+
+            // Destroy(nextPos);
+            //
+            // nextRange = CastRayRange().Item2;
+            // if ((nextRange < 4 && nextRange > 6) || CurMoveCount <= 0) return;
+            //
+            // nextPos = Instantiate(nextPosArrow, new Vector3(PhotonNetwork.IsMasterClient 
+            //     ? (float) (nextRange switch {4 => 3.5, 5 => 0, 6 => -3.5, _ => 0}) 
+            //     : (float) (nextRange switch {4 => -3.5, 5 => 0, 6 => 3.5, _ => 0}), 
+            //     PhotonNetwork.IsMasterClient ? gameObject.GetComponent<PhotonView>() ? 1f : -5f : 
+            //     gameObject.GetComponent<PhotonView>() ? -1f : 5f, 0), Quaternion.identity, gameObject.transform);
+            //
+            // GameManager.Instance.AddBattleList(nextRange, 10, PhotonNetwork.IsMasterClient);
+            // CurMoveCount--;
         }
 
         if (Input.GetMouseButton(0))
         {
             if (player is null || !player.GetPhotonView().IsMine) return;
-
+        
             player.transform.position = worldMousePos;
         }
-
+        
         if (Input.GetMouseButtonUp(0))
         {
             if (player is null || !player.GetPhotonView().IsMine) return;
-
+        
             int range = CastRayRange().Item2;
-
+        
             if (range == 0)
             {
                 player.transform.position = new Vector3(
@@ -215,7 +234,7 @@ public class Player : MonoBehaviourPunCallbacks
                     PhotonNetwork.IsMasterClient ? player.GetPhotonView().IsMine ? 1f : -5f :
                     player.GetPhotonView().IsMine ? -1f : 5f, 0);
             }
-
+        
             else
             {
                 player.transform.position = new Vector3(
