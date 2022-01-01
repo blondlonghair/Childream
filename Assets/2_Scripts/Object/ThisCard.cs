@@ -29,7 +29,6 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
     [Header("카드 요소")] [SerializeField] TextMeshPro nameText;
     [SerializeField] TextMeshPro costText;
-    [SerializeField] TextMeshPro powerText;
     [SerializeField] TextMeshPro descText;
     [SerializeField] SpriteRenderer CardImage;
     [SerializeField] SpriteRenderer CardImageBG;
@@ -158,7 +157,6 @@ public class ThisCard : MonoBehaviourPunCallbacks
 
         nameText.text = cardName;
         costText.text = cost.ToString();
-        powerText.text = power.ToString();
         descText.text = cardDesc;
         CardImage.sprite = cardImage;
         CardImageBG.sprite = cardImageBG;
@@ -209,10 +207,9 @@ public class ThisCard : MonoBehaviourPunCallbacks
     {
         nameText.sortingOrder = index;
         costText.sortingOrder = index;
-        powerText.sortingOrder = index;
         descText.sortingOrder = index;
-        CardImage.sortingOrder = index;
-        CardImageBG.sortingOrder = index;
+        CardImage.sortingOrder = index - 1;
+        CardImageBG.sortingOrder = index - 1;
     }
 
     public void EffectScale(float scale)

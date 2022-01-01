@@ -5945,7 +5945,7 @@ MonoBehaviour:
   hostCardActive: {fileID: 461287003}
   guestCardActive: {fileID: 1662600486}
   resultCard: {fileID: 7732100949398585855, guid: c59a64147b404d949b04c856ed4a3f9a, type: 3}
-  maxCard: 4
+  maxCard: 5
 --- !u!1 &2133416751
 GameObject:
   m_ObjectHideFlags: 0

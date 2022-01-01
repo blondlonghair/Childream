@@ -5,6 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System;
 using System.Numerics;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Utils;
@@ -74,6 +75,11 @@ public class Player : MonoBehaviourPunCallbacks
         {
             MouseInput();
             PlayerMove();
+        }
+
+        else
+        {
+            Destroy(nextPos);
         }
     }
 
@@ -202,7 +208,10 @@ public class Player : MonoBehaviourPunCallbacks
 
             if (CastRayRange().Item1 is null) return;
 
-            Destroy(nextPos);
+            if (nextPos != null)
+            {
+                Destroy(nextPos);
+            }
             
             nextRange = CastRayRange().Item2;
             if (nextRange < 4 || nextRange > 6) return;

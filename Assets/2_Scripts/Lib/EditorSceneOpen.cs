@@ -25,14 +25,20 @@ public class EditorSceneOpen
     {
         OpenScene("Assets/1_Scenes/IngameScene.unity");
     }
+
+    [MenuItem("Scenes/4.Cutscene")]
+    public static void OpenScene_Cut()
+    {
+        OpenScene("Assets/1_Scenes/CutScene.unity");
+    }
     
-    [MenuItem("Scenes/4.TutorialScene")]
+    [MenuItem("Scenes/5.TutorialScene")]
     public static void OpenScene_Tutorial()
     {
         OpenScene("Assets/1_Scenes/TutorialScene.unity");
     }
     
-    [MenuItem("Scenes/5.Test")]
+    [MenuItem("Scenes/6.Test")]
     public static void OpenScene_Test()
     {
         OpenScene("Assets/1_Scenes/Test.unity");

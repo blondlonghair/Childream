@@ -23,10 +23,12 @@ public class MatchingDoor : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         animator.SetTrigger("DoorOpen");
+        gameObject.SetActive(false);
     }
 
     public void CloseDoor()
     {
+        gameObject.SetActive(true);
         animator = GetComponent<Animator>();
         animator.SetTrigger("DoorClose");
     }

@@ -173,6 +173,8 @@ public class GameManager : SingletonMonoDestroy<GameManager>
         gameStatePanel.ShowPanel(PanelState.TurnStart);
 
         CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
+        CardManager.Instance.AddCard(guestPlayer.PV().IsMine);
         CardManager.Instance.AddCard(guestPlayer.PV().IsMine);
 
         //플레이어 잠금효과 헤제
