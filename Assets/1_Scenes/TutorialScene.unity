@@ -1928,6 +1928,7 @@ GameObject:
   - component: {fileID: 990362814}
   - component: {fileID: 990362816}
   - component: {fileID: 990362815}
+  - component: {fileID: 990362817}
   m_Layer: 5
   m_Name: PlayerImage
   m_TagString: Untagged
@@ -1992,6 +1993,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 990362813}
   m_CullTransparentMesh: 1
+--- !u!95 &990362817
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 990362813}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 931c2059a7ac8d0498743c6780fd8138, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &996900245
 GameObject:
   m_ObjectHideFlags: 0
@@ -2414,7 +2434,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "\u3139\u3147\u3134\u3141\u3139\u3147\u3134\u3141"
+  m_Text: fdsa
 --- !u!222 &1176817247
 CanvasRenderer:
   m_ObjectHideFlags: 0

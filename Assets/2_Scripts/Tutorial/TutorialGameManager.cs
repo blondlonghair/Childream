@@ -22,6 +22,8 @@ public class TutorialGameManager : SingletonMonoDestroy<TutorialGameManager>
 
     private float theTime;
     private int textCount;
+    private Coroutine _coroutine;
+    private bool isSkipText, isTyping;
 
     enum Turn
     {
@@ -55,8 +57,35 @@ public class TutorialGameManager : SingletonMonoDestroy<TutorialGameManager>
 
     private void TextOn(string text)
     {
+        if (_coroutine != null)
+        {
+            StopCoroutine(_coroutine);
+        }
+
+        _coroutine = StartCoroutine(Co_TextOn(text));
+    }
+    
+    IEnumerator Co_TextOn(string text)
+    {
+        Text uiText = textPanel.transform.GetChild(1).GetChild(0).GetComponent<Text>();
+        
         textPanel.SetActive(true);
-        textPanel.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = text;
+        uiText.text = "";
+        isTyping = true;
+        yield return null;
+        
+        for (int i = 0; i < text.Length; i++)
+        {
+            if (isSkipText) break;
+            
+            uiText.text += text[i];
+            yield return new WaitForSeconds(0.05f);
+        }
+
+        uiText.text = text;
+        isTyping = false;
+        isSkipText = false;
+        yield return null;
     }
 
     private void TextOff()
@@ -96,21 +125,37 @@ public class TutorialGameManager : SingletonMonoDestroy<TutorialGameManager>
     {
         if (Input.GetMouseButtonDown(0))
         {
-            textCount--;
-        }
-        
-        switch (textCount)
-        {
-            case 4 : TextOn("체력은 한 칸에 5이고 총 20이야! 0이 되면 패배해!마나는 한 칸에 1이고 총 5이야! 스킬을 쓰면 1씩 줄어"); break;
-            case 3 : TextOn("카드는 처음 3장을 받고 그 다음엔 4장이 될 때 까지 매 턴 뽑을 수 있어! "); break;
-            case 2 : TextOn("카드를 드래그해서 상대 진영이나 자기 진영에 놓으면 카드를 사용할 수 있어!우선 “마법타격“ 부터 해보자!"); break;
-            case 1 : TextOn("아 내 지시대로 해준 다음엔 턴 종료 누르는 걸 잊지마!"); break;
-        }
-        
-        if (textCount <= 0)
-        {
-            TextOff();
-            _turn = Turn.FirstTurnEnd;
+            if (isTyping)
+            {
+                isSkipText = true;
+            }
+
+            else
+            {
+                textCount--;
+
+                switch (textCount)
+                {
+                    case 4:
+                        TextOn("체력은 한 칸에 5이고 총 20이야! 0이 되면 패배해!마나는 한 칸에 1이고 총 5이야! 스킬을 쓰면 1씩 줄어");
+                        break;
+                    case 3:
+                        TextOn("카드는 처음 3장을 받고 그 다음엔 4장이 될 때 까지 매 턴 뽑을 수 있어! ");
+                        break;
+                    case 2:
+                        TextOn("카드를 드래그해서 상대 진영이나 자기 진영에 놓으면 카드를 사용할 수 있어!우선 “마법타격“ 부터 해보자!");
+                        break;
+                    case 1:
+                        TextOn("아 내 지시대로 해준 다음엔 턴 종료 누르는 걸 잊지마!");
+                        break;
+                }
+
+                if (textCount <= 0)
+                {
+                    TextOff();
+                    _turn = Turn.FirstTurnEnd;
+                }
+            }
         }
     }
 
@@ -143,20 +188,34 @@ public class TutorialGameManager : SingletonMonoDestroy<TutorialGameManager>
     {
         if (Input.GetMouseButtonDown(0))
         {
-            textCount--;
-        }
-        
-        switch (textCount)
-        {
-            case 3 : TextOn("그럼 나도 한번 예측해서 막아보자!"); break;
-            case 2 : TextOn("“폭발마법” 을 쓸 것 같은데…"); break;
-            case 1 : TextOn("그럼 “방폭마법“ 을 사용해보자!내가 있는 곳에 드래그해서 사용해줘!"); break;
-        }
-        
-        if (textCount <= 0)
-        {
-            TextOff();
-            _turn = Turn.SecondTurnEnd;
+            if (isTyping)
+            {
+                isSkipText = true;
+            }
+
+            else
+            {
+                textCount--;
+
+                switch (textCount)
+                {
+                    case 3:
+                        TextOn("그럼 나도 한번 예측해서 막아보자!");
+                        break;
+                    case 2:
+                        TextOn("“폭발마법” 을 쓸 것 같은데…");
+                        break;
+                    case 1:
+                        TextOn("그럼 “방폭마법“ 을 사용해보자!내가 있는 곳에 드래그해서 사용해줘!");
+                        break;
+                }
+
+                if (textCount <= 0)
+                {
+                    TextOff();
+                    _turn = Turn.SecondTurnEnd;
+                }
+            }
         }
     }
 
@@ -190,23 +249,43 @@ public class TutorialGameManager : SingletonMonoDestroy<TutorialGameManager>
     {
         if (Input.GetMouseButtonDown(0))
         {
-            textCount--;
-        }
-        
-        switch (textCount)
-        {
-            case 6 : TextOn("각 방어카드는 발동하는 조건이 달라!"); break;
-            case 5 : TextOn("지금부터는 신중히 써보자.."); break;
-            case 4 : TextOn("일단 체력을 회복하자!“회복주문” 을 드래그해서 사용해줘!"); break;
-            case 3 : TextOn("아 그리고 말 안 했지만"); break;
-            case 2 : TextOn("왼쪽 아래의 이동버튼을 누르면위치를 바꿀 수 있어!"); break;
-            case 1 : TextOn("날 좌측으로 옮겨봐"); break;
-        }
-        
-        if (textCount <= 0)
-        {
-            TextOff();
-            _turn = Turn.ThirdTurnEnd;
+            if (isTyping)
+            {
+                isSkipText = true;
+            }
+
+            else
+            {
+                textCount--;
+
+                switch (textCount)
+                {
+                    case 6:
+                        TextOn("각 방어카드는 발동하는 조건이 달라!");
+                        break;
+                    case 5:
+                        TextOn("지금부터는 신중히 써보자..");
+                        break;
+                    case 4:
+                        TextOn("일단 체력을 회복하자!“회복주문” 을 드래그해서 사용해줘!");
+                        break;
+                    case 3:
+                        TextOn("아 그리고 말 안 했지만");
+                        break;
+                    case 2:
+                        TextOn("왼쪽 아래의 이동버튼을 누르면위치를 바꿀 수 있어!");
+                        break;
+                    case 1:
+                        TextOn("날 좌측으로 옮겨봐");
+                        break;
+                }
+
+                if (textCount <= 0)
+                {
+                    TextOff();
+                    _turn = Turn.ThirdTurnEnd;
+                }
+            }
         }
     }
 
@@ -236,18 +315,28 @@ public class TutorialGameManager : SingletonMonoDestroy<TutorialGameManager>
     {
         if (Input.GetMouseButtonDown(0))
         {
-            textCount--;
-        }
-        
-        switch (textCount)
-        {
-            case 1 : TextOn("자 그럼 본격적으로 시작해보자!"); break;
-        }
-        
-        if (textCount <= 0)
-        {
-            TextOff();
-            _turn = Turn.ForthTurnEnd;
+            if (isTyping)
+            {
+                isSkipText = true;
+            }
+
+            else
+            {
+                textCount--;
+
+                switch (textCount)
+                {
+                    case 1:
+                        TextOn("자 그럼 본격적으로 시작해보자!");
+                        break;
+                }
+
+                if (textCount <= 0)
+                {
+                    TextOff();
+                    _turn = Turn.ForthTurnEnd;
+                }
+            }
         }
     }
 
