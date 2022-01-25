@@ -10,7 +10,7 @@ public class IntroScene : MonoBehaviourPunCallbacks
 {
     private void Start()
     {
-        if (PlayerPrefs.GetInt("Tutorial") == 1)
+        if (!PlayerPrefs.HasKey("Tutorial"))
         {
             SceneManager.LoadScene("CutScene");
         }
@@ -19,12 +19,12 @@ public class IntroScene : MonoBehaviourPunCallbacks
         PhotonNetwork.SendRate = 60;
         PhotonNetwork.SerializationRate = 30;
     }
-    
+
     public override void OnConnectedToMaster()
     {
         PhotonNetwork.JoinLobby();
     }
-    
+
     public override void OnJoinedLobby()
     {
         SceneManager.LoadScene("LobbyScene");

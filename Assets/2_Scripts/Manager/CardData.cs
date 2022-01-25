@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -10,7 +11,7 @@ using Photon.Realtime;
 using UnityEngine.UIElements;
 using Utils;
 
-public class Card
+public class Card : MonoBehaviour
 {
     //카드 정보들
     public int id;
@@ -38,6 +39,66 @@ public class Card
 public abstract class AtkCard : Card
 {
     public int damage;
+
+    protected void EnemyDefence(Player _caster, Player _target, int _index)
+    {
+        StartCoroutine(Co_Defence(_target));
+    }
+
+    public override void CardSecondAbility(Player _caster, Player _target, int _index)
+    {
+        base.CardSecondAbility(_caster, _target, _index);
+
+        StartCoroutine(Co_Attack(_caster));
+    }
+
+    IEnumerator Co_Defence(Player _target)
+    {
+        Vector3 firstPos = _target.transform.position;
+        
+        for (int i = 0; i < 2; i++)
+        {
+            while (!Mathf.Approximately(_target.transform.position.x, firstPos.x - 1))
+            {
+                _target.transform.position =
+                    Vector3.Lerp(_target.transform.position, firstPos + new Vector3(-1, 0, 0), 0.2f);
+                // _target.transform.position = new Vector3(Mathf.Lerp(_target.transform.position.x, 
+                //     firstPos.x - 1, 0.2f), _target.transform.position.y, 0);
+                yield return new WaitForSeconds(0.01f);
+            }
+
+            while (!Mathf.Approximately(_target.transform.position.x, firstPos.x + 1))
+            {
+                _target.transform.position =
+                    Vector3.Lerp(_target.transform.position, firstPos + new Vector3(1, 0, 0), 0.2f);
+                // _target.transform.position = new Vector3(Mathf.Lerp(_target.transform.position.x, 
+                //     firstPos.x + 1, 0.2f), _target.transform.position.y,  0);
+                yield return new WaitForSeconds(0.01f);
+            }
+        }
+    }
+
+    IEnumerator Co_Attack(Player _caster)
+    {
+        Vector3 movePos = (PhotonNetwork.IsMasterClient ? -1 : 1) * new Vector3(0, _caster.photonView.IsMine ? 1 : 3);
+        while (!Mathf.Approximately(_caster.transform.position.y, movePos.y))
+        {
+            _caster.transform.position = Vector3.Lerp(_caster.transform.position, movePos, 0.5f);
+            // _caster.transform.position = new Vector3(_caster.transform.position.x,
+            //     Mathf.Lerp(transform.position.y, movePos.y, 0.5f), 0);
+            yield return new WaitForSeconds(0.01f);
+        }
+        
+        movePos = (PhotonNetwork.IsMasterClient ? -1 : 1) * new Vector3(0, _caster.photonView.IsMine ? -1 : 5);
+
+        while (!Mathf.Approximately(_caster.transform.position.y, movePos.y))
+        {
+            _caster.transform.position = Vector3.Lerp(_caster.transform.position, movePos, 0.2f);
+            // _caster.transform.position = new Vector3(_caster.transform.position.x,
+            //     Mathf.Lerp(transform.position.y, movePos.y, 0.2f), 0);
+            yield return new WaitForSeconds(0.01f);
+        }
+    }
 }
 
 public abstract class DefCard : Card
@@ -77,8 +138,8 @@ public class AtkCard1 : AtkCard
         cardImageBG = CardData.CardTable[1].cardImageBG;
         cardType = CardData.CardTable[1].cardType;
         targetType = CardData.CardTable[1].targetType;
-        // damage = 5;
-        damage = 20;
+        damage = 5;
+        // damage = 20;
     }
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
@@ -95,10 +156,12 @@ public class AtkCard1 : AtkCard
             {
                 EffectManager.Instance.InitEffect(_caster, _target, _index, 4);
                 CardManager.Instance.ShowWatIUsed(_target, _caster, 4);
+                // SoundManager.Instance.PlaySFXSound("Attack_01");
                 _target.DefMagic = false;
             }
             else
             {
+                EnemyDefence(_caster, _target, _index);
                 _target.CurHp -= damage;
             }
         }
@@ -117,8 +180,8 @@ public class AtkCard2 : AtkCard
         cardImageBG = CardData.CardTable[2].cardImageBG;
         cardType = CardData.CardTable[2].cardType;
         targetType = CardData.CardTable[2].targetType;
-        // damage = 2;
-        damage = 20;
+        damage = 2;
+        // damage = 20;
     }
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
@@ -133,11 +196,13 @@ public class AtkCard2 : AtkCard
         {
             EffectManager.Instance.InitEffect(_caster, _target, _index, 5);
             CardManager.Instance.ShowWatIUsed(_target, _caster, 5);
+            // SoundManager.Instance.PlaySFXSound("Attack_02");
             _caster.CurHp -= 1;
             _target.DefElectricity = false;   
         }
         else
         {
+            EnemyDefence(_caster, _target, _index);
             _target.CurHp -= damage;
         }
     }
@@ -155,8 +220,8 @@ public class AtkCard3 : AtkCard
         cardImageBG = CardData.CardTable[3].cardImageBG;
         cardType = CardData.CardTable[3].cardType;
         targetType = CardData.CardTable[3].targetType;
-        // damage = 10;
-        damage = 20;
+        damage = 10;
+        // damage = 20;
     }
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
@@ -173,11 +238,13 @@ public class AtkCard3 : AtkCard
             {
                 EffectManager.Instance.InitEffect(_caster, _target, _index, 6);
                 CardManager.Instance.ShowWatIUsed(_target, _caster, 6);
+                // SoundManager.Instance.PlaySFXSound("Attack_03");
                 _caster.CurHp -= damage / 2;
                 _target.DefExplosion = false;
             }
             else
             {
+                EnemyDefence(_caster, _target, _index);
                 _target.CurHp -= damage;
             }
         }
@@ -272,6 +339,7 @@ public class SupCard1 : SupCard
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
     {
+        // SoundManager.Instance.PlaySFXSound("Sub_01");
         _target.IsLocked = true;
     }
 
@@ -302,6 +370,7 @@ public class SupCard2 : SupCard
     {
         base.CardSecondAbility(_caster, _target, _index);
 
+        // SoundManager.Instance.PlaySFXSound("Sub_02");
         for (int i = 0; i < 3; i++)
         {
             if (_caster.CurHp == _caster.MaxHp)
@@ -336,6 +405,8 @@ public class SupCard3 : SupCard
     {
         base.CardSecondAbility(_caster, _target, _index);
 
+        // SoundManager.Instance.PlaySFXSound("Sub_03");
+        
         CardManager.Instance.AddCard(_caster.PV().IsMine);
         CardManager.Instance.AddCard(_caster.PV().IsMine);
     }
@@ -356,54 +427,44 @@ public class Move : Card
 
     public override void CardSecondAbility(Player _caster, Player _target, int _index)
     {
-        // caster = _caster;
-        
-        if (_caster.IsLocked)
-        {
-            return;
-        }
+        if (_caster.IsLocked) return;
 
+        // SoundManager.Instance.PlaySFXSound("Move");
+        
         if (PhotonNetwork.IsMasterClient)
         {
             if (_caster.gameObject.GetPhotonView().IsMine)
             {
-                _caster.transform.position = new Vector3((float)(_index switch{4 => 3.5f, 5 => 0, 6 => -3.5, _ => 0}), _caster.transform.position.y, 0);
+                StartCoroutine(Co_Move(_caster, new Vector3((float) (_index switch {4 => 3.5f, 5 => 0, 6 => -3.5, _ => 0}), _caster.transform.position.y, 0)));
             }
             else
             {
-                _caster.transform.position = new Vector3((float)(_index switch{4 => 2.7f, 5 => 0, 6 => -2.7, _ => 0}), _caster.transform.position.y, 0);
+                StartCoroutine(Co_Move(_caster, new Vector3((float)(_index switch{4 => 2.7f, 5 => 0, 6 => -2.7, _ => 0}), _caster.transform.position.y, 0)));
             }
         }
         else
         {
             if (_caster.gameObject.GetPhotonView().IsMine)
             {
-                _caster.transform.position = new Vector3((float)(_index switch{4 => -3.5f, 5 => 0, 6 => 3.5, _ => 0}), _caster.transform.position.y, 0);
+                StartCoroutine(Co_Move(_caster, new Vector3((float) (_index switch {4 => -3.5f, 5 => 0, 6 => 3.5, _ => 0}), _caster.transform.position.y, 0)));
             }
             else
             {
-                _caster.transform.position = new Vector3((float)(_index switch{4 => -2.7f, 5 => 0, 6 => 2.7, _ => 0}), _caster.transform.position.y, 0);
+                StartCoroutine(Co_Move(_caster, new Vector3((float) (_index switch {4 => -2.7f, 5 => 0, 6 => 2.7, _ => 0}), _caster.transform.position.y, 0)));
             }
         }
-        
-        // _caster.transform.position = new Vector3(PhotonNetwork.IsMasterClient ? 
-        //     (float)(_index switch{4 => 2.7, 5 => 0, 6 => -2.7, _ => 0}) : 
-        //     (float)(_index switch{4 => -3.5, 5 => 0, 6 => 3.5, _ => 0}),
-        //     _caster.transform.position.y, 0);
+
+        IEnumerator Co_Move(Player caster, Vector3 pos)
+        {
+            while (!Mathf.Approximately(caster.transform.position.x, pos.x))
+            {
+                caster.transform.position = Vector3.Lerp(caster.transform.position, pos, 0.2f);
+                yield return null;
+            }
+        }
 
         _caster.CurState = _index - 3;
     }
-
-    // IEnumerator move(int _index)
-    // {
-    //     yield return null;
-    //
-    //     while (true)
-    //     {
-    //         Vector3.Lerp(caster.transform.position,
-    //             new Vector3((float)(_index switch{4 => 2.7f, 5 => 0, 6 => -2.7, _ => 0}), caster.transform.position.y, 0), 0.5f);
-    //     }
-    // }
 }
 
 public class CardData : MonoBehaviour
@@ -419,17 +480,29 @@ public class CardData : MonoBehaviour
         CardTable = new List<CardInfo>();
         
         CardTable.AddRange(cardTable);
+
+        EmptyCard emptyCard = gameObject.AddComponent<EmptyCard>();
+        AtkCard1 atkCard1 = gameObject.AddComponent<AtkCard1>();
+        AtkCard2 atkCard2 = gameObject.AddComponent<AtkCard2>();
+        AtkCard3 atkCard3 = gameObject.AddComponent<AtkCard3>();
+        DefCard1 defCard1 = gameObject.AddComponent<DefCard1>();
+        DefCard2 defCard2 = gameObject.AddComponent<DefCard2>();
+        DefCard3 defCard3 = gameObject.AddComponent<DefCard3>();
+        SupCard1 supCard1 = gameObject.AddComponent<SupCard1>();
+        SupCard2 supCard2 = gameObject.AddComponent<SupCard2>();
+        SupCard3 supCard3 = gameObject.AddComponent<SupCard3>();
+        Move move = gameObject.AddComponent<Move>();
         
-        CardList.Add(new EmptyCard());
-        CardList.Add(new AtkCard1());
-        CardList.Add(new AtkCard2());
-        CardList.Add(new AtkCard3());
-        CardList.Add(new DefCard1());
-        CardList.Add(new DefCard2());
-        CardList.Add(new DefCard3());
-        CardList.Add(new SupCard1());
-        CardList.Add(new SupCard2());
-        CardList.Add(new SupCard3());
-        CardList.Add(new Move());
+        CardList.Add(emptyCard);
+        CardList.Add(atkCard1);
+        CardList.Add(atkCard2);
+        CardList.Add(atkCard3);
+        CardList.Add(defCard1);
+        CardList.Add(defCard2);
+        CardList.Add(defCard3);
+        CardList.Add(supCard1);
+        CardList.Add(supCard2);
+        CardList.Add(supCard3);
+        CardList.Add(move);
     }
 }

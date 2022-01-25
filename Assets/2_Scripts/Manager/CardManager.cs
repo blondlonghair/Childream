@@ -214,7 +214,6 @@ public class CardManager : SingletonMonoDestroy<CardManager>
                 {
                     objLerps[i] = interval * i;
                 }
-
                 break;
         }
 
@@ -237,7 +236,7 @@ public class CardManager : SingletonMonoDestroy<CardManager>
                 targetRot = Quaternion.Slerp(leftTr.rotation, rightTr.rotation, objLerps[i]);
             }
 
-            results.Add(new PRS(targetPos, targetRot, scale, i));
+            results.Add(new PRS(targetPos/* + new Vector3(0,0,i)*/, targetRot, scale, i));
         }
 
         return results;

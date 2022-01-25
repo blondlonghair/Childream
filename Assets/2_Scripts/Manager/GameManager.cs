@@ -7,6 +7,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using Unity.Mathematics;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Utils;
@@ -19,6 +20,7 @@ public class GameManager : SingletonMonoDestroy<GameManager>
     public List<Tuple<int, int>> hostBattleList = new List<Tuple<int, int>>(); //first : 카드 ID, second : range 번호
     public List<Tuple<int, int>> guestBattleList = new List<Tuple<int, int>>();
     public bool? isPlayerWin = null;
+    public Vector3 worldMousePos;
 
     [Header("Timer")] [SerializeField] private float cardInvokeTimer;
     [SerializeField] private float cardInovkeInvaldTime;
@@ -34,7 +36,7 @@ public class GameManager : SingletonMonoDestroy<GameManager>
     [SerializeField] private TurnEndButton turnEndButton;
 
     private PhotonView PV;
-
+    
     private void Start()
     {
         PV = this.PV();
@@ -50,6 +52,10 @@ public class GameManager : SingletonMonoDestroy<GameManager>
 
     void Update()
     {
+        Vector3 mousePos = Input.mousePosition;
+        worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
+        worldMousePos.z = 0;
+        
         if (!AllPlayerIn()) return;
 
         //스위치 분기 나누기
@@ -389,5 +395,46 @@ public class GameManager : SingletonMonoDestroy<GameManager>
         
         matchingDoor.gameObject.SetActive(false);
         yield return null;
+    }
+    
+    public (GameObject, int) CastRayRange()
+    {
+        RaycastHit2D[] hits = Physics2D.RaycastAll(worldMousePos, Vector2.zero, 0f);
+        int range = 0;
+
+        foreach (var hit in hits)
+        {
+            if (hit.collider.gameObject.tag.Contains("Range") && !hit.collider.gameObject.CompareTag("EffectRange"))
+            {
+                range = int.Parse(hit.collider.gameObject.tag.Replace("Range", ""));
+
+                if (hit.collider.gameObject.GetPhotonView().IsMine)
+                {
+                    range += 3;
+                }
+
+                return (hit.collider.gameObject, range);
+            }
+        }
+
+        return (null, range);
+    }
+    
+    public bool CheckCastRay(string tag)
+    {
+        if (EventSystem.current.IsPointerOverGameObject())
+            return false;
+
+        RaycastHit2D[] hits = Physics2D.RaycastAll(worldMousePos, Vector2.zero, 0f);
+
+        foreach (var hit2D in hits)
+        {
+            if (hit2D.collider != null && hit2D.collider.gameObject.CompareTag(tag))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

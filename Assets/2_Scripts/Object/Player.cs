@@ -39,8 +39,6 @@ public class Player : MonoBehaviourPunCallbacks
     private PhotonView PV;
     private Animator animator;
 
-    private Vector3 worldMousePos;
-    
     private GameObject nextPos;
     public int nextRange = 5;
     ThisCard cardInfo = null;
@@ -49,6 +47,7 @@ public class Player : MonoBehaviourPunCallbacks
     private GameObject card2 = null;
     private ThisCard thisCard;
     private bool isLerping;
+    private bool cardIn;
 
     void Start()
     {
@@ -64,8 +63,6 @@ public class Player : MonoBehaviourPunCallbacks
         {
             PV.RPC(nameof(DieInput), RpcTarget.AllBuffered);
         }
-
-        GetMousePos();
 
         if (!PV.IsMine) return;
 
@@ -87,13 +84,6 @@ public class Player : MonoBehaviourPunCallbacks
     private void DieInput()
     {
         CurHp = 0;
-    }
-
-    void GetMousePos()
-    {
-        Vector3 mousePos = Input.mousePosition;
-        worldMousePos = Camera.main.ScreenToWorldPoint(mousePos);
-        worldMousePos.z = 0;
     }
 
     GameObject CastRay(string tag)
@@ -292,7 +282,7 @@ public class Player : MonoBehaviourPunCallbacks
             {
                 if (CastRayRange().Item1 == null)
                 {
-                    raycastTarget.transform.position = worldMousePos;
+                    raycastTarget.transform.position = GameManager.Instance.worldMousePos;
                     raycastTarget.transform.localScale = Vector3.one;
                     // isLerping = false;
                 }
@@ -336,14 +326,6 @@ public class Player : MonoBehaviourPunCallbacks
         }
     }
 
-    private enum CardIn
-    {
-        Enter,
-        Exit,
-        On
-    }
-
-    private CardIn cardIn = CardIn.Exit;
 
     void CardZoom()
     {
@@ -352,19 +334,19 @@ public class Player : MonoBehaviourPunCallbacks
         if (card != null && !Input.GetMouseButton(0) && card2 == card)
         {
             card.TryGetComponent(out thisCard);
-            if (thisCard.gameObject.GetPhotonView().IsMine && cardIn == CardIn.Exit)
+            if (thisCard.gameObject.GetPhotonView().IsMine && !cardIn)
             {
                 thisCard.CardZoomIn();
-                cardIn = CardIn.On;
+                cardIn = true;
             }
         }
 
         if (card2 != card && !isLerping)
         {
-            if (thisCard != null && thisCard.gameObject.GetPhotonView().IsMine && cardIn == CardIn.On)
+            if (thisCard != null && thisCard.gameObject.GetPhotonView().IsMine && cardIn)
             {
                 thisCard.CardZoomOut();
-                cardIn = CardIn.Exit;
+                cardIn = false;
             }
 
             card2 = card;
@@ -429,7 +411,7 @@ public class Player : MonoBehaviourPunCallbacks
                 break;
 
             case TargetType.None:
-                raycastTarget.transform.position = worldMousePos;
+                raycastTarget.transform.position = GameManager.Instance.worldMousePos;
                 raycastTarget.transform.localScale = Vector3.one;
                 isLerping = false;
                 break;
