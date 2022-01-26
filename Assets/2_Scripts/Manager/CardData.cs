@@ -56,31 +56,20 @@ public abstract class AtkCard : Card
     {
         Vector3 firstPos = _target.transform.position;
         
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < 5; i++)
         {
-            while (!Mathf.Approximately(_target.transform.position.x, firstPos.x - 1))
-            {
-                _target.transform.position =
-                    Vector3.Lerp(_target.transform.position, firstPos + new Vector3(-1, 0, 0), 0.2f);
-                // _target.transform.position = new Vector3(Mathf.Lerp(_target.transform.position.x, 
-                //     firstPos.x - 1, 0.2f), _target.transform.position.y, 0);
-                yield return new WaitForSeconds(0.01f);
-            }
-
-            while (!Mathf.Approximately(_target.transform.position.x, firstPos.x + 1))
-            {
-                _target.transform.position =
-                    Vector3.Lerp(_target.transform.position, firstPos + new Vector3(1, 0, 0), 0.2f);
-                // _target.transform.position = new Vector3(Mathf.Lerp(_target.transform.position.x, 
-                //     firstPos.x + 1, 0.2f), _target.transform.position.y,  0);
-                yield return new WaitForSeconds(0.01f);
-            }
+            _target.transform.position = new Vector3(firstPos.x - 0.5f, _target.transform.position.y, 0);
+            yield return new WaitForSeconds(0.05f);
+            _target.transform.position = new Vector3(firstPos.x + 0.5f, _target.transform.position.y, 0);
+            yield return new WaitForSeconds(0.05f);
         }
+
+        _target.transform.position = new Vector3(firstPos.x, _target.transform.position.y, 0);
     }
 
     IEnumerator Co_Attack(Player _caster)
     {
-        Vector3 movePos = (PhotonNetwork.IsMasterClient ? -1 : 1) * new Vector3(0, _caster.photonView.IsMine ? 1 : 3);
+        Vector3 movePos = new Vector3(_caster.transform.position.x, (_caster.photonView.IsMine ? 1 : 3) * (PhotonNetwork.IsMasterClient ? -1 : 1));
         while (!Mathf.Approximately(_caster.transform.position.y, movePos.y))
         {
             _caster.transform.position = Vector3.Lerp(_caster.transform.position, movePos, 0.5f);
@@ -89,7 +78,7 @@ public abstract class AtkCard : Card
             yield return new WaitForSeconds(0.01f);
         }
         
-        movePos = (PhotonNetwork.IsMasterClient ? -1 : 1) * new Vector3(0, _caster.photonView.IsMine ? -1 : 5);
+        movePos = new Vector3(_caster.transform.position.x, (_caster.photonView.IsMine ? -1 : 5) * (PhotonNetwork.IsMasterClient ? -1 : 1));
 
         while (!Mathf.Approximately(_caster.transform.position.y, movePos.y))
         {

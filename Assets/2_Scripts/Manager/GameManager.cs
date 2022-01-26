@@ -34,13 +34,13 @@ public class GameManager : SingletonMonoDestroy<GameManager>
     [SerializeField] private GameStatePanel gameStatePanel;
     [SerializeField] private MatchingDoor matchingDoor;
     [SerializeField] private TurnEndButton turnEndButton;
+    [SerializeField] private LoadingPanel _loadingPanel;
 
     private PhotonView PV;
     
     private void Start()
     {
         PV = this.PV();
-        StartCoroutine(DoorOpenOver());
 
         gameState = GameState.GameSetup;
     }
@@ -100,7 +100,6 @@ public class GameManager : SingletonMonoDestroy<GameManager>
             return;
 
         PV.RPC(nameof(InitPlayers), RpcTarget.AllBuffered);
-        matchingDoor.OpenDoor();
         
         CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
         CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
@@ -230,7 +229,12 @@ public class GameManager : SingletonMonoDestroy<GameManager>
         if (PhotonNetwork.IsMasterClient ? (hostPlayer.CurState != hostPlayer.nextRange) : (guestPlayer.CurState != guestPlayer.nextRange))
         {
             print(PhotonNetwork.IsMasterClient ? hostPlayer.nextRange : guestPlayer.nextRange);
-            AddBattleList(PhotonNetwork.IsMasterClient ? hostPlayer.nextRange : guestPlayer.nextRange, 10, PhotonNetwork.IsMasterClient);
+            // AddBattleList(PhotonNetwork.IsMasterClient ? hostPlayer.nextRange : guestPlayer.nextRange, 10, PhotonNetwork.IsMasterClient);
+            if ((PhotonNetwork.IsMasterClient ? hostPlayer : guestPlayer).CurState !=
+                (PhotonNetwork.IsMasterClient ? hostPlayer : guestPlayer).nextRange)
+            {
+                AddBattleList(PhotonNetwork.IsMasterClient ? hostPlayer.nextRange : guestPlayer.nextRange, 10, PhotonNetwork.IsMasterClient);
+            }
         }
 
         gameState = GameState.StartTurn;
@@ -343,7 +347,8 @@ public class GameManager : SingletonMonoDestroy<GameManager>
     {
         // SceneManager.LoadScene(scene);
         PhotonNetwork.LeaveRoom();
-        PhotonNetwork.LoadLevel(scene);
+        _loadingPanel.Close(scene);
+        // PhotonNetwork.LoadLevel(scene);
     }
 
     public void RematchButton()
@@ -381,20 +386,6 @@ public class GameManager : SingletonMonoDestroy<GameManager>
                 yield return null;
             }
         }
-    }
-
-    IEnumerator DoorOpenOver()
-    {
-        matchingDoor.gameObject.SetActive(true);
-        yield return null;
-
-        while (!matchingDoor.isOpenOver)
-        {
-            yield return null;
-        }
-        
-        matchingDoor.gameObject.SetActive(false);
-        yield return null;
     }
     
     public (GameObject, int) CastRayRange()

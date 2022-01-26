@@ -8,8 +8,11 @@ using UnityEngine.SceneManagement;
 
 public class IntroScene : MonoBehaviourPunCallbacks
 {
+    [SerializeField] LoadingPanel _loadingPanel;
+    
     private void Start()
     {
+        // PlayerPrefs.DeleteAll();
         if (!PlayerPrefs.HasKey("Tutorial"))
         {
             SceneManager.LoadScene("CutScene");
@@ -27,6 +30,6 @@ public class IntroScene : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
-        SceneManager.LoadScene("LobbyScene");
+        _loadingPanel.Close("LobbyScene");
     }
 }

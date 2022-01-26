@@ -40,7 +40,7 @@ public class Player : MonoBehaviourPunCallbacks
     private Animator animator;
 
     private GameObject nextPos;
-    public int nextRange = 5;
+    public int nextRange;
     ThisCard cardInfo = null;
 
     private GameObject card = null;

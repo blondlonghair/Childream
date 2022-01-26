@@ -19,6 +19,7 @@ public class TutorialGameManager : SingletonMonoDestroy<TutorialGameManager>
     [SerializeField] private LerpSlider PlayerHpBar;
 
     [SerializeField] private GameObject textPanel;
+    [SerializeField] private LoadingPanel _loadingPanel;
 
     private float theTime;
     private int textCount;
@@ -342,6 +343,7 @@ public class TutorialGameManager : SingletonMonoDestroy<TutorialGameManager>
 
     private void OnForthTurnEnd()
     {
-        SceneManager.LoadScene("IntroScene");
+        _loadingPanel.Close("IntroScene");
+        // SceneManager.LoadScene("IntroScene");
     }
 }

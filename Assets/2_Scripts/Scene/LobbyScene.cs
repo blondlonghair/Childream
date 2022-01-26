@@ -43,7 +43,7 @@ public class LobbyScene : MonoBehaviourPunCallbacks
 
     public void MatchStartButton()
     {
-        print(GameObject.Find("SoundManager"));
+        // print(GameObject.Find("SoundManager"));
         // GameObject.Find("SoundManager").GetComponent<SoundManager>().PlaySFXSound("Button_matching");
         // SoundManager.Instance.PlaySFXSound("Button_matching");
         

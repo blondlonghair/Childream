@@ -64,3 +64,6 @@ TagManager:
   - name: UI
     uniqueID: 1787826815
     locked: 0
+  - name: LoadingPanel
+    uniqueID: 1644171411
+    locked: 0

@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6467517843919791294}
   - component: {fileID: 6467517843919791295}
-  - component: {fileID: 2379956069637481665}
   - component: {fileID: 3526124671331361918}
+  - component: {fileID: 2379956069637481665}
   - component: {fileID: 6467517843919791293}
   - component: {fileID: 4352244080361110912}
   - component: {fileID: 6854834152208874585}
@@ -87,25 +87,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!95 &2379956069637481665
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6467517843919791266}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: cb3241d0905e3c143aefaa911f13dc65, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &3526124671331361918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,7 +110,26 @@ MonoBehaviour:
   CurState: 0
   IsLocked: 0
   isPlayerTurn: 0
-  nextRange: 0
+  nextRange: 5
+--- !u!95 &2379956069637481665
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6467517843919791266}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cb3241d0905e3c143aefaa911f13dc65, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!114 &6467517843919791293
 MonoBehaviour:
   m_ObjectHideFlags: 0

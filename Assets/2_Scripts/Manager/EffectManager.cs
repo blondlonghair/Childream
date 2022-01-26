@@ -8,38 +8,70 @@ using UnityEngine;
 
 public class EffectManager : SingletonMonoDestroy<EffectManager>
 {
-    [SerializeField] private GameObject Atk1_1;
-    [SerializeField] private GameObject Atk1_2;
-    [SerializeField] private GameObject Atk2;
-    [SerializeField] private GameObject Atk3;
-    [SerializeField] private GameObject Def1;
-    [SerializeField] private GameObject Def2;
-    [SerializeField] private GameObject Def3;
-    [SerializeField] private GameObject Sup1_1;
-    [SerializeField] private GameObject Sup1_2;
-    [SerializeField] private GameObject Sup2;
-    [SerializeField] private GameObject Sup3;
+    [SerializeField] private GameObject attack1;
+    [SerializeField] private GameObject attack2;
+    [SerializeField] private GameObject attack3;
+    [SerializeField] private GameObject defence;
+    [SerializeField] private GameObject support1;
+    [SerializeField] private GameObject support2;
+
+    // [SerializeField] private GameObject Atk1_1;
+    // [SerializeField] private GameObject Atk1_2;
+    // [SerializeField] private GameObject Atk2;
+    // [SerializeField] private GameObject Atk3;
+    // [SerializeField] private GameObject Def1;
+    // [SerializeField] private GameObject Def2;
+    // [SerializeField] private GameObject Def3;
+    // [SerializeField] private GameObject Sup1_1;
+    // [SerializeField] private GameObject Sup1_2;
+    // [SerializeField] private GameObject Sup2;
+    // [SerializeField] private GameObject Sup3;
 
     private float rangePos = 2.7f;
 
     public void InitEffect(Player _caster, Player _target, int _index, int _effectId)
     {
-        Vector3 targetPos = new Vector3(PhotonNetwork.IsMasterClient ? 
-            _index switch{1 => rangePos, 2 => 0, 3 => -rangePos, _ => 0} : 
-            _index switch{1 => -rangePos, 2 => 0, 3 => rangePos, _ => 0}, 
-            _target.transform.position.y, 0);
+        SpawnEffect(_caster, _target, _effectId);
+
+        // Vector3 targetPos = new Vector3(PhotonNetwork.IsMasterClient ? 
+        //     _index switch{1 => rangePos, 2 => 0, 3 => -rangePos, _ => 0} : 
+        //     _index switch{1 => -rangePos, 2 => 0, 3 => rangePos, _ => 0}, 
+        //     _target.transform.position.y, 0);
+        //
+        // switch (_effectId)
+        // {
+        //     case 1: StartCoroutine(EffectAtk1Update(_caster, _target, targetPos, Atk1_1, Atk1_2)); break;
+        //     case 2: StartCoroutine(EffectAtk2Update(_caster, _target, targetPos, Atk2)); break;
+        //     case 3: StartCoroutine(EffectAtk3Update(_caster, _target, targetPos, Atk3)); break;
+        //     case 4: StartCoroutine(EffectDefUpdate(_caster, _target, targetPos, Def1)); break;
+        //     case 5: StartCoroutine(EffectDefUpdate(_caster, _target, targetPos, Def2)); break;
+        //     case 6: StartCoroutine(EffectDefUpdate(_caster, _target, targetPos, Def3)); break;
+        //     case 7: StartCoroutine(EffectSup1Update(_caster, _target, targetPos, Sup1_1, Sup1_2)); break;
+        //     case 8: StartCoroutine(EffectSup2Update(_caster, _target, targetPos, Sup2)); break;
+        //     case 9: StartCoroutine(EffectSup3Update(_caster, _target, targetPos, Sup3)); break;
+        // }
+    }
+
+    private void SpawnEffect(Player _caster, Player _target, int _effectId)
+    {
+        GameObject obj;
+        Player player;
         
         switch (_effectId)
         {
-            case 1: StartCoroutine(EffectAtk1Update(_caster, _target, targetPos, Atk1_1, Atk1_2)); break;
-            case 2: StartCoroutine(EffectAtk2Update(_caster, _target, targetPos, Atk2)); break;
-            case 3: StartCoroutine(EffectAtk3Update(_caster, _target, targetPos, Atk3)); break;
-            case 4: StartCoroutine(EffectDefUpdate(_caster, _target, targetPos, Def1)); break;
-            case 5: StartCoroutine(EffectDefUpdate(_caster, _target, targetPos, Def2)); break;
-            case 6: StartCoroutine(EffectDefUpdate(_caster, _target, targetPos, Def3)); break;
-            case 7: StartCoroutine(EffectSup1Update(_caster, _target, targetPos, Sup1_1, Sup1_2)); break;
-            case 8: StartCoroutine(EffectSup2Update(_caster, _target, targetPos, Sup2)); break;
-            case 9: StartCoroutine(EffectSup3Update(_caster, _target, targetPos, Sup3)); break;
+            case 1 : obj = attack1; player = _target; break;
+            case 2 : obj = attack2; player = _target; break;
+            case 3 : obj = attack3; player = _target; break;
+            case 4 : case 5: case 6 : obj = defence; player = _target; break;
+            case 7 : obj = support1; player = _caster; break;
+            case 8 : obj = support2; player = _caster; break;
+            default : obj = null; player = _caster; break;
+        }
+
+        if (_effectId != 9)
+        {
+            Instantiate(obj, player.transform.position, quaternion.identity, player.transform);
+            
         }
     }
 
