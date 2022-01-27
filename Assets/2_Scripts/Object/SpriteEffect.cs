@@ -21,7 +21,7 @@ public class SpriteEffect : MonoBehaviour
     {
         Color color = _spriteRenderer.color;
 
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.5f);
 
         while (_spriteRenderer.color.a >= 0)
         {

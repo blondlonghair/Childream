@@ -231,7 +231,7 @@ public class GameManager : SingletonMonoDestroy<GameManager>
             print(PhotonNetwork.IsMasterClient ? hostPlayer.nextRange : guestPlayer.nextRange);
             // AddBattleList(PhotonNetwork.IsMasterClient ? hostPlayer.nextRange : guestPlayer.nextRange, 10, PhotonNetwork.IsMasterClient);
             if ((PhotonNetwork.IsMasterClient ? hostPlayer : guestPlayer).CurState !=
-                (PhotonNetwork.IsMasterClient ? hostPlayer : guestPlayer).nextRange)
+                (PhotonNetwork.IsMasterClient ? hostPlayer : guestPlayer).nextRange - 3)
             {
                 AddBattleList(PhotonNetwork.IsMasterClient ? hostPlayer.nextRange : guestPlayer.nextRange, 10, PhotonNetwork.IsMasterClient);
             }

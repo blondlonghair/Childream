@@ -17,6 +17,8 @@ public class IntroScene : MonoBehaviourPunCallbacks
         {
             SceneManager.LoadScene("CutScene");
         }
+        
+        SoundManager.Instance.PlayBGMSound();
 
         PhotonNetwork.ConnectUsingSettings();
         PhotonNetwork.SendRate = 60;

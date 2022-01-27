@@ -70,7 +70,7 @@ public class EffectManager : SingletonMonoDestroy<EffectManager>
 
         if (_effectId != 9)
         {
-            Instantiate(obj, player.transform.position, quaternion.identity, player.transform);
+            Instantiate(obj, player.transform.position, Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0), player.transform);
             
         }
     }

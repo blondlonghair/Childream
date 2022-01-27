@@ -58,9 +58,9 @@ public abstract class AtkCard : Card
         
         for (int i = 0; i < 5; i++)
         {
-            _target.transform.position = new Vector3(firstPos.x - 0.5f, _target.transform.position.y, 0);
+            _target.transform.position = new Vector3(firstPos.x - 0.1f, _target.transform.position.y, 0);
             yield return new WaitForSeconds(0.05f);
-            _target.transform.position = new Vector3(firstPos.x + 0.5f, _target.transform.position.y, 0);
+            _target.transform.position = new Vector3(firstPos.x + 0.1f, _target.transform.position.y, 0);
             yield return new WaitForSeconds(0.05f);
         }
 
@@ -145,11 +145,12 @@ public class AtkCard1 : AtkCard
             {
                 EffectManager.Instance.InitEffect(_caster, _target, _index, 4);
                 CardManager.Instance.ShowWatIUsed(_target, _caster, 4);
-                // SoundManager.Instance.PlaySFXSound("Attack_01");
+                SoundManager.Instance.PlaySFXSound("Guard_01~03");
                 _target.DefMagic = false;
             }
             else
             {
+                SoundManager.Instance.PlaySFXSound("Attack_01");
                 EnemyDefence(_caster, _target, _index);
                 _target.CurHp -= damage;
             }
@@ -185,12 +186,13 @@ public class AtkCard2 : AtkCard
         {
             EffectManager.Instance.InitEffect(_caster, _target, _index, 5);
             CardManager.Instance.ShowWatIUsed(_target, _caster, 5);
-            // SoundManager.Instance.PlaySFXSound("Attack_02");
+            SoundManager.Instance.PlaySFXSound("Guard_01~03");
             _caster.CurHp -= 1;
             _target.DefElectricity = false;   
         }
         else
         {
+            SoundManager.Instance.PlaySFXSound("Attack_02");
             EnemyDefence(_caster, _target, _index);
             _target.CurHp -= damage;
         }
@@ -227,12 +229,13 @@ public class AtkCard3 : AtkCard
             {
                 EffectManager.Instance.InitEffect(_caster, _target, _index, 6);
                 CardManager.Instance.ShowWatIUsed(_target, _caster, 6);
-                // SoundManager.Instance.PlaySFXSound("Attack_03");
+                SoundManager.Instance.PlaySFXSound("Guard_01~03");
                 _caster.CurHp -= damage / 2;
                 _target.DefExplosion = false;
             }
             else
             {
+                SoundManager.Instance.PlaySFXSound("Attack_03");
                 EnemyDefence(_caster, _target, _index);
                 _target.CurHp -= damage;
             }
@@ -328,7 +331,7 @@ public class SupCard1 : SupCard
 
     public override void CardFirstAbility(Player _caster, Player _target, int _index)
     {
-        // SoundManager.Instance.PlaySFXSound("Sub_01");
+        SoundManager.Instance.PlaySFXSound("Sub_01");
         _target.IsLocked = true;
     }
 
@@ -359,7 +362,7 @@ public class SupCard2 : SupCard
     {
         base.CardSecondAbility(_caster, _target, _index);
 
-        // SoundManager.Instance.PlaySFXSound("Sub_02");
+        SoundManager.Instance.PlaySFXSound("Sub_02");
         for (int i = 0; i < 3; i++)
         {
             if (_caster.CurHp == _caster.MaxHp)
@@ -394,7 +397,7 @@ public class SupCard3 : SupCard
     {
         base.CardSecondAbility(_caster, _target, _index);
 
-        // SoundManager.Instance.PlaySFXSound("Sub_03");
+        SoundManager.Instance.PlaySFXSound("Sub_03");
         
         CardManager.Instance.AddCard(_caster.PV().IsMine);
         CardManager.Instance.AddCard(_caster.PV().IsMine);

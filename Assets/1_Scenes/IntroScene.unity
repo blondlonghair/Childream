@@ -554,13 +554,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5406234522979291277, guid: a29d7acbcfc83db4a90fabddffdb7682, type: 3}
+      propertyPath: mainBgmAudioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 06ddd4c5431ed7f4e98216732d4f261f, type: 3}
+    - target: {fileID: 5406234522979291277, guid: a29d7acbcfc83db4a90fabddffdb7682, type: 3}
+      propertyPath: adventureBgmAudioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 42c0071aee6bdd744b7e61cefa3e9a25, type: 3}
     - target: {fileID: 5406234522979291279, guid: a29d7acbcfc83db4a90fabddffdb7682, type: 3}
       propertyPath: m_Name
       value: SoundManager
       objectReference: {fileID: 0}
     - target: {fileID: 5406234522979291279, guid: a29d7acbcfc83db4a90fabddffdb7682, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a29d7acbcfc83db4a90fabddffdb7682, type: 3}

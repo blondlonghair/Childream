@@ -18,6 +18,7 @@ public class LobbyScene : MonoBehaviourPunCallbacks
     private void Start()
     {
         // matchingDoor.OpenDoor();
+        SoundManager.Instance.PlayBGMSound();
     }
     
     public void Update()
@@ -45,7 +46,7 @@ public class LobbyScene : MonoBehaviourPunCallbacks
     {
         // print(GameObject.Find("SoundManager"));
         // GameObject.Find("SoundManager").GetComponent<SoundManager>().PlaySFXSound("Button_matching");
-        // SoundManager.Instance.PlaySFXSound("Button_matching");
+        SoundManager.Instance.PlaySFXSound("Button_matching");
         
         matchingDoor.gameObject.SetActive(true);
         matchingDoor.CloseDoor();
