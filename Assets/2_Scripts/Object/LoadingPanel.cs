@@ -13,6 +13,8 @@ public class LoadingPanel : MonoBehaviour
     private void Start()
     {
         Open();
+        if (TryGetComponent(out SpriteRenderer spriteRenderer))
+            spriteRenderer.enabled = true;
     }
 
     public void Open()

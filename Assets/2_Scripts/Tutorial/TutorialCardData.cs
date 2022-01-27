@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -11,7 +11,7 @@ using Photon.Realtime;
 using UnityEngine.UIElements;
 using Utils;
 
-namespace Online
+namespace Tutorial
 {
     public class Card : MonoBehaviour
     {
@@ -26,15 +26,15 @@ namespace Online
         public TargetType targetType;
 
         //카드 효과들 First는 시전시 발동, Second는 카드 인보크시 발동
-        public virtual void CardFirstAbility(Player _caster, Player _target, int _index)
+        public virtual void CardFirstAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
-            EffectManager.Instance.InitEffect(_caster, _target, _index, id);
+            TutorialEffectManager.Instance.InitEffect(_caster.gameObject, _target.gameObject, _index, id);
         }
 
-        public virtual void CardSecondAbility(Player _caster, Player _target, int _index)
+        public virtual void CardSecondAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
-            CardManager.Instance.ShowWatIUsed(_caster, _target, id);
-            EffectManager.Instance.InitEffect(_caster, _target, _index, id);
+            // TutorialCardManager.Instance.ShowWatIUsed(_caster, _target, id);
+            TutorialEffectManager.Instance.InitEffect(_caster.gameObject, _target.gameObject, _index, id);
         }
     }
 
@@ -42,19 +42,19 @@ namespace Online
     {
         public int damage;
 
-        protected void EnemyDefence(Player _caster, Player _target, int _index)
+        protected void EnemyDefence(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
             StartCoroutine(Co_Defence(_target));
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
             base.CardSecondAbility(_caster, _target, _index);
 
             StartCoroutine(Co_Attack(_caster));
         }
 
-        IEnumerator Co_Defence(Player _target)
+        IEnumerator Co_Defence(TutorialPlayer _target)
         {
             Vector3 firstPos = _target.transform.position;
 
@@ -69,7 +69,7 @@ namespace Online
             _target.transform.position = new Vector3(firstPos.x, _target.transform.position.y, 0);
         }
 
-        IEnumerator Co_Attack(Player _caster)
+        IEnumerator Co_Attack(TutorialPlayer _caster)
         {
             Vector3 movePos = new Vector3(_caster.transform.position.x,
                 (_caster.photonView.IsMine ? 1 : 3) * (PhotonNetwork.IsMasterClient ? -1 : 1));
@@ -108,14 +108,14 @@ namespace Online
     {
         public EmptyCard()
         {
-            id = CardData.CardTable[0].id;
-            cardName = CardData.CardTable[0].name;
-            cost = CardData.CardTable[0].cost;
-            cardDesc = CardData.CardTable[0].desc;
-            cardImage = CardData.CardTable[0].cardImage;
-            cardImageBG = CardData.CardTable[0].cardImageBG;
-            cardType = CardData.CardTable[0].cardType;
-            targetType = CardData.CardTable[0].targetType;
+            id = TutorialCardData.CardTable[0].id;
+            cardName = TutorialCardData.CardTable[0].name;
+            cost = TutorialCardData.CardTable[0].cost;
+            cardDesc = TutorialCardData.CardTable[0].desc;
+            cardImage = TutorialCardData.CardTable[0].cardImage;
+            cardImageBG = TutorialCardData.CardTable[0].cardImageBG;
+            cardType = TutorialCardData.CardTable[0].cardType;
+            targetType = TutorialCardData.CardTable[0].targetType;
         }
     }
 
@@ -123,23 +123,23 @@ namespace Online
     {
         public AtkCard1()
         {
-            id = CardData.CardTable[1].id;
-            cardName = CardData.CardTable[1].name;
-            cost = CardData.CardTable[1].cost;
-            cardDesc = CardData.CardTable[1].desc;
-            cardImage = CardData.CardTable[1].cardImage;
-            cardImageBG = CardData.CardTable[1].cardImageBG;
-            cardType = CardData.CardTable[1].cardType;
-            targetType = CardData.CardTable[1].targetType;
+            id = TutorialCardData.CardTable[1].id;
+            cardName = TutorialCardData.CardTable[1].name;
+            cost = TutorialCardData.CardTable[1].cost;
+            cardDesc = TutorialCardData.CardTable[1].desc;
+            cardImage = TutorialCardData.CardTable[1].cardImage;
+            cardImageBG = TutorialCardData.CardTable[1].cardImageBG;
+            cardType = TutorialCardData.CardTable[1].cardType;
+            targetType = TutorialCardData.CardTable[1].targetType;
             damage = 5;
             // damage = 20;
         }
 
-        public override void CardFirstAbility(Player _caster, Player _target, int _index)
+        public override void CardFirstAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
             base.CardSecondAbility(_caster, _target, _index);
 
@@ -147,8 +147,8 @@ namespace Online
             {
                 if (_target.DefMagic)
                 {
-                    EffectManager.Instance.InitEffect(_caster, _target, _index, 4);
-                    CardManager.Instance.ShowWatIUsed(_target, _caster, 4);
+                    TutorialEffectManager.Instance.InitEffect(_caster.gameObject, _target.gameObject, _index, 4);
+                    // TutorialCardManager.Instance.ShowWatIUsed(_target, _caster, 4);
                     SoundManager.Instance.PlaySFXSound("Guard_01~03");
                     _target.DefMagic = false;
                 }
@@ -166,30 +166,30 @@ namespace Online
     {
         public AtkCard2()
         {
-            id = CardData.CardTable[2].id;
-            cardName = CardData.CardTable[2].name;
-            cost = CardData.CardTable[2].cost;
-            cardDesc = CardData.CardTable[2].desc;
-            cardImage = CardData.CardTable[2].cardImage;
-            cardImageBG = CardData.CardTable[2].cardImageBG;
-            cardType = CardData.CardTable[2].cardType;
-            targetType = CardData.CardTable[2].targetType;
+            id = TutorialCardData.CardTable[2].id;
+            cardName = TutorialCardData.CardTable[2].name;
+            cost = TutorialCardData.CardTable[2].cost;
+            cardDesc = TutorialCardData.CardTable[2].desc;
+            cardImage = TutorialCardData.CardTable[2].cardImage;
+            cardImageBG = TutorialCardData.CardTable[2].cardImageBG;
+            cardType = TutorialCardData.CardTable[2].cardType;
+            targetType = TutorialCardData.CardTable[2].targetType;
             damage = 2;
             // damage = 20;
         }
 
-        public override void CardFirstAbility(Player _caster, Player _target, int _index)
+        public override void CardFirstAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
             base.CardSecondAbility(_caster, _target, _index);
 
             if (_target.DefElectricity)
             {
-                EffectManager.Instance.InitEffect(_caster, _target, _index, 5);
-                CardManager.Instance.ShowWatIUsed(_target, _caster, 5);
+                TutorialEffectManager.Instance.InitEffect(_caster.gameObject, _target.gameObject, _index, 5);
+                // TutorialCardManager.Instance.ShowWatIUsed(_target, _caster, 5);
                 SoundManager.Instance.PlaySFXSound("Guard_01~03");
                 _caster.CurHp -= 1;
                 _target.DefElectricity = false;
@@ -207,23 +207,23 @@ namespace Online
     {
         public AtkCard3()
         {
-            id = CardData.CardTable[3].id;
-            cardName = CardData.CardTable[3].name;
-            cost = CardData.CardTable[3].cost;
-            cardDesc = CardData.CardTable[3].desc;
-            cardImage = CardData.CardTable[3].cardImage;
-            cardImageBG = CardData.CardTable[3].cardImageBG;
-            cardType = CardData.CardTable[3].cardType;
-            targetType = CardData.CardTable[3].targetType;
+            id = TutorialCardData.CardTable[3].id;
+            cardName = TutorialCardData.CardTable[3].name;
+            cost = TutorialCardData.CardTable[3].cost;
+            cardDesc = TutorialCardData.CardTable[3].desc;
+            cardImage = TutorialCardData.CardTable[3].cardImage;
+            cardImageBG = TutorialCardData.CardTable[3].cardImageBG;
+            cardType = TutorialCardData.CardTable[3].cardType;
+            targetType = TutorialCardData.CardTable[3].targetType;
             damage = 10;
             // damage = 20;
         }
 
-        public override void CardFirstAbility(Player _caster, Player _target, int _index)
+        public override void CardFirstAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
             base.CardSecondAbility(_caster, _target, _index);
 
@@ -231,8 +231,8 @@ namespace Online
             {
                 if (_target.DefExplosion)
                 {
-                    EffectManager.Instance.InitEffect(_caster, _target, _index, 6);
-                    CardManager.Instance.ShowWatIUsed(_target, _caster, 6);
+                    TutorialEffectManager.Instance.InitEffect(_caster.gameObject, _target.gameObject, _index, 6);
+                    // TutorialCardManager.Instance.ShowWatIUsed(_target, _caster, 6);
                     SoundManager.Instance.PlaySFXSound("Guard_01~03");
                     _caster.CurHp -= damage / 2;
                     _target.DefExplosion = false;
@@ -251,22 +251,22 @@ namespace Online
     {
         public DefCard1()
         {
-            id = CardData.CardTable[4].id;
-            cardName = CardData.CardTable[4].name;
-            cost = CardData.CardTable[4].cost;
-            cardDesc = CardData.CardTable[4].desc;
-            cardImage = CardData.CardTable[4].cardImage;
-            cardImageBG = CardData.CardTable[4].cardImageBG;
-            cardType = CardData.CardTable[4].cardType;
-            targetType = CardData.CardTable[4].targetType;
+            id = TutorialCardData.CardTable[4].id;
+            cardName = TutorialCardData.CardTable[4].name;
+            cost = TutorialCardData.CardTable[4].cost;
+            cardDesc = TutorialCardData.CardTable[4].desc;
+            cardImage = TutorialCardData.CardTable[4].cardImage;
+            cardImageBG = TutorialCardData.CardTable[4].cardImageBG;
+            cardType = TutorialCardData.CardTable[4].cardType;
+            targetType = TutorialCardData.CardTable[4].targetType;
         }
 
-        public override void CardFirstAbility(Player _caster, Player _target, int _index)
+        public override void CardFirstAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
             _caster.DefMagic = true;
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
         }
     }
@@ -275,22 +275,22 @@ namespace Online
     {
         public DefCard2()
         {
-            id = CardData.CardTable[5].id;
-            cardName = CardData.CardTable[5].name;
-            cost = CardData.CardTable[5].cost;
-            cardDesc = CardData.CardTable[5].desc;
-            cardImage = CardData.CardTable[5].cardImage;
-            cardImageBG = CardData.CardTable[5].cardImageBG;
-            cardType = CardData.CardTable[5].cardType;
-            targetType = CardData.CardTable[5].targetType;
+            id = TutorialCardData.CardTable[5].id;
+            cardName = TutorialCardData.CardTable[5].name;
+            cost = TutorialCardData.CardTable[5].cost;
+            cardDesc = TutorialCardData.CardTable[5].desc;
+            cardImage = TutorialCardData.CardTable[5].cardImage;
+            cardImageBG = TutorialCardData.CardTable[5].cardImageBG;
+            cardType = TutorialCardData.CardTable[5].cardType;
+            targetType = TutorialCardData.CardTable[5].targetType;
         }
 
-        public override void CardFirstAbility(Player _caster, Player _target, int _index)
+        public override void CardFirstAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
             _caster.DefElectricity = true;
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
         }
     }
@@ -299,22 +299,22 @@ namespace Online
     {
         public DefCard3()
         {
-            id = CardData.CardTable[6].id;
-            cardName = CardData.CardTable[6].name;
-            cost = CardData.CardTable[6].cost;
-            cardDesc = CardData.CardTable[6].desc;
-            cardImage = CardData.CardTable[6].cardImage;
-            cardImageBG = CardData.CardTable[6].cardImageBG;
-            cardType = CardData.CardTable[6].cardType;
-            targetType = CardData.CardTable[6].targetType;
+            id = TutorialCardData.CardTable[6].id;
+            cardName = TutorialCardData.CardTable[6].name;
+            cost = TutorialCardData.CardTable[6].cost;
+            cardDesc = TutorialCardData.CardTable[6].desc;
+            cardImage = TutorialCardData.CardTable[6].cardImage;
+            cardImageBG = TutorialCardData.CardTable[6].cardImageBG;
+            cardType = TutorialCardData.CardTable[6].cardType;
+            targetType = TutorialCardData.CardTable[6].targetType;
         }
 
-        public override void CardFirstAbility(Player _caster, Player _target, int _index)
+        public override void CardFirstAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
             _caster.DefExplosion = true;
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
         }
     }
@@ -323,23 +323,23 @@ namespace Online
     {
         public SupCard1()
         {
-            id = CardData.CardTable[7].id;
-            cardName = CardData.CardTable[7].name;
-            cost = CardData.CardTable[7].cost;
-            cardDesc = CardData.CardTable[7].desc;
-            cardImage = CardData.CardTable[7].cardImage;
-            cardImageBG = CardData.CardTable[7].cardImageBG;
-            cardType = CardData.CardTable[7].cardType;
-            targetType = CardData.CardTable[7].targetType;
+            id = TutorialCardData.CardTable[7].id;
+            cardName = TutorialCardData.CardTable[7].name;
+            cost = TutorialCardData.CardTable[7].cost;
+            cardDesc = TutorialCardData.CardTable[7].desc;
+            cardImage = TutorialCardData.CardTable[7].cardImage;
+            cardImageBG = TutorialCardData.CardTable[7].cardImageBG;
+            cardType = TutorialCardData.CardTable[7].cardType;
+            targetType = TutorialCardData.CardTable[7].targetType;
         }
 
-        public override void CardFirstAbility(Player _caster, Player _target, int _index)
+        public override void CardFirstAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
             SoundManager.Instance.PlaySFXSound("Sub_01");
             _target.IsLocked = true;
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
         }
     }
@@ -348,21 +348,21 @@ namespace Online
     {
         public SupCard2()
         {
-            id = CardData.CardTable[8].id;
-            cardName = CardData.CardTable[8].name;
-            cost = CardData.CardTable[8].cost;
-            cardDesc = CardData.CardTable[8].desc;
-            cardImage = CardData.CardTable[8].cardImage;
-            cardImageBG = CardData.CardTable[8].cardImageBG;
-            cardType = CardData.CardTable[8].cardType;
-            targetType = CardData.CardTable[8].targetType;
+            id = TutorialCardData.CardTable[8].id;
+            cardName = TutorialCardData.CardTable[8].name;
+            cost = TutorialCardData.CardTable[8].cost;
+            cardDesc = TutorialCardData.CardTable[8].desc;
+            cardImage = TutorialCardData.CardTable[8].cardImage;
+            cardImageBG = TutorialCardData.CardTable[8].cardImageBG;
+            cardType = TutorialCardData.CardTable[8].cardType;
+            targetType = TutorialCardData.CardTable[8].targetType;
         }
 
-        public override void CardFirstAbility(Player _caster, Player _target, int _index)
+        public override void CardFirstAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
             base.CardSecondAbility(_caster, _target, _index);
 
@@ -383,34 +383,34 @@ namespace Online
     {
         public SupCard3()
         {
-            id = CardData.CardTable[9].id;
-            cardName = CardData.CardTable[9].name;
-            cost = CardData.CardTable[9].cost;
-            cardDesc = CardData.CardTable[9].desc;
-            cardImage = CardData.CardTable[9].cardImage;
-            cardImageBG = CardData.CardTable[9].cardImageBG;
-            cardType = CardData.CardTable[9].cardType;
-            targetType = CardData.CardTable[9].targetType;
+            id = TutorialCardData.CardTable[9].id;
+            cardName = TutorialCardData.CardTable[9].name;
+            cost = TutorialCardData.CardTable[9].cost;
+            cardDesc = TutorialCardData.CardTable[9].desc;
+            cardImage = TutorialCardData.CardTable[9].cardImage;
+            cardImageBG = TutorialCardData.CardTable[9].cardImageBG;
+            cardType = TutorialCardData.CardTable[9].cardType;
+            targetType = TutorialCardData.CardTable[9].targetType;
         }
 
-        public override void CardFirstAbility(Player _caster, Player _target, int _index)
+        public override void CardFirstAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
             base.CardSecondAbility(_caster, _target, _index);
 
             SoundManager.Instance.PlaySFXSound("Sub_03");
 
-            CardManager.Instance.AddCard(_caster.PV().IsMine);
-            CardManager.Instance.AddCard(_caster.PV().IsMine);
+            TutorialCardManager.Instance.AddCard();
+            TutorialCardManager.Instance.AddCard();
         }
     }
 
     public class Move : Card
     {
-        private Player caster;
+        private TutorialPlayer caster;
 
         public Move()
         {
@@ -418,11 +418,11 @@ namespace Online
             targetType = TargetType.MeSellect;
         }
 
-        public override void CardFirstAbility(Player _caster, Player _target, int _index)
+        public override void CardFirstAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(TutorialPlayer _caster, TutorialPlayer _target, int _index)
         {
             if (_caster.IsLocked) return;
 
@@ -459,7 +459,7 @@ namespace Online
                 }
             }
 
-            IEnumerator Co_Move(Player caster, Vector3 pos)
+            IEnumerator Co_Move(TutorialPlayer caster, Vector3 pos)
             {
                 while (!Mathf.Approximately(caster.transform.position.x, pos.x))
                 {
@@ -472,7 +472,7 @@ namespace Online
         }
     }
 
-    public class CardData : MonoBehaviour
+    public class TutorialCardData : MonoBehaviour
     {
         public static List<Card> CardList;
         public static List<CardInfo> CardTable;
@@ -509,6 +509,8 @@ namespace Online
             CardList.Add(supCard2);
             CardList.Add(supCard3);
             CardList.Add(move);
+            
+            print($"{CardList.Count} {CardList.Count}");
         }
     }
 }

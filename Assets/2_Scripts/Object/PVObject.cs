@@ -5,13 +5,16 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 
-public class PVObject : MonoBehaviourPunCallbacks
+namespace Online
 {
-    private void Start()
+    public class PVObject : MonoBehaviourPunCallbacks
     {
-        if (PhotonNetwork.IsMasterClient)
+        private void Start()
         {
-            transform.Rotate(0, 0, 180);
+            if (PhotonNetwork.IsMasterClient)
+            {
+                transform.Rotate(0, 0, 180);
+            }
         }
     }
 }

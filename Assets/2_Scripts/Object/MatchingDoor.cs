@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MatchingDoor : MonoBehaviour
 {
@@ -27,6 +28,10 @@ public class MatchingDoor : MonoBehaviour
 
         if (SceneManager.GetActiveScene().name == "IngameScene")
         {
+            if (TryGetComponent(out Image image))
+            {
+                image.enabled = true;
+            }
             animator.SetTrigger("DoorOpen");
         }
     }

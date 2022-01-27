@@ -3865,7 +3865,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnEndButton: {fileID: 1674109761}
-  _player: {fileID: 6467517843351582426}
+  _player: {fileID: 6467517843351582427}
   _ai: {fileID: 2341253664831296471}
   AIHpBar: {fileID: 790924429}
   PlayerHpBar: {fileID: 1965081640}

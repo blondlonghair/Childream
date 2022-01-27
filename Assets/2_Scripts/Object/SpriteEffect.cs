@@ -28,7 +28,6 @@ public class SpriteEffect : MonoBehaviour
             color.a -= 0.1f;
             _spriteRenderer.color = color;
             transform.localScale += Vector3.one * 0.1f;
-            // transform.position = _firstPosition + new Vector3(Random.Range(0.2f, -0.2f), Random.Range(0.2f, -0.2f));
             yield return new WaitForSeconds(0.01f);
         }
         Destroy(gameObject);
