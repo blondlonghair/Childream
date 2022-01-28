@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Tutorial
 {
-    public class TutorialGameManager : SingletonMonoDestroy<TutorialGameManager>
+    public class TutorialGameManager : PunSingletonMonoDestroy<TutorialGameManager>
     {
         public List<Tuple<int, int>> hostBattleList = new List<Tuple<int, int>>(); //first : 카드 ID, second : range 번호
         public List<Tuple<int, int>> guestBattleList = new List<Tuple<int, int>>();

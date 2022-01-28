@@ -14,10 +14,10 @@ using Utils;
 
 namespace Online
 {
-    public class GameManager : SingletonMonoDestroy<GameManager>
+    public class GameManager : PunSingletonMonoDestroy<GameManager>
     {
         [Header("Manager")] public GameState gameState = GameState.None;
-        public Player hostPlayer, guestPlayer;
+        public OnPlayer hostOnPlayer, guestOnPlayer;
         public bool isHostReady, isGuestReady;
         public List<Tuple<int, int>> hostBattleList = new List<Tuple<int, int>>(); //first : 카드 ID, second : range 번호
         public List<Tuple<int, int>> guestBattleList = new List<Tuple<int, int>>();
@@ -90,15 +90,15 @@ namespace Online
 
             if (PhotonNetwork.IsMasterClient)
             {
-                myHpBar.SliderValue(hostPlayer.CurHp / hostPlayer.MaxHp);
-                EnemyHpBar.SliderValue(guestPlayer.CurHp / guestPlayer.MaxHp);
-                myMpBar.value = hostPlayer.CurMp / hostPlayer.MaxMp;
+                myHpBar.SliderValue(hostOnPlayer.CurHp / hostOnPlayer.MaxHp);
+                EnemyHpBar.SliderValue(guestOnPlayer.CurHp / guestOnPlayer.MaxHp);
+                myMpBar.value = hostOnPlayer.CurMp / hostOnPlayer.MaxMp;
             }
             else
             {
-                myHpBar.SliderValue(guestPlayer.CurHp / guestPlayer.MaxHp);
-                EnemyHpBar.SliderValue(hostPlayer.CurHp / hostPlayer.MaxHp);
-                myMpBar.value = guestPlayer.CurMp / guestPlayer.MaxMp;
+                myHpBar.SliderValue(guestOnPlayer.CurHp / guestOnPlayer.MaxHp);
+                EnemyHpBar.SliderValue(hostOnPlayer.CurHp / hostOnPlayer.MaxHp);
+                myMpBar.value = guestOnPlayer.CurMp / guestOnPlayer.MaxMp;
             }
         }
 
@@ -117,10 +117,10 @@ namespace Online
 
             PV.RPC(nameof(InitPlayers), RpcTarget.AllBuffered);
 
-            CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
-            CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
-            CardManager.Instance.AddCard(guestPlayer.PV().IsMine);
-            CardManager.Instance.AddCard(guestPlayer.PV().IsMine);
+            CardManager.Instance.AddCard(hostOnPlayer.PV().IsMine);
+            CardManager.Instance.AddCard(hostOnPlayer.PV().IsMine);
+            CardManager.Instance.AddCard(guestOnPlayer.PV().IsMine);
+            CardManager.Instance.AddCard(guestOnPlayer.PV().IsMine);
 
             gameState = GameState.StartTurn;
         }
@@ -130,7 +130,7 @@ namespace Online
             cardInvokeTimer += Time.deltaTime;
 
             //게임 끝인지 확인
-            if (hostPlayer.CurHp <= 0 || guestPlayer.CurHp <= 0)
+            if (hostOnPlayer.CurHp <= 0 || guestOnPlayer.CurHp <= 0)
             {
                 cardInvokeTimer = 0;
                 gameState = GameState.GameEnd;
@@ -146,16 +146,16 @@ namespace Online
                 }
 
                 //플레이어 이동 잠금은 첫번째로 발동되게  
-                if (hostBattleList.Any(x => CardData.CardList[x.Item2]?.id == 7))
+                if (hostBattleList.Any(x => OnCardData.CardList[x.Item2]?.id == 7))
                 {
-                    var hostSupCard = hostBattleList.Find(x => CardData.CardList[x.Item2]?.id == 7);
+                    var hostSupCard = hostBattleList.Find(x => OnCardData.CardList[x.Item2]?.id == 7);
                     hostBattleList.Remove(hostSupCard);
                     hostBattleList.Insert(0, hostSupCard);
                 }
 
-                if (guestBattleList.Any(x => CardData.CardList[x.Item2]?.id == 7))
+                if (guestBattleList.Any(x => OnCardData.CardList[x.Item2]?.id == 7))
                 {
-                    var guestSupCard = guestBattleList.Find(x => CardData.CardList[x.Item2]?.id == 7);
+                    var guestSupCard = guestBattleList.Find(x => OnCardData.CardList[x.Item2]?.id == 7);
                     guestBattleList.Remove(guestSupCard);
                     guestBattleList.Insert(0, guestSupCard);
                 }
@@ -164,22 +164,22 @@ namespace Online
                 {
                     if (hostBattleList.Count > 0)
                     {
-                        var firstHostCard = CardData.CardList[hostBattleList[0].Item2];
+                        var firstHostCard = OnCardData.CardList[hostBattleList[0].Item2];
 
                         print(firstHostCard);
 
-                        firstHostCard?.CardSecondAbility(hostPlayer, guestPlayer, hostBattleList[0].Item1);
+                        firstHostCard?.CardSecondAbility(hostOnPlayer, guestOnPlayer, hostBattleList[0].Item1);
 
                         hostBattleList.RemoveAt(0);
                     }
 
                     if (guestBattleList.Count > 0)
                     {
-                        var firstGuestCard = CardData.CardList[guestBattleList[0].Item2];
+                        var firstGuestCard = OnCardData.CardList[guestBattleList[0].Item2];
 
                         print(firstGuestCard);
 
-                        firstGuestCard?.CardSecondAbility(guestPlayer, hostPlayer, guestBattleList[0].Item1);
+                        firstGuestCard?.CardSecondAbility(guestOnPlayer, hostOnPlayer, guestBattleList[0].Item1);
 
                         guestBattleList.RemoveAt(0);
                     }
@@ -193,27 +193,27 @@ namespace Online
         {
             gameStatePanel.ShowPanel(PanelState.TurnStart);
 
-            CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
-            CardManager.Instance.AddCard(hostPlayer.PV().IsMine);
-            CardManager.Instance.AddCard(guestPlayer.PV().IsMine);
-            CardManager.Instance.AddCard(guestPlayer.PV().IsMine);
+            CardManager.Instance.AddCard(hostOnPlayer.PV().IsMine);
+            CardManager.Instance.AddCard(hostOnPlayer.PV().IsMine);
+            CardManager.Instance.AddCard(guestOnPlayer.PV().IsMine);
+            CardManager.Instance.AddCard(guestOnPlayer.PV().IsMine);
 
             //플레이어 잠금효과 헤제
-            hostPlayer.IsLocked = false;
-            guestPlayer.IsLocked = false;
+            hostOnPlayer.IsLocked = false;
+            guestOnPlayer.IsLocked = false;
 
-            hostPlayer.DefElectricity = false;
-            hostPlayer.DefExplosion = false;
-            hostPlayer.DefMagic = false;
-            guestPlayer.DefElectricity = false;
-            guestPlayer.DefExplosion = false;
-            guestPlayer.DefMagic = false;
+            hostOnPlayer.DefElectricity = false;
+            hostOnPlayer.DefExplosion = false;
+            hostOnPlayer.DefMagic = false;
+            guestOnPlayer.DefElectricity = false;
+            guestOnPlayer.DefExplosion = false;
+            guestOnPlayer.DefMagic = false;
 
-            hostPlayer.CurMp = hostPlayer.MaxMp;
-            guestPlayer.CurMp = guestPlayer.MaxMp;
+            hostOnPlayer.CurMp = hostOnPlayer.MaxMp;
+            guestOnPlayer.CurMp = guestOnPlayer.MaxMp;
 
-            hostPlayer.isPlayerTurn = true;
-            guestPlayer.isPlayerTurn = true;
+            hostOnPlayer.isPlayerTurn = true;
+            guestOnPlayer.isPlayerTurn = true;
 
             // hostPlayer.CurState = hostPlayer.nextRange;
             // guestPlayer.CurState = guestPlayer.nextRange;
@@ -239,19 +239,19 @@ namespace Online
         {
             gameStatePanel.ShowPanel(PanelState.Result);
 
-            hostPlayer.isPlayerTurn = false;
-            guestPlayer.isPlayerTurn = false;
+            hostOnPlayer.isPlayerTurn = false;
+            guestOnPlayer.isPlayerTurn = false;
 
             if (PhotonNetwork.IsMasterClient
-                    ? (hostPlayer.CurState != hostPlayer.nextRange)
-                    : (guestPlayer.CurState != guestPlayer.nextRange))
+                    ? (hostOnPlayer.CurState != hostOnPlayer.nextRange)
+                    : (guestOnPlayer.CurState != guestOnPlayer.nextRange))
             {
-                print(PhotonNetwork.IsMasterClient ? hostPlayer.nextRange : guestPlayer.nextRange);
+                print(PhotonNetwork.IsMasterClient ? hostOnPlayer.nextRange : guestOnPlayer.nextRange);
                 // AddBattleList(PhotonNetwork.IsMasterClient ? hostPlayer.nextRange : guestPlayer.nextRange, 10, PhotonNetwork.IsMasterClient);
-                if ((PhotonNetwork.IsMasterClient ? hostPlayer : guestPlayer).CurState !=
-                    (PhotonNetwork.IsMasterClient ? hostPlayer : guestPlayer).nextRange - 3)
+                if ((PhotonNetwork.IsMasterClient ? hostOnPlayer : guestOnPlayer).CurState !=
+                    (PhotonNetwork.IsMasterClient ? hostOnPlayer : guestOnPlayer).nextRange - 3)
                 {
-                    AddBattleList(PhotonNetwork.IsMasterClient ? hostPlayer.nextRange : guestPlayer.nextRange, 10,
+                    AddBattleList(PhotonNetwork.IsMasterClient ? hostOnPlayer.nextRange : guestOnPlayer.nextRange, 10,
                         PhotonNetwork.IsMasterClient);
                 }
             }
@@ -262,8 +262,8 @@ namespace Online
         void OnGameEnd()
         {
             isPlayerWin = PhotonNetwork.IsMasterClient
-                ? !(hostPlayer.CurHp <= 0)
-                : !(guestPlayer.CurHp <= 0);
+                ? !(hostOnPlayer.CurHp <= 0)
+                : !(guestOnPlayer.CurHp <= 0);
 
             if (isPlayerWin == true)
             {
@@ -315,14 +315,14 @@ namespace Online
         void _HostReady()
         {
             isHostReady = true;
-            hostPlayer.isPlayerTurn = false;
+            hostOnPlayer.isPlayerTurn = false;
         }
 
         [PunRPC]
         void _GuestReady()
         {
             isGuestReady = true;
-            guestPlayer.isPlayerTurn = false;
+            guestOnPlayer.isPlayerTurn = false;
         }
 
         public void AddBattleList(int SelectRange, int id, bool isHost)
@@ -340,22 +340,22 @@ namespace Online
         [PunRPC]
         private void _AddHostBattleList(int SelectRange, int cardId)
         {
-            CardData.CardList[cardId].CardFirstAbility(hostPlayer, guestPlayer, SelectRange);
+            OnCardData.CardList[cardId].CardFirstAbility(hostOnPlayer, guestOnPlayer, SelectRange);
             hostBattleList.Add(new Tuple<int, int>(SelectRange, cardId));
         }
 
         [PunRPC]
         private void _AddGuestBattleList(int SelectRange, int cardId)
         {
-            CardData.CardList[cardId].CardFirstAbility(guestPlayer, hostPlayer, SelectRange);
+            OnCardData.CardList[cardId].CardFirstAbility(guestOnPlayer, hostOnPlayer, SelectRange);
             guestBattleList.Add(new Tuple<int, int>(SelectRange, cardId));
         }
 
         [PunRPC]
         void InitPlayers()
         {
-            hostPlayer = GameObject.Find("HostPlayer").GetComponent<Player>();
-            guestPlayer = GameObject.Find("GuestPlayer").GetComponent<Player>();
+            hostOnPlayer = GameObject.Find("HostPlayer").GetComponent<OnPlayer>();
+            guestOnPlayer = GameObject.Find("GuestPlayer").GetComponent<OnPlayer>();
         }
 
         bool Checkplayers() => GameObject.FindGameObjectsWithTag("Player").Length == 2;

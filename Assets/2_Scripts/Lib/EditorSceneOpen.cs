@@ -20,7 +20,7 @@ public class EditorSceneOpen
         OpenScene("Assets/1_Scenes/LobbyScene.unity");
     }
     
-    [MenuItem("Scenes/3.IngameScene")]
+    [MenuItem("Scenes/3.InIngameScene")]
     public static void OpenScene_Ingame()
     {
         OpenScene("Assets/1_Scenes/IngameScene.unity");
@@ -42,6 +42,12 @@ public class EditorSceneOpen
     public static void OpenScene_Test()
     {
         OpenScene("Assets/1_Scenes/Test.unity");
+    }
+    
+    [MenuItem("Scenes/7.OffIngame")]
+    public static void OpenScene_OffIngame()
+    {
+        OpenScene("Assets/1_Scenes/OfflineIngameScene.unity");
     }
     
     public static void OpenScene(string scenepath)

@@ -13,7 +13,7 @@ using Random = UnityEngine.Random;
 
 namespace Online
 {
-    public class CardManager : SingletonMonoDestroy<CardManager>
+    public class CardManager : PunSingletonMonoDestroy<CardManager>
     {
         public List<ThisCard> hostCards;
         public List<ThisCard> guestCards;
@@ -25,7 +25,7 @@ namespace Online
 
         [Header("카드 드로우 위치")] [SerializeField] private Transform hostCardDraw;
         [SerializeField] private Transform guestCardDraw;
-
+ 
         [Header("카드 효과발동 위치")] [SerializeField]
         private Transform hostCardActive;
 
@@ -141,9 +141,9 @@ namespace Online
         //카드 뽑을때 카드 9장 랜덤 셔플
         void SetupCard()
         {
-            for (int i = 1; i < CardData.CardList.Count - 1; i++)
+            for (int i = 1; i < OnCardData.CardList.Count - 1; i++)
             {
-                Card card = CardData.CardList[i];
+                Card card = OnCardData.CardList[i];
                 cardBuffer.Add(card);
             }
 
@@ -244,7 +244,7 @@ namespace Online
             return results;
         }
 
-        public void ShowWatIUsed(Player _caster, Player _target, int cardId)
+        public void ShowWatIUsed(OnPlayer _caster, OnPlayer _target, int cardId)
         {
             GameObject card = Instantiate(resultCard, new Vector3(0, 0, 0),
                 PhotonNetwork.IsMasterClient ? Quaternion.Euler(0, 0, 180) : Quaternion.Euler(0, 0, 0),

@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Online
 {
-    public class EffectManager : SingletonMonoDestroy<EffectManager>
+    public class EffectManager : PunSingletonMonoDestroy<EffectManager>
     {
         [SerializeField] private GameObject attack1;
         [SerializeField] private GameObject attack2;
@@ -31,7 +31,7 @@ namespace Online
 
         private float rangePos = 2.7f;
 
-        public void InitEffect(Player _caster, Player _target, int _index, int _effectId)
+        public void InitEffect(OnPlayer _caster, OnPlayer _target, int _index, int _effectId)
         {
             SpawnEffect(_caster, _target, _effectId);
 
@@ -54,54 +54,54 @@ namespace Online
             // }
         }
 
-        private void SpawnEffect(Player _caster, Player _target, int _effectId)
+        private void SpawnEffect(OnPlayer _caster, OnPlayer _target, int _effectId)
         {
             GameObject obj;
-            Player player;
+            OnPlayer onPlayer;
 
             switch (_effectId)
             {
                 case 1:
                     obj = attack1;
-                    player = _target;
+                    onPlayer = _target;
                     break;
                 case 2:
                     obj = attack2;
-                    player = _target;
+                    onPlayer = _target;
                     break;
                 case 3:
                     obj = attack3;
-                    player = _target;
+                    onPlayer = _target;
                     break;
                 case 4:
                 case 5:
                 case 6:
                     obj = defence;
-                    player = _target;
+                    onPlayer = _target;
                     break;
                 case 7:
                     obj = support1;
-                    player = _caster;
+                    onPlayer = _caster;
                     break;
                 case 8:
                     obj = support2;
-                    player = _caster;
+                    onPlayer = _caster;
                     break;
                 default:
                     obj = null;
-                    player = _caster;
+                    onPlayer = _caster;
                     break;
             }
 
             if (_effectId != 9)
             {
-                Instantiate(obj, player.transform.position,
-                    Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0), player.transform);
+                Instantiate(obj, onPlayer.transform.position,
+                    Quaternion.Euler(0, 0, PhotonNetwork.IsMasterClient ? 180 : 0), onPlayer.transform);
 
             }
         }
 
-        IEnumerator EffectAtk1Update(Player _caster, Player _target, Vector3 _targetPos, params GameObject[] _effect)
+        IEnumerator EffectAtk1Update(OnPlayer _caster, OnPlayer _target, Vector3 _targetPos, params GameObject[] _effect)
         {
             GameObject effectObj = Instantiate(_effect[0], _caster.transform.position, quaternion.identity);
             yield return null;
@@ -122,7 +122,7 @@ namespace Online
             yield return null;
         }
 
-        IEnumerator EffectAtk2Update(Player _caster, Player _target, Vector3 _targetPos, params GameObject[] _effect)
+        IEnumerator EffectAtk2Update(OnPlayer _caster, OnPlayer _target, Vector3 _targetPos, params GameObject[] _effect)
         {
             GameObject[] effectObj = new GameObject[3];
             effectObj[0] = Instantiate(_effect[0], new Vector3(rangePos, _targetPos.y, 0), quaternion.identity);
@@ -138,7 +138,7 @@ namespace Online
             yield return null;
         }
 
-        IEnumerator EffectAtk3Update(Player _caster, Player _target, Vector3 _targetPos, params GameObject[] _effect)
+        IEnumerator EffectAtk3Update(OnPlayer _caster, OnPlayer _target, Vector3 _targetPos, params GameObject[] _effect)
         {
             GameObject effectObj = Instantiate(_effect[0], _targetPos, Quaternion.Euler(90, 0, 0));
             yield return new WaitForSeconds(2);
@@ -147,7 +147,7 @@ namespace Online
             yield return null;
         }
 
-        IEnumerator EffectDefUpdate(Player _caster, Player _target, Vector3 _targetPos, params GameObject[] _effect)
+        IEnumerator EffectDefUpdate(OnPlayer _caster, OnPlayer _target, Vector3 _targetPos, params GameObject[] _effect)
         {
             GameObject effectObj = Instantiate(_effect[0], _targetPos, quaternion.identity);
             yield return new WaitForSeconds(2);
@@ -156,7 +156,7 @@ namespace Online
             yield return null;
         }
 
-        IEnumerator EffectSup1Update(Player _caster, Player _target, Vector3 _targetPos, params GameObject[] _effect)
+        IEnumerator EffectSup1Update(OnPlayer _caster, OnPlayer _target, Vector3 _targetPos, params GameObject[] _effect)
         {
             GameObject[] effectObj = new GameObject[] { };
 
@@ -190,7 +190,7 @@ namespace Online
             yield return null;
         }
 
-        IEnumerator EffectSup2Update(Player _caster, Player _target, Vector3 _targetPos, params GameObject[] _effect)
+        IEnumerator EffectSup2Update(OnPlayer _caster, OnPlayer _target, Vector3 _targetPos, params GameObject[] _effect)
         {
             GameObject effectObj = Instantiate(_effect[0], _caster.transform.position, Quaternion.identity);
             yield return new WaitForSeconds(2);
@@ -199,7 +199,7 @@ namespace Online
             yield return null;
         }
 
-        IEnumerator EffectSup3Update(Player _caster, Player _target, Vector3 _targetPos, params GameObject[] _effect)
+        IEnumerator EffectSup3Update(OnPlayer _caster, OnPlayer _target, Vector3 _targetPos, params GameObject[] _effect)
         {
             GameObject effectObj = Instantiate(_effect[0], Vector3.zero, quaternion.identity);
             yield return new WaitForSeconds(2);

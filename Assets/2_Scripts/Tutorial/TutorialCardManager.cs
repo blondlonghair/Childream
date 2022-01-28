@@ -13,7 +13,7 @@ using Random = UnityEngine.Random;
 
 namespace Tutorial
 {
-    public class TutorialCardManager : SingletonMonoDestroy<TutorialCardManager>
+    public class TutorialCardManager : PunSingletonMonoDestroy<TutorialCardManager>
     {
         public List<TutorialThisCard> hostCards;
         public List<TutorialThisCard> guestCards;

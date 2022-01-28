@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace Tutorial
 {
-    public class TutorialEffectManager : SingletonMonoDestroy<TutorialEffectManager>
+    public class TutorialEffectManager : PunSingletonMonoDestroy<TutorialEffectManager>
     {
         [SerializeField] private GameObject Atk1_1;
         [SerializeField] private GameObject Atk1_2;

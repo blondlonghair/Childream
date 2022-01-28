@@ -17,7 +17,7 @@ using Vector3 = UnityEngine.Vector3;
 
 namespace Online
 {
-    public class Player : MonoBehaviourPunCallbacks
+    public class OnPlayer : MonoBehaviourPunCallbacks
     {
         [SerializeField] private GameObject nextPosArrow;
 

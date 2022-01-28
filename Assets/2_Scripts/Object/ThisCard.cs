@@ -159,14 +159,14 @@ namespace Online
         {
             cardId = _id;
 
-            id = CardData.CardList[cardId].id;
-            cardName = CardData.CardList[cardId].cardName;
-            cost = CardData.CardList[cardId].cost;
-            cardType = CardData.CardList[cardId].cardType;
-            targetType = CardData.CardList[cardId].targetType;
-            cardDesc = CardData.CardList[cardId].cardDesc;
-            cardImage = CardData.CardList[cardId].cardImage;
-            cardImageBG = CardData.CardList[cardId].cardImageBG;
+            id = OnCardData.CardList[cardId].id;
+            cardName = OnCardData.CardList[cardId].cardName;
+            cost = OnCardData.CardList[cardId].cost;
+            cardType = OnCardData.CardList[cardId].cardType;
+            targetType = OnCardData.CardList[cardId].targetType;
+            cardDesc = OnCardData.CardList[cardId].cardDesc;
+            cardImage = OnCardData.CardList[cardId].cardImage;
+            cardImageBG = OnCardData.CardList[cardId].cardImageBG;
 
             nameText.text = cardName;
             costText.text = cost.ToString();

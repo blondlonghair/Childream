@@ -26,12 +26,12 @@ namespace Online
         public TargetType targetType;
 
         //카드 효과들 First는 시전시 발동, Second는 카드 인보크시 발동
-        public virtual void CardFirstAbility(Player _caster, Player _target, int _index)
+        public virtual void CardFirstAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
             EffectManager.Instance.InitEffect(_caster, _target, _index, id);
         }
 
-        public virtual void CardSecondAbility(Player _caster, Player _target, int _index)
+        public virtual void CardSecondAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
             CardManager.Instance.ShowWatIUsed(_caster, _target, id);
             EffectManager.Instance.InitEffect(_caster, _target, _index, id);
@@ -42,19 +42,19 @@ namespace Online
     {
         public int damage;
 
-        protected void EnemyDefence(Player _caster, Player _target, int _index)
+        protected void EnemyDefence(OnPlayer _caster, OnPlayer _target, int _index)
         {
             StartCoroutine(Co_Defence(_target));
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
             base.CardSecondAbility(_caster, _target, _index);
 
             StartCoroutine(Co_Attack(_caster));
         }
 
-        IEnumerator Co_Defence(Player _target)
+        IEnumerator Co_Defence(OnPlayer _target)
         {
             Vector3 firstPos = _target.transform.position;
 
@@ -69,7 +69,7 @@ namespace Online
             _target.transform.position = new Vector3(firstPos.x, _target.transform.position.y, 0);
         }
 
-        IEnumerator Co_Attack(Player _caster)
+        IEnumerator Co_Attack(OnPlayer _caster)
         {
             Vector3 movePos = new Vector3(_caster.transform.position.x,
                 (_caster.photonView.IsMine ? 1 : 3) * (PhotonNetwork.IsMasterClient ? -1 : 1));
@@ -108,14 +108,14 @@ namespace Online
     {
         public EmptyCard()
         {
-            id = CardData.CardTable[0].id;
-            cardName = CardData.CardTable[0].name;
-            cost = CardData.CardTable[0].cost;
-            cardDesc = CardData.CardTable[0].desc;
-            cardImage = CardData.CardTable[0].cardImage;
-            cardImageBG = CardData.CardTable[0].cardImageBG;
-            cardType = CardData.CardTable[0].cardType;
-            targetType = CardData.CardTable[0].targetType;
+            id = OnCardData.CardTable[0].id;
+            cardName = OnCardData.CardTable[0].name;
+            cost = OnCardData.CardTable[0].cost;
+            cardDesc = OnCardData.CardTable[0].desc;
+            cardImage = OnCardData.CardTable[0].cardImage;
+            cardImageBG = OnCardData.CardTable[0].cardImageBG;
+            cardType = OnCardData.CardTable[0].cardType;
+            targetType = OnCardData.CardTable[0].targetType;
         }
     }
 
@@ -123,23 +123,23 @@ namespace Online
     {
         public AtkCard1()
         {
-            id = CardData.CardTable[1].id;
-            cardName = CardData.CardTable[1].name;
-            cost = CardData.CardTable[1].cost;
-            cardDesc = CardData.CardTable[1].desc;
-            cardImage = CardData.CardTable[1].cardImage;
-            cardImageBG = CardData.CardTable[1].cardImageBG;
-            cardType = CardData.CardTable[1].cardType;
-            targetType = CardData.CardTable[1].targetType;
+            id = OnCardData.CardTable[1].id;
+            cardName = OnCardData.CardTable[1].name;
+            cost = OnCardData.CardTable[1].cost;
+            cardDesc = OnCardData.CardTable[1].desc;
+            cardImage = OnCardData.CardTable[1].cardImage;
+            cardImageBG = OnCardData.CardTable[1].cardImageBG;
+            cardType = OnCardData.CardTable[1].cardType;
+            targetType = OnCardData.CardTable[1].targetType;
             damage = 5;
             // damage = 20;
         }
 
-        public override void CardFirstAbility(Player _caster, Player _target, int _index)
+        public override void CardFirstAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
             base.CardSecondAbility(_caster, _target, _index);
 
@@ -166,23 +166,23 @@ namespace Online
     {
         public AtkCard2()
         {
-            id = CardData.CardTable[2].id;
-            cardName = CardData.CardTable[2].name;
-            cost = CardData.CardTable[2].cost;
-            cardDesc = CardData.CardTable[2].desc;
-            cardImage = CardData.CardTable[2].cardImage;
-            cardImageBG = CardData.CardTable[2].cardImageBG;
-            cardType = CardData.CardTable[2].cardType;
-            targetType = CardData.CardTable[2].targetType;
+            id = OnCardData.CardTable[2].id;
+            cardName = OnCardData.CardTable[2].name;
+            cost = OnCardData.CardTable[2].cost;
+            cardDesc = OnCardData.CardTable[2].desc;
+            cardImage = OnCardData.CardTable[2].cardImage;
+            cardImageBG = OnCardData.CardTable[2].cardImageBG;
+            cardType = OnCardData.CardTable[2].cardType;
+            targetType = OnCardData.CardTable[2].targetType;
             damage = 2;
             // damage = 20;
         }
 
-        public override void CardFirstAbility(Player _caster, Player _target, int _index)
+        public override void CardFirstAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
             base.CardSecondAbility(_caster, _target, _index);
 
@@ -207,23 +207,23 @@ namespace Online
     {
         public AtkCard3()
         {
-            id = CardData.CardTable[3].id;
-            cardName = CardData.CardTable[3].name;
-            cost = CardData.CardTable[3].cost;
-            cardDesc = CardData.CardTable[3].desc;
-            cardImage = CardData.CardTable[3].cardImage;
-            cardImageBG = CardData.CardTable[3].cardImageBG;
-            cardType = CardData.CardTable[3].cardType;
-            targetType = CardData.CardTable[3].targetType;
+            id = OnCardData.CardTable[3].id;
+            cardName = OnCardData.CardTable[3].name;
+            cost = OnCardData.CardTable[3].cost;
+            cardDesc = OnCardData.CardTable[3].desc;
+            cardImage = OnCardData.CardTable[3].cardImage;
+            cardImageBG = OnCardData.CardTable[3].cardImageBG;
+            cardType = OnCardData.CardTable[3].cardType;
+            targetType = OnCardData.CardTable[3].targetType;
             damage = 10;
             // damage = 20;
         }
 
-        public override void CardFirstAbility(Player _caster, Player _target, int _index)
+        public override void CardFirstAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
             base.CardSecondAbility(_caster, _target, _index);
 
@@ -251,22 +251,22 @@ namespace Online
     {
         public DefCard1()
         {
-            id = CardData.CardTable[4].id;
-            cardName = CardData.CardTable[4].name;
-            cost = CardData.CardTable[4].cost;
-            cardDesc = CardData.CardTable[4].desc;
-            cardImage = CardData.CardTable[4].cardImage;
-            cardImageBG = CardData.CardTable[4].cardImageBG;
-            cardType = CardData.CardTable[4].cardType;
-            targetType = CardData.CardTable[4].targetType;
+            id = OnCardData.CardTable[4].id;
+            cardName = OnCardData.CardTable[4].name;
+            cost = OnCardData.CardTable[4].cost;
+            cardDesc = OnCardData.CardTable[4].desc;
+            cardImage = OnCardData.CardTable[4].cardImage;
+            cardImageBG = OnCardData.CardTable[4].cardImageBG;
+            cardType = OnCardData.CardTable[4].cardType;
+            targetType = OnCardData.CardTable[4].targetType;
         }
 
-        public override void CardFirstAbility(Player _caster, Player _target, int _index)
+        public override void CardFirstAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
             _caster.DefMagic = true;
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
         }
     }
@@ -275,22 +275,22 @@ namespace Online
     {
         public DefCard2()
         {
-            id = CardData.CardTable[5].id;
-            cardName = CardData.CardTable[5].name;
-            cost = CardData.CardTable[5].cost;
-            cardDesc = CardData.CardTable[5].desc;
-            cardImage = CardData.CardTable[5].cardImage;
-            cardImageBG = CardData.CardTable[5].cardImageBG;
-            cardType = CardData.CardTable[5].cardType;
-            targetType = CardData.CardTable[5].targetType;
+            id = OnCardData.CardTable[5].id;
+            cardName = OnCardData.CardTable[5].name;
+            cost = OnCardData.CardTable[5].cost;
+            cardDesc = OnCardData.CardTable[5].desc;
+            cardImage = OnCardData.CardTable[5].cardImage;
+            cardImageBG = OnCardData.CardTable[5].cardImageBG;
+            cardType = OnCardData.CardTable[5].cardType;
+            targetType = OnCardData.CardTable[5].targetType;
         }
 
-        public override void CardFirstAbility(Player _caster, Player _target, int _index)
+        public override void CardFirstAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
             _caster.DefElectricity = true;
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
         }
     }
@@ -299,22 +299,22 @@ namespace Online
     {
         public DefCard3()
         {
-            id = CardData.CardTable[6].id;
-            cardName = CardData.CardTable[6].name;
-            cost = CardData.CardTable[6].cost;
-            cardDesc = CardData.CardTable[6].desc;
-            cardImage = CardData.CardTable[6].cardImage;
-            cardImageBG = CardData.CardTable[6].cardImageBG;
-            cardType = CardData.CardTable[6].cardType;
-            targetType = CardData.CardTable[6].targetType;
+            id = OnCardData.CardTable[6].id;
+            cardName = OnCardData.CardTable[6].name;
+            cost = OnCardData.CardTable[6].cost;
+            cardDesc = OnCardData.CardTable[6].desc;
+            cardImage = OnCardData.CardTable[6].cardImage;
+            cardImageBG = OnCardData.CardTable[6].cardImageBG;
+            cardType = OnCardData.CardTable[6].cardType;
+            targetType = OnCardData.CardTable[6].targetType;
         }
 
-        public override void CardFirstAbility(Player _caster, Player _target, int _index)
+        public override void CardFirstAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
             _caster.DefExplosion = true;
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
         }
     }
@@ -323,23 +323,23 @@ namespace Online
     {
         public SupCard1()
         {
-            id = CardData.CardTable[7].id;
-            cardName = CardData.CardTable[7].name;
-            cost = CardData.CardTable[7].cost;
-            cardDesc = CardData.CardTable[7].desc;
-            cardImage = CardData.CardTable[7].cardImage;
-            cardImageBG = CardData.CardTable[7].cardImageBG;
-            cardType = CardData.CardTable[7].cardType;
-            targetType = CardData.CardTable[7].targetType;
+            id = OnCardData.CardTable[7].id;
+            cardName = OnCardData.CardTable[7].name;
+            cost = OnCardData.CardTable[7].cost;
+            cardDesc = OnCardData.CardTable[7].desc;
+            cardImage = OnCardData.CardTable[7].cardImage;
+            cardImageBG = OnCardData.CardTable[7].cardImageBG;
+            cardType = OnCardData.CardTable[7].cardType;
+            targetType = OnCardData.CardTable[7].targetType;
         }
 
-        public override void CardFirstAbility(Player _caster, Player _target, int _index)
+        public override void CardFirstAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
             SoundManager.Instance.PlaySFXSound("Sub_01");
             _target.IsLocked = true;
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
         }
     }
@@ -348,21 +348,21 @@ namespace Online
     {
         public SupCard2()
         {
-            id = CardData.CardTable[8].id;
-            cardName = CardData.CardTable[8].name;
-            cost = CardData.CardTable[8].cost;
-            cardDesc = CardData.CardTable[8].desc;
-            cardImage = CardData.CardTable[8].cardImage;
-            cardImageBG = CardData.CardTable[8].cardImageBG;
-            cardType = CardData.CardTable[8].cardType;
-            targetType = CardData.CardTable[8].targetType;
+            id = OnCardData.CardTable[8].id;
+            cardName = OnCardData.CardTable[8].name;
+            cost = OnCardData.CardTable[8].cost;
+            cardDesc = OnCardData.CardTable[8].desc;
+            cardImage = OnCardData.CardTable[8].cardImage;
+            cardImageBG = OnCardData.CardTable[8].cardImageBG;
+            cardType = OnCardData.CardTable[8].cardType;
+            targetType = OnCardData.CardTable[8].targetType;
         }
 
-        public override void CardFirstAbility(Player _caster, Player _target, int _index)
+        public override void CardFirstAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
             base.CardSecondAbility(_caster, _target, _index);
 
@@ -383,21 +383,21 @@ namespace Online
     {
         public SupCard3()
         {
-            id = CardData.CardTable[9].id;
-            cardName = CardData.CardTable[9].name;
-            cost = CardData.CardTable[9].cost;
-            cardDesc = CardData.CardTable[9].desc;
-            cardImage = CardData.CardTable[9].cardImage;
-            cardImageBG = CardData.CardTable[9].cardImageBG;
-            cardType = CardData.CardTable[9].cardType;
-            targetType = CardData.CardTable[9].targetType;
+            id = OnCardData.CardTable[9].id;
+            cardName = OnCardData.CardTable[9].name;
+            cost = OnCardData.CardTable[9].cost;
+            cardDesc = OnCardData.CardTable[9].desc;
+            cardImage = OnCardData.CardTable[9].cardImage;
+            cardImageBG = OnCardData.CardTable[9].cardImageBG;
+            cardType = OnCardData.CardTable[9].cardType;
+            targetType = OnCardData.CardTable[9].targetType;
         }
 
-        public override void CardFirstAbility(Player _caster, Player _target, int _index)
+        public override void CardFirstAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
             base.CardSecondAbility(_caster, _target, _index);
 
@@ -410,7 +410,7 @@ namespace Online
 
     public class Move : Card
     {
-        private Player caster;
+        private OnPlayer caster;
 
         public Move()
         {
@@ -418,11 +418,11 @@ namespace Online
             targetType = TargetType.MeSellect;
         }
 
-        public override void CardFirstAbility(Player _caster, Player _target, int _index)
+        public override void CardFirstAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
         }
 
-        public override void CardSecondAbility(Player _caster, Player _target, int _index)
+        public override void CardSecondAbility(OnPlayer _caster, OnPlayer _target, int _index)
         {
             if (_caster.IsLocked) return;
 
@@ -459,7 +459,7 @@ namespace Online
                 }
             }
 
-            IEnumerator Co_Move(Player caster, Vector3 pos)
+            IEnumerator Co_Move(OnPlayer caster, Vector3 pos)
             {
                 while (!Mathf.Approximately(caster.transform.position.x, pos.x))
                 {
@@ -472,7 +472,7 @@ namespace Online
         }
     }
 
-    public class CardData : MonoBehaviour
+    public class OnCardData : MonoBehaviour
     {
         public static List<Card> CardList;
         public static List<CardInfo> CardTable;
